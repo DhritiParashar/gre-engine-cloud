@@ -90,3 +90,176 @@ window.renderTab6 = function (el) {
     </div>
   `;
 };
+// ==============================================================================
+// POSTGRADUATE REGISTRATION ENRICHER & REGISTERED PROFILE HEADER SYNC
+// ==============================================================================
+window.getPostgradProfile = function () {
+  const host = window.location.host.toLowerCase();
+  const exam = host.includes("gmat") ? "GMAT" : (host.includes("gre") ? "GRE" : "CAT");
+  let saved = {};
+  try {
+    saved = JSON.parse(localStorage.getItem("goalisb_postgrad_profile_v1") || localStorage.getItem("ipm_user") || "{}");
+  } catch (e) {}
+
+  return {
+    name: saved.name || "Dina Shah",
+    classXII: Number(saved.classXII || saved.class12 || 90),
+    ugCgpa10: Number(saved.ugCgpa10 || (exam === "GRE" ? 9.25 : (exam === "GMAT" ? 9.1 : 8.7))),
+    ugGpa4: Number(saved.ugGpa4 || (exam === "GRE" ? 3.70 : 3.64)),
+    ugPct: Number(saved.ugPct || 82),
+    workExMonths: Number(saved.workExMonths !== undefined ? saved.workExMonths : (exam === "GMAT" ? 48 : 24)),
+    targetTrack: saved.targetTrack || (exam === "GRE" ? "MS CS / AI" : (exam === "GMAT" ? "Global MBA / MiM" : "IIM A/B/C PGP")),
+    researchTier: saved.researchTier || "PUB",
+    category: saved.category || "GEN"
+  };
+};
+
+window.savePostgradProfile = function (updates) {
+  const cur = window.getPostgradProfile();
+  const next = { ...cur, ...updates };
+  if (updates.ugCgpa10 !== undefined) {
+    const c10 = Math.min(10, Math.max(4, Number(updates.ugCgpa10)));
+    next.ugCgpa10 = Number(c10.toFixed(2));
+    next.ugGpa4 = Number(((c10 / 10) * 4.0).toFixed(2));
+    next.ugPct = Number(Math.min(100, (c10 - 0.5) * 10).toFixed(1));
+  }
+  localStorage.setItem("goalisb_postgrad_profile_v1", JSON.stringify(next));
+
+  // Sync into Tab 6 state automatically
+  if (window.CAT_CALL_STATE) {
+    window.CAT_CALL_STATE.classXII = next.classXII;
+    window.CAT_CALL_STATE.gradCgpa = next.ugCgpa10;
+    window.CAT_CALL_STATE.gradPct = next.ugPct;
+    window.CAT_CALL_STATE.workExMonths = next.workExMonths;
+    window.CAT_CALL_STATE.category = next.category;
+  }
+  if (window.GMAT_ADMIT_STATE) {
+    window.GMAT_ADMIT_STATE.ugCgpa10 = next.ugCgpa10;
+    window.GMAT_ADMIT_STATE.ugGpa = next.ugGpa4;
+    window.GMAT_ADMIT_STATE.workExYears = Number((next.workExMonths / 12).toFixed(1));
+  }
+  if (window.GRE_GRAD_STATE) {
+    window.GRE_GRAD_STATE.ugCgpa10 = next.ugCgpa10;
+    window.GRE_GRAD_STATE.ugGpa = next.ugGpa4;
+    window.GRE_GRAD_STATE.researchTier = next.researchTier;
+  }
+  window.syncRegisteredHeaderAndForms();
+  if (typeof window.renderActiveTab === "function") window.renderActiveTab();
+};
+
+window.openPostgradProfileModal = function () {
+  const p = window.getPostgradProfile();
+  const host = window.location.host.toLowerCase();
+  const exam = host.includes("gmat") ? "GMAT" : (host.includes("gre") ? "GRE" : "CAT");
+
+  let modal = document.getElementById("postgrad-profile-modal");
+  if (!modal) {
+    modal = document.createElement("div");
+    modal.id = "postgrad-profile-modal";
+    modal.className = "fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm p-4";
+    document.body.appendChild(modal);
+  }
+
+  modal.innerHTML = `
+    <div class="bg-slate-900 border border-slate-700 rounded-2xl max-w-md w-full p-5 space-y-4 text-xs text-slate-200 shadow-2xl">
+      <div class="flex justify-between items-center border-b border-slate-800 pb-2.5">
+        <div>
+          <span class="text-[10px] uppercase font-bold text-indigo-400">Registered Candidate Profile</span>
+          <h3 class="text-base font-extrabold text-white">Postgraduate Academic &amp; Experience Credentials</h3>
+        </div>
+        <button type="button" onclick="document.getElementById('postgrad-profile-modal').remove()" class="text-slate-400 hover:text-white text-lg font-bold">&times;</button>
+      </div>
+      <div class="space-y-3">
+        <label class="block"><span class="text-slate-400">Candidate Full Name</span>
+          <input id="pg-prof-name" type="text" value="${p.name}" class="mt-1 w-full px-3 py-2 rounded-xl bg-slate-950 border border-slate-700 text-white font-semibold">
+        </label>
+        <div class="grid grid-cols-2 gap-2.5">
+          <label class="block"><span class="text-slate-400">Undergrad CGPA (10-Pt)</span>
+            <input id="pg-prof-cgpa" type="number" step="0.05" min="4" max="10" value="${p.ugCgpa10}" class="mt-1 w-full px-3 py-2 rounded-xl bg-slate-950 border border-slate-700 text-white font-bold">
+          </label>
+          <label class="block"><span class="text-slate-400">${exam === "CAT" ? "Class XII Board %" : "Work Experience (Months)"}</span>
+            <input id="pg-prof-sec" type="number" min="0" max="120" value="${exam === "CAT" ? p.classXII : p.workExMonths}" class="mt-1 w-full px-3 py-2 rounded-xl bg-slate-950 border border-slate-700 text-white font-bold">
+          </label>
+        </div>
+        ${exam === "CAT" ? `
+        <div class="grid grid-cols-2 gap-2.5">
+          <label class="block"><span class="text-slate-400">Work Experience (Months)</span>
+            <input id="pg-prof-wx" type="number" min="0" max="96" value="${p.workExMonths}" class="mt-1 w-full px-3 py-2 rounded-xl bg-slate-950 border border-slate-700 text-white font-bold">
+          </label>
+          <label class="block"><span class="text-slate-400">Category</span>
+            <select id="pg-prof-cat" class="mt-1 w-full px-3 py-2 rounded-xl bg-slate-950 border border-slate-700 text-white font-semibold">
+              <option value="GEN" ${p.category==="GEN"?"selected":""}>General</option>
+              <option value="EWS" ${p.category==="EWS"?"selected":""}>EWS</option>
+              <option value="NCOBC" ${p.category==="NCOBC"?"selected":""}>NC-OBC</option>
+              <option value="SC" ${p.category==="SC"?"selected":""}>SC</option>
+              <option value="ST" ${p.category==="ST"?"selected":""}>ST</option>
+            </select>
+          </label>
+        </div>` : `
+        <label class="block"><span class="text-slate-400">Target Postgraduate Track</span>
+          <input id="pg-prof-track" type="text" value="${p.targetTrack}" class="mt-1 w-full px-3 py-2 rounded-xl bg-slate-950 border border-slate-700 text-white font-semibold">
+        </label>`}
+      </div>
+      <div class="flex justify-end gap-2 pt-2 border-t border-slate-800">
+        <button type="button" onclick="document.getElementById('postgrad-profile-modal').remove()" class="px-3.5 py-2 rounded-xl bg-slate-800 text-slate-300 font-semibold">Cancel</button>
+        <button type="button" onclick="
+          const exam = window.location.host.includes('gmat') ? 'GMAT' : (window.location.host.includes('gre') ? 'GRE' : 'CAT');
+          window.savePostgradProfile({
+            name: document.getElementById('pg-prof-name').value.trim() || 'Dina Shah',
+            ugCgpa10: Number(document.getElementById('pg-prof-cgpa').value || 8.8),
+            classXII: exam === 'CAT' ? Number(document.getElementById('pg-prof-sec').value || 90) : 90,
+            workExMonths: exam === 'CAT' ? Number(document.getElementById('pg-prof-wx').value || 24) : Number(document.getElementById('pg-prof-sec').value || 24),
+            category: document.getElementById('pg-prof-cat') ? document.getElementById('pg-prof-cat').value : 'GEN',
+            targetTrack: document.getElementById('pg-prof-track') ? document.getElementById('pg-prof-track').value : 'Postgrad'
+          });
+          document.getElementById('postgrad-profile-modal').remove();
+        " class="px-4 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-extrabold cursor-pointer">Save &amp; Sync Profile</button>
+      </div>
+    </div>
+  `;
+};
+
+window.syncRegisteredHeaderAndForms = function () {
+  const p = window.getPostgradProfile();
+  const host = window.location.host.toLowerCase();
+  const exam = host.includes("gmat") ? "GMAT" : (host.includes("gre") ? "GRE" : "CAT");
+
+  let hist = [];
+  try { hist = JSON.parse(localStorage.getItem("ipm_mock_history_v1") || "[]"); } catch (e) {}
+  const latest = hist[0];
+
+  let summary = "";
+  if (exam === "GMAT") {
+    const est = latest && latest.maxScore ? Math.min(805, Math.max(205, Math.round((205 + (latest.score / latest.maxScore) * 600) / 10) * 10 + 5)) : null;
+    summary = `CGPA: ${p.ugCgpa10.toFixed(1)}/10 (${p.ugGpa4.toFixed(2)} GPA) | WX: ${(p.workExMonths/12).toFixed(1)}y &bull; ${est ? `Mock &rarr; ${est}/805` : "Target: 715+ Focus"}`;
+  } else if (exam === "GRE") {
+    const est = latest && latest.maxScore ? Math.min(340, Math.max(260, Math.round(260 + (latest.score / latest.maxScore) * 80))) : null;
+    summary = `CGPA: ${p.ugCgpa10.toFixed(1)}/10 (${p.ugGpa4.toFixed(2)} GPA) | ${p.targetTrack} &bull; ${est ? `Mock &rarr; ${est}/340` : "Target: 328+ GRE"}`;
+  } else {
+    const scaled198 = latest && latest.maxScore ? Math.round((latest.score / latest.maxScore) * 198) : null;
+    summary = `XII: ${p.classXII}% | CGPA: ${p.ugCgpa10.toFixed(1)}/10 (${p.ugPct}%) | WX: ${p.workExMonths}m &bull; ${scaled198 !== null ? `Mock &rarr; ${scaled198}/198` : "Target: 99.2+%ile"}`;
+  }
+
+  // Update the top-bar candidate profile pill & make it clickable to edit Postgraduate credentials
+  document.querySelectorAll("header span, header div, nav span, nav div").forEach(el => {
+    if (el.children.length <= 3 && (/Class\s*(X|XII|10|12)/i.test(el.textContent || "") || el.dataset.pgSynced === "1")) {
+      el.dataset.pgSynced = "1";
+      el.style.cursor = "pointer";
+      el.title = "Click to edit Registered Postgraduate Profile (CGPA, Work-Ex, Target Track)";
+      el.onclick = window.openPostgradProfileModal;
+      el.innerHTML = `<span class="font-bold">&#128100; ${p.name}</span> <span class="mx-1.5 opacity-50">|</span> <span class="text-indigo-600 dark:text-indigo-300 font-semibold">${summary}</span> <span class="ml-1.5 text-[10px] px-1.5 py-0.5 rounded bg-indigo-500/15 text-indigo-400">Edit</span>`;
+    }
+  });
+
+  // Also upgrade any Registration Modal inputs labeled 'Class 10 %' / 'Class 12 %' to Postgraduate fields
+  document.querySelectorAll("label, input").forEach(node => {
+    if (node.tagName === "LABEL" && /Class\s*10/i.test(node.textContent || "")) {
+      node.innerHTML = node.innerHTML.replace(/Class\s*10\s*%/gi, "Undergrad CGPA (10-Pt Scale)");
+    }
+    if (node.tagName === "LABEL" && /Class\s*12/i.test(node.textContent || "") && exam !== "CAT") {
+      node.innerHTML = node.innerHTML.replace(/Class\s*12\s*%/gi, "Work Experience (Months)");
+    }
+  });
+};
+
+setInterval(window.syncRegisteredHeaderAndForms, 500);
