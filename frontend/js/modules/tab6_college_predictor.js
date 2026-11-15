@@ -1,10 +1,12 @@
 window.GRE_GRAD_STATE = window.GRE_GRAD_STATE || {
   quant: 167, verbal: 161, awa: 4.5,
-  ugGpa: 3.70, degreeGoal: "MS_CS", researchTier: "PUB"
+  ugCgpa10: 9.25, ugGpa: 3.70, degreeGoal: "MS_CS", researchTier: "PUB"
 };
 
 window.updateGreGradField = function (field, val) {
   window.GRE_GRAD_STATE[field] = (field === "degreeGoal" || field === "researchTier") ? String(val) : Number(val);
+  if (field === "ugCgpa10") { window.GRE_GRAD_STATE.ugGpa = Number(((window.GRE_GRAD_STATE.ugCgpa10 / 10) * 4.0).toFixed(2)); }
+  if (field === "ugGpa") { window.GRE_GRAD_STATE.ugCgpa10 = Number(((window.GRE_GRAD_STATE.ugGpa / 4.0) * 10).toFixed(1)); }
   window.renderActiveTab();
 };
 
@@ -61,7 +63,7 @@ window.renderTab6 = function (el) {
         </div>
         <div class="bg-slate-900/95 border border-slate-800 rounded-2xl p-4 space-y-3">
           <div class="text-xs font-bold uppercase text-indigo-300">2. Undergraduate GPA &amp; Research Profile</div>
-          <div><div class="flex justify-between text-xs text-slate-300"><span>Undergraduate GPA (4.0 Scale)</span><strong>${s.ugGpa.toFixed(2)} / 4.00</strong></div><input type="range" min="2.7" max="4.0" step="0.05" value="${s.ugGpa}" oninput="window.updateGreGradField('ugGpa', this.value)" class="w-full accent-indigo-500"></div>
+          <div><div class="flex justify-between text-xs text-slate-300"><span>Undergrad CGPA (10-Pt Scale)</span><strong>${(s.ugCgpa10 || 9.25).toFixed(1)} / 10 &rarr; ${s.ugGpa.toFixed(2)} / 4.0 GPA</strong></div><input type="range" min="6.0" max="10.0" step="0.1" value="${s.ugCgpa10 || 9.25}" oninput="window.updateGreGradField('ugCgpa10', this.value)" class="w-full accent-indigo-500"></div>
           <select onchange="window.updateGreGradField('researchTier', this.value)" class="w-full px-3 py-2 rounded-xl bg-slate-950 border border-slate-700 text-white text-xs font-semibold">
             <option value="TIER1_PUB" ${s.researchTier==="TIER1_PUB"?"selected":""}>First-Author Peer-Reviewed Publication (IEEE/ACM/NeurIPS)</option>
             <option value="PUB" ${s.researchTier==="PUB"?"selected":""}>Undergraduate Thesis / Lab Internship / Co-Author</option>
