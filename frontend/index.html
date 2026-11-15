@@ -1172,5 +1172,195 @@
 </script>
 <!-- END LIVE POSTGRES PRACTICE & WORKED EXAMPLES (TABS 1-3) -->
   
+<script id="pg-boot-auth-gate">
+(function () {
+  const host = window.location.host.toLowerCase();
+  const exam = host.includes("gmat") ? "GMAT" : (host.includes("gre") ? "GRE" : "CAT");
+  const defaultCgpa = exam === "GRE" ? "9.25" : (exam === "GMAT" ? "9.10" : "8.70");
+  const defaultWx   = exam === "GMAT" ? "48" : "24";
+
+  function getUser() {
+    try {
+      const raw = localStorage.getItem("goalisb_postgrad_profile_v1") || localStorage.getItem("ipm_user");
+      if (!raw) return null;
+      const u = JSON.parse(raw);
+      return (u && u.name) ? u : null;
+    } catch (e) { return null; }
+  }
+
+  window.handlePostgradLogout = function () {
+    localStorage.removeItem("goalisb_postgrad_profile_v1");
+    localStorage.removeItem("ipm_user");
+    localStorage.removeItem("goalisb_user");
+    localStorage.removeItem("ipm_token");
+    window.IPM_USER = null;
+    window.location.reload();
+  };
+
+  window.openPostgradAuthGate = function (mode) {
+    const activeMode = mode || "REGISTER";
+    let gate = document.getElementById("pg-auth-gate-overlay");
+    if (!gate) {
+      gate = document.createElement("div");
+      gate.id = "pg-auth-gate-overlay";
+      gate.style.cssText = "position:fixed;inset:0;z-index:99999;display:flex;align-items:center;justify-content:center;background:rgba(2,6,23,0.92);backdrop-filter:blur(8px);padding:16px;overflow-y:auto;";
+      document.body.appendChild(gate);
+    }
+
+    const examTitle = exam === "GRE" ? "GRE General (260–340 + AWA)" : (exam === "GMAT" ? "GMAT Focus (205–805)" : "CAT 2026 & OMETs (IIM/FMS/XLRI)");
+    const secLabel  = exam === "CAT" ? "Class 12 Board % (IIM AR Weight)" : "Work Experience (Months)";
+    const secVal    = exam === "CAT" ? "90" : defaultWx;
+
+    gate.innerHTML = `
+      <div style="max-width:860px;width:100%;background:#0f172a;color:#f8fafc;border:1px solid #334155;border-radius:24px;overflow:hidden;display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));box-shadow:0 25px 50px -12px rgba(0,0,0,0.75);font-family:system-ui,-apple-system,sans-serif;">
+        <div style="background:linear-gradient(135deg,#0f172a,#1e1b4b);padding:28px;display:flex;flex-direction:column;justify-content:space-between;">
+          <div>
+            <span style="font-size:10px;font-weight:800;letter-spacing:1px;text-transform:uppercase;padding:4px 10px;border-radius:999px;background:rgba(99,102,241,0.2);color:#a5b4fc;border:1px solid rgba(129,140,248,0.3);">${examTitle}</span>
+            <h2 style="font-size:22px;font-weight:800;margin:14px 0 8px;line-height:1.25;">GOALisB ${exam} Postgraduate Master Engine</h2>
+            <p style="font-size:12px;color:#cbd5e1;line-height:1.5;">Calibrated for MBA, PGP, MiM, MS &amp; PhD Admissions with 260+ PostgreSQL Questions &amp; Diagnostic Scorecards.</p>
+            <ul style="list-style:none;padding:0;margin:18px 0 0;font-size:12px;color:#e2e8f0;line-height:1.9;">
+              <li>&#9745; <strong>260+ Postgraduate Questions:</strong> Official PYQs &amp; Chapter Drills</li>
+              <li>&#9745; <strong>18 Interactive Trap Clinics:</strong> Adaptive &amp; Negative-Marking Defense</li>
+              <li>&#9745; <strong>Admissions &amp; ROI Predictor:</strong> Live Mock-to-Official Score Sync</li>
+            </ul>
+          </div>
+          <div style="font-size:11px;color:#94a3b8;padding-top:16px;border-top:1px solid #1e293b;">Neon PostgreSQL Encrypted Postgraduate Portal</div>
+        </div>
+
+        <div style="padding:28px;background:#ffffff;color:#0f172a;">
+          <div style="display:flex;gap:8px;border-bottom:1px solid #e2e8f0;padding-bottom:12px;margin-bottom:16px;">
+            <button type="button" onclick="window.openPostgradAuthGate('LOGIN')" style="flex:1;padding:9px;border-radius:10px;font-size:12px;font-weight:700;border:none;cursor:pointer;background:${activeMode==='LOGIN'?'#4f46e5':'#f1f5f9'};color:${activeMode==='LOGIN'?'#ffffff':'#475569'};">Student Login</button>
+            <button type="button" onclick="window.openPostgradAuthGate('REGISTER')" style="flex:1;padding:9px;border-radius:10px;font-size:12px;font-weight:700;border:none;cursor:pointer;background:${activeMode==='REGISTER'?'#4f46e5':'#f1f5f9'};color:${activeMode==='REGISTER'?'#ffffff':'#475569'};">Fresh Registration (Free Demo)</button>
+          </div>
+
+          ${activeMode === "LOGIN" ? `
+            <div style="display:flex;flex-direction:column;gap:12px;">
+              <h3 style="font-size:17px;font-weight:800;margin:0;">Welcome Back, Aspirant</h3>
+              <label style="font-size:11px;font-weight:700;color:#475569;">Registered Email or Mobile
+                <input id="pg-login-email" type="text" value="dina.shah@goalisb.com" style="margin-top:4px;width:100%;padding:10px 12px;border-radius:10px;border:1px solid #cbd5e1;font-size:12px;font-weight:600;box-sizing:border-box;">
+              </label>
+              <label style="font-size:11px;font-weight:700;color:#475569;">Password
+                <input id="pg-login-pass" type="password" value="demo1234" style="margin-top:4px;width:100%;padding:10px 12px;border-radius:10px;border:1px solid #cbd5e1;font-size:12px;box-sizing:border-box;">
+              </label>
+              <button type="button" onclick="window.completePostgradAuth()" style="margin-top:6px;width:100%;padding:12px;border-radius:12px;border:none;background:#4f46e5;color:#ffffff;font-size:13px;font-weight:800;cursor:pointer;">Enter Postgraduate Master Engine &rarr;</button>
+            </div>
+          ` : `
+            <div style="display:flex;flex-direction:column;gap:11px;">
+              <h3 style="font-size:17px;font-weight:800;margin:0;">Create Postgraduate Account (Free Demo)</h3>
+              <label style="font-size:11px;font-weight:700;color:#475569;">Candidate Full Name
+                <input id="pg-reg-name" type="text" value="Dina Shah" style="margin-top:4px;width:100%;padding:9px 12px;border-radius:10px;border:1px solid #cbd5e1;font-size:12px;font-weight:600;box-sizing:border-box;">
+              </label>
+              <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+                <label style="font-size:11px;font-weight:700;color:#4338ca;">Undergrad CGPA (10-Pt)
+                  <input id="pg-reg-cgpa" type="number" step="0.05" min="4" max="10" value="${defaultCgpa}" style="margin-top:4px;width:100%;padding:9px 12px;border-radius:10px;border:1px solid #cbd5e1;font-size:12px;font-weight:700;box-sizing:border-box;">
+                </label>
+                <label style="font-size:11px;font-weight:700;color:#4338ca;">${secLabel}
+                  <input id="pg-reg-sec" type="number" min="0" max="120" value="${secVal}" style="margin-top:4px;width:100%;padding:9px 12px;border-radius:10px;border:1px solid #cbd5e1;font-size:12px;font-weight:700;box-sizing:border-box;">
+                </label>
+              </div>
+              <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+                <label style="font-size:11px;font-weight:700;color:#475569;">Mobile Number
+                  <input id="pg-reg-phone" type="text" placeholder="+91 9876543210" style="margin-top:4px;width:100%;padding:9px 12px;border-radius:10px;border:1px solid #cbd5e1;font-size:12px;box-sizing:border-box;">
+                </label>
+                <label style="font-size:11px;font-weight:700;color:#475569;">Email Address
+                  <input id="pg-reg-email" type="email" placeholder="aspirant@example.com" style="margin-top:4px;width:100%;padding:9px 12px;border-radius:10px;border:1px solid #cbd5e1;font-size:12px;box-sizing:border-box;">
+                </label>
+              </div>
+              <button type="button" onclick="window.completePostgradAuth()" style="margin-top:6px;width:100%;padding:12px;border-radius:12px;border:none;background:#4f46e5;color:#ffffff;font-size:13px;font-weight:800;cursor:pointer;">Activate Free Demo &amp; Sync Profile &rarr;</button>
+            </div>
+          `}
+        </div>
+      </div>
+    `;
+  };
+
+  window.completePostgradAuth = function () {
+    const existing = getUser() || {};
+    const name = (document.getElementById("pg-reg-name")?.value || existing.name || "Dina Shah").trim();
+    const cgpa = Number(document.getElementById("pg-reg-cgpa")?.value || existing.ugCgpa10 || defaultCgpa);
+    const sec  = Number(document.getElementById("pg-reg-sec")?.value || (exam === "CAT" ? 90 : defaultWx));
+
+    const profile = {
+      name,
+      tier: "FREE_DEMO",
+      ugCgpa10: cgpa,
+      ugGpa4: Number(((cgpa / 10) * 4.0).toFixed(2)),
+      ugPct: Number(Math.min(100, (cgpa - 0.5) * 10).toFixed(1)),
+      classXII: exam === "CAT" ? sec : 90,
+      workExMonths: exam === "CAT" ? 24 : sec
+    };
+
+    localStorage.setItem("goalisb_postgrad_profile_v1", JSON.stringify(profile));
+    localStorage.setItem("ipm_user", JSON.stringify(profile));
+    window.IPM_USER = profile;
+
+    const gate = document.getElementById("pg-auth-gate-overlay");
+    if (gate) gate.remove();
+    syncHeaderControls();
+  };
+
+  function syncHeaderControls() {
+    const user = getUser();
+    let hist = [];
+    try { hist = JSON.parse(localStorage.getItem("ipm_mock_history_v1") || "[]"); } catch (e) {}
+    const latest = hist[0];
+
+    // 1. Update Login/Register button into Logout/Exit when signed in, or wire click handler
+    document.querySelectorAll("button").forEach(btn => {
+      const txt = (btn.textContent || "").trim();
+      if (/Free Demo Login|2-Step Register/i.test(txt)) {
+        if (user) {
+          btn.innerHTML = "Exit / Logout";
+          btn.style.cssText = "padding:6px 14px;border-radius:10px;background:#dc2626;color:#ffffff;font-size:12px;font-weight:700;border:none;cursor:pointer;";
+          btn.onclick = window.handlePostgradLogout;
+        } else {
+          btn.onclick = function (e) { e.preventDefault(); window.openPostgradAuthGate("REGISTER"); };
+        }
+      } else if (/^Exit \/ Logout$|^Logout$/i.test(txt)) {
+        btn.onclick = window.handlePostgradLogout;
+      }
+    });
+
+    // 2. Populate the top-bar candidate profile pill with CGPA, Work-Ex & Mock-to-Official Score
+    if (user) {
+      let summary = "";
+      if (exam === "GMAT") {
+        const est = latest && latest.maxScore ? Math.min(805, Math.max(205, Math.round((205 + (latest.score / latest.maxScore) * 600) / 10) * 10 + 5)) : null;
+        summary = `CGPA: ${Number(user.ugCgpa10).toFixed(1)}/10 (${Number(user.ugGpa4).toFixed(2)} GPA) | WX: ${(user.workExMonths/12).toFixed(1)}y &bull; ${est ? `Mock &rarr; ${est}/805` : "Target: 715+ Focus"}`;
+      } else if (exam === "GRE") {
+        const est = latest && latest.maxScore ? Math.min(340, Math.max(260, Math.round(260 + (latest.score / latest.maxScore) * 80))) : null;
+        summary = `CGPA: ${Number(user.ugCgpa10).toFixed(1)}/10 (${Number(user.ugGpa4).toFixed(2)} GPA) | WX: ${user.workExMonths}m &bull; ${est ? `Mock &rarr; ${est}/340` : "Target: 328+ GRE"}`;
+      } else {
+        const scaled198 = latest && latest.maxScore ? Math.round((latest.score / latest.maxScore) * 198) : null;
+        summary = `XII: ${user.classXII}% | CGPA: ${Number(user.ugCgpa10).toFixed(1)}/10 (${user.ugPct}%) | WX: ${user.workExMonths}m &bull; ${scaled198 !== null ? `Mock &rarr; ${scaled198}/198` : "Target: 99.2+%ile"}`;
+      }
+
+      let pill = document.getElementById("pg-header-profile-pill");
+      if (!pill) {
+        const proBtn = Array.from(document.querySelectorAll("button")).find(b => /Go Pro Learner|FREE DEMO/i.test(b.textContent || ""));
+        if (proBtn && proBtn.parentElement) {
+          pill = document.createElement("div");
+          pill.id = "pg-header-profile-pill";
+          pill.style.cssText = "display:inline-flex;align-items:center;gap:6px;padding:5px 12px;border-radius:999px;background:#f8fafc;border:1px solid #cbd5e1;font-size:11px;color:#0f172a;cursor:pointer;";
+          proBtn.parentElement.insertBefore(pill, proBtn);
+        }
+      }
+      if (pill) {
+        pill.title = "Click to edit Postgraduate Profile (CGPA, Work-Ex)";
+        pill.onclick = function () { window.openPostgradAuthGate("REGISTER"); };
+        pill.innerHTML = `<strong>&#128100; ${user.name}</strong> <span style="color:#94a3b8;">|</span> <span style="color:#4338ca;font-weight:700;">${summary}</span>`;
+      }
+    }
+  }
+
+  window.addEventListener("DOMContentLoaded", function () {
+    syncHeaderControls();
+    if (!getUser()) {
+      window.openPostgradAuthGate("REGISTER");
+    }
+  });
+  setInterval(syncHeaderControls, 400);
+})();
+</script>
 </body>
 </html>
