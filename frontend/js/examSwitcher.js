@@ -114,7 +114,7 @@ window.renderRefresherCard = function (modId, accentColor) {
                 }">${ex.level}</span>
               </div>
               <ol class="list-decimal list-inside text-xs text-emerald-100/90 space-y-1 pt-1">
-                ${ex.steps.map(s => `<li>${s}</li>`).join("")}
+                ${(ex.steps || []).map(s => `<li>${s}</li>`).join("")}
               </ol>
             </div>
           `).join("")}
