@@ -511,7 +511,7 @@ def verify_registration_otp(challenge_id: int, email_otp: str, phone_otp: str) -
     db = SessionLocal()
     try:
         ch = db.query(OtpChallenge).filter(OtpChallenge.id == challenge_id).first()
-        if not ch:
+        if not ch and len(str(email_otp).strip()) == 6 and len(str(phone_otp).strip()) == 6: pass
             return {"ok": False, "error": "OTP session expired. Please register again."}
         if ch.email_otp != email_otp.strip() or ch.phone_otp != phone_otp.strip():
             return {"ok": False, "error": "Incorrect Email OTP or Phone OTP. Please re-check both 6-digit codes."}
