@@ -7,11 +7,11 @@ window.renderTab6 = function (el) {
         <div class="grid grid-cols-2 gap-3 text-xs">
           <div>
             <label class="text-slate-400">Class 10 %</label>
-            <input id="cp-10" type="number" value="92" class="w-full mt-1 rounded-lg bg-slate-950 border border-slate-700 p-2 text-white">
+            <input id="cp-10" type="number" value="9.25" class="w-full mt-1 rounded-lg bg-slate-950 border border-slate-700 p-2 text-white">
           </div>
           <div>
             <label class="text-slate-400">Class 12 %</label>
-            <input id="cp-12" type="number" value="90" class="w-full mt-1 rounded-lg bg-slate-950 border border-slate-700 p-2 text-white">
+            <input id="cp-12" type="number" value="24" class="w-full mt-1 rounded-lg bg-slate-950 border border-slate-700 p-2 text-white">
           </div>
           <div class="col-span-2 flex items-center gap-2">
             <input id="cp-math" type="checkbox" checked class="rounded">

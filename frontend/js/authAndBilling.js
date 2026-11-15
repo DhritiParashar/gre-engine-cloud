@@ -47,9 +47,9 @@ window.renderHeaderAccountBar = function () {
     pill.innerHTML = `
       <span class="font-bold text-white">&#128100; ${window.IPM_USER.full_name}</span>
       <span class="text-slate-400 mx-1">|</span>
-      <span class="text-sky-300 font-semibold">Class X: ${c10}%</span>
+      <span class="text-sky-300 font-semibold">CGPA: ${user.class10 || "9.25"}/10</span>
       <span class="text-slate-400 mx-1">&bull;</span>
-      <span class="text-emerald-300 font-semibold">Class XII: ${c12}%</span>
+      <span class="text-emerald-300 font-semibold">WX: ${user.class12 || "24"}m</span>
     `;
     authBtn.textContent = "Logout";
     authBtn.onclick = window.logoutStudent;
