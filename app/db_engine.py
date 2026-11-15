@@ -32,7 +32,7 @@ if RAW_DB_URL.startswith("postgres://"):
 
 LOCAL_SQLITE_PATH = os.path.join(os.path.dirname(__file__), "data", "ipm_databank.db")
 os.makedirs(os.path.dirname(LOCAL_SQLITE_PATH), exist_ok=True)
-DATABASE_URL = RAW_DB_URL if RAW_DB_URL else f"sqlite:///{LOCAL_SQLITE_PATH}"
+DATABASE_URL = RAW_DB_URL if RAW_DB_URL.startswith(("postgresql://", "sqlite://")) else f"sqlite:///{LOCAL_SQLITE_PATH}"
 
 connect_args = {"check_same_thread": False} if DATABASE_URL.startswith("sqlite") else {}
 engine = create_engine(DATABASE_URL, connect_args=connect_args, pool_pre_ping=True)
