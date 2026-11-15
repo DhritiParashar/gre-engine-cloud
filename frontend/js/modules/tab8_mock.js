@@ -437,3 +437,189 @@ window.downloadActiveMockSolutionsCsv = function () {
     }
   }, 500);
 })();
+
+// ==============================================================================
+// SERIAL ASSESSMENT ID, CLEAN DIAGNOSTIC PDF MARKSHEET & TITA BADGE SANITIZER
+// ==============================================================================
+window.generateAssessmentSerialId = function (prefix) {
+  const yr = new Date().getFullYear();
+  const rnd = Math.floor(1000 + Math.random() * 9000);
+  const tag = (prefix || "MOCK").replace(/[^A-Z0-9]/gi, "").toUpperCase().slice(0, 6) || "TEST";
+  return `${tag}-${yr}-${rnd}`;
+};
+
+window.cleanMathText = function (str) {
+  return String(str || "")
+    .replace(/\$([^$]+)\$/g, "$1")
+    .replace(/\\_/g, "_")
+    .replace(/\\times/g, "×")
+    .replace(/\\equiv/g, "≡")
+    .replace(/\\ge/g, "≥")
+    .replace(/\\le/g, "≤")
+    .replace(/\\alpha/g, "α")
+    .replace(/\\beta/g, "β")
+    .replace(/\\sqrt\{([^}]+)\}/g, "√($1)")
+    .replace(/\^2/g, "²")
+    .replace(/\^3/g, "³");
+};
+
+window.printOfficialDiagnosticMarksheet = function () {
+  const qs = window.MOCK_QUESTIONS_CACHE || [];
+  if (!qs.length) {
+    alert("Start and submit a mock first to generate your Official Diagnostic Marksheet.");
+    return;
+  }
+  const hostTag = window.location.host.includes("gmat") ? "GMAT" : (window.location.host.includes("gre") ? "GRE" : "CAT");
+  const serialId = window.ACTIVE_MOCK_SERIAL_ID || window.generateAssessmentSerialId(hostTag);
+  window.ACTIVE_MOCK_SERIAL_ID = serialId;
+
+  const userEl = document.querySelector("header, nav");
+  const candMatch = (userEl ? userEl.innerText : "").match(/([A-Z][a-z]+ [A-Z][a-z]+)/);
+  const candidateName = candMatch ? candMatch[1] : "Aspirant";
+  const safeCand = candidateName.replace(/\s+/g, "_");
+  const dateStr = new Date().toLocaleDateString("en-GB");
+
+  // Compute per-question evaluation
+  const answers = window.MOCK_ANSWERS || {};
+  let correct = 0, wrong = 0, skipped = 0, netScore = 0;
+  const posMark = hostTag === "CAT" ? 3 : 1;
+  const negMark = hostTag === "CAT" ? -1 : 0;
+
+  const qRowsHtml = qs.map((q, idx) => {
+    const isTita = !q.options || q.options.length === 0 || q.q_type === "SA_NUMERIC";
+    const badgeText = isTita ? `TITA (+${posMark} / 0)` : `MCQ (+${posMark} / ${negMark})`;
+    const userAns = answers[q.id];
+    const hasAns = userAns !== undefined && String(userAns).trim() !== "";
+    let statusLabel = "Unattempted (0 Marks)";
+    let statusColor = "#64748b";
+    let userDisplay = "(No response submitted)";
+
+    if (hasAns) {
+      if (isTita) {
+        userDisplay = String(userAns).trim();
+        const isRight = userDisplay.toLowerCase() === String(q.answer).trim().toLowerCase();
+        if (isRight) { correct++; netScore += posMark; statusLabel = `Correct (+${posMark} Marks)`; statusColor = "#059669"; }
+        else { wrong++; statusLabel = "Incorrect TITA (0 Marks — Zero Negative)"; statusColor = "#d97706"; }
+      } else {
+        const uIdx = Number(userAns);
+        userDisplay = `(${String.fromCharCode(65 + uIdx)}) ${q.options[uIdx] ?? userAns}`;
+        if (uIdx === Number(q.answer)) { correct++; netScore += posMark; statusLabel = `Correct (+${posMark} Marks)`; statusColor = "#059669"; }
+        else { wrong++; netScore += negMark; statusLabel = `Incorrect (${negMark} Mark Negative Penalty)`; statusColor = "#dc2626"; }
+      }
+    } else {
+      skipped++;
+    }
+
+    const officialAns = isTita
+      ? String(q.answer)
+      : `(${String.fromCharCode(65 + Number(q.answer))}) ${q.options[Number(q.answer)] ?? q.answer}`;
+
+    return `
+      <div style="border:1px solid #cbd5e1; border-radius:8px; padding:12px 14px; margin-bottom:12px; page-break-inside:avoid;">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px; border-bottom:1px solid #e2e8f0; padding-bottom:4px;">
+          <strong style="font-size:12px; color:#1e1b4b;">Question ${idx + 1} of ${qs.length} &bull; ${window.cleanMathText(q.section || "")} (${window.cleanMathText(q.topic || "")})</strong>
+          <span style="font-size:11px; font-weight:700; color:${statusColor};">${badgeText} &bull; ${statusLabel}</span>
+        </div>
+        <div style="font-size:12px; color:#0f172a; margin-bottom:8px; white-space:pre-line;">${window.cleanMathText(q.prompt || q.stem || "")}</div>
+        <div style="font-size:11px; background:#f8fafc; padding:6px 10px; border-radius:6px; margin-bottom:4px;">
+          <strong>Your Submitted Response:</strong> <span style="color:${statusColor}; font-weight:600;">${window.cleanMathText(userDisplay)}</span>
+        </div>
+        <div style="font-size:11px; background:#ecfdf5; padding:6px 10px; border-radius:6px; color:#065f46;">
+          <strong>Official Answer:</strong> ${window.cleanMathText(officialAns)}<br/>
+          <strong>Solution:</strong> ${window.cleanMathText(q.explanation || "")}
+        </div>
+      </div>
+    `;
+  }).join("");
+
+  const maxScore = qs.length * posMark;
+  const attempted = correct + wrong;
+  const accPct = attempted > 0 ? ((correct / attempted) * 100).toFixed(1) : "0.0";
+  const totalMins = window.MOCK_PAPER_TYPE === "FULL_DIAGNOSTIC" ? 120 : 40;
+  const elapsedSecs = Math.max(1, (totalMins * 60) - (window.MOCK_TIMER_SECONDS || 0));
+  const paceSec = (elapsedSecs / Math.max(1, qs.length)).toFixed(1);
+  const paceVerdict = elapsedSecs < qs.length * 15 ? "Rushed (High Risk of Operational Slips)" : (elapsedSecs <= totalMins * 60 ? "Balanced Exam Pacing" : "Over-Time");
+
+  let printRoot = document.getElementById("official-print-marksheet");
+  if (!printRoot) {
+    printRoot = document.createElement("div");
+    printRoot.id = "official-print-marksheet";
+    document.body.appendChild(printRoot);
+  }
+
+  printRoot.innerHTML = `
+    <div style="font-family: 'Segoe UI', Arial, sans-serif; color:#0f172a; padding:16px;">
+      <div style="border-bottom:2px solid #1e1b4b; padding-bottom:10px; margin-bottom:14px; display:flex; justify-content:space-between; align-items:flex-end;">
+        <div>
+          <div style="font-size:10px; font-weight:700; letter-spacing:1px; color:#4338ca; text-transform:uppercase;">GOALisB ${hostTag} Evaluation Engine</div>
+          <h1 style="font-size:18px; font-weight:800; margin:2px 0; color:#0f172a;">OFFICIAL ${hostTag} DIAGNOSTIC MARKSHEET</h1>
+          <div style="font-size:11px; color:#334155;">
+            <strong>Candidate:</strong> ${candidateName} &nbsp;|&nbsp;
+            <strong>Assessment Serial ID:</strong> <span style="font-family:monospace; font-weight:700; color:#1e1b4b;">${serialId}</span> &nbsp;|&nbsp;
+            <strong>Date:</strong> ${dateStr}
+          </div>
+        </div>
+        <div style="text-align:right; font-size:11px;">
+          <div><strong>SCORE AWARDED:</strong> <span style="font-size:15px; font-weight:800; color:#1e1b4b;">${netScore} / ${maxScore}</span></div>
+          <div><strong>ACCURACY:</strong> ${accPct}% (${correct}C / ${wrong}W / ${skipped}U)</div>
+          <div><strong>PACE PER Q:</strong> ${paceSec}s/Q &bull; <strong>VERDICT:</strong> ${paceVerdict}</div>
+        </div>
+      </div>
+      ${qRowsHtml}
+    </div>
+  `;
+
+  const origTitle = document.title;
+  document.title = `${hostTag}_Marksheet_${serialId}_${safeCand}`;
+  window.print();
+  setTimeout(() => { document.title = origTitle; }, 1000);
+};
+
+// Inject @media print rule so printing ONLY renders #official-print-marksheet (hiding web nav/buttons)
+(function injectCleanPrintCss() {
+  if (document.getElementById("clean-marksheet-print-css")) return;
+  const st = document.createElement("style");
+  st.id = "clean-marksheet-print-css";
+  st.textContent = `
+    #official-print-marksheet { display: none; }
+    @media print {
+      body > *:not(#official-print-marksheet) { display: none !important; }
+      #official-print-marksheet { display: block !important; background: #ffffff !important; color: #000000 !important; }
+    }
+  `;
+  document.head.appendChild(st);
+})();
+
+// Fix TITA badges in live DOM & wire Print button to printOfficialDiagnosticMarksheet() + assign Serial ID on every mock
+(function patchLiveMockUiAndSerialId() {
+  setInterval(() => {
+    const printBtn = document.querySelector("#btn-export-mock-sheet button[onclick*='print']");
+    if (printBtn) {
+      printBtn.setAttribute("onclick", "window.printOfficialDiagnosticMarksheet()");
+    }
+    // Fix MCQ (+3 / -1) badge on TITA cards in live view
+    document.querySelectorAll("#tab-content > div > div").forEach(card => {
+      const txt = card.innerText || "";
+      if (/\[TITA|TITA Parajumble|TITA Odd-One-Out|TITA Para-Completion|TITA Tournament|TITA Caselet/i.test(txt)) {
+        card.querySelectorAll("span").forEach(sp => {
+          if (sp.textContent.trim() === "MCQ (+3 / -1)") {
+            sp.textContent = "TITA (+3 / 0)";
+            sp.className = "px-2.5 py-0.5 rounded-full bg-amber-500/20 text-amber-300 text-[11px] font-bold";
+          }
+        });
+      }
+    });
+  }, 400);
+
+  const origSave = window.saveMockAttemptRecord;
+  if (typeof origSave === "function") {
+    window.saveMockAttemptRecord = function (rec) {
+      const hostTag = window.location.host.includes("gmat") ? "GMAT" : (window.location.host.includes("gre") ? "GRE" : "CAT");
+      const serialId = window.ACTIVE_MOCK_SERIAL_ID || window.generateAssessmentSerialId(hostTag);
+      window.ACTIVE_MOCK_SERIAL_ID = serialId;
+      rec.serialId = serialId;
+      rec.paperType = `[${serialId}] ${rec.paperType}`;
+      return origSave.call(this, rec);
+    };
+  }
+})();
