@@ -327,3 +327,113 @@ window.scoreMock = async function () {
     `;
   }
 };
+
+// ==============================================================================
+// DOWNLOAD & EXPORT ENGINE (CSV HISTORY LEDGER + SCORECARD & SOLUTIONS EXPORT)
+// ==============================================================================
+window.downloadMockHistoryCsv = function () {
+  const attempts = (typeof window.getLocalMockHistory === "function") ? window.getLocalMockHistory() : [];
+  if (!attempts.length) {
+    alert("No mock attempts logged yet. Submit a mock first to export your ledger.");
+    return;
+  }
+  const headers = ["Attempt_No", "Date_Time", "Exam_Track", "Paper_Format", "Net_Score", "Max_Score", "Accuracy_Pct", "Correct", "Wrong", "Unattempted"];
+  const rows = attempts.map((a, i) => [
+    attempts.length - i,
+    `"${String(a.timestamp || "").replace(/"/g, '""')}"`,
+    `"${String(a.examTrack || "").replace(/"/g, '""')}"`,
+    `"${String(a.paperType || "").replace(/"/g, '""')}"`,
+    a.score,
+    a.maxScore,
+    a.accuracyPct,
+    a.correct,
+    a.wrong,
+    a.unattempted
+  ].join(","));
+  const csv = [headers.join(","), ...rows].join("\n");
+  const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement("a");
+  link.href = url;
+  link.download = `GOALisB_Mock_History_${new Date().toISOString().slice(0, 10)}.csv`;
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+  URL.revokeObjectURL(url);
+};
+
+window.downloadActiveMockSolutionsCsv = function () {
+  const qs = window.MOCK_QUESTIONS_CACHE || window.IPM_TAGGED_MOCK_QUESTIONS || [];
+  if (!qs.length) {
+    alert("Start or complete a mock session first to export questions and solutions.");
+    return;
+  }
+  const headers = ["Q_No", "Question_ID", "Section", "Topic", "Prompt", "Options", "Correct_Answer", "Step_By_Step_Explanation"];
+  const rows = qs.map((q, idx) => {
+    const opts = Array.isArray(q.options) ? q.options : [];
+    const ansText = (typeof q.answer === "number" && opts[q.answer] !== undefined)
+      ? `(${String.fromCharCode(65 + q.answer)}) ${opts[q.answer]}`
+      : String(q.answer ?? "");
+    return [
+      idx + 1,
+      `"${String(q.id || "").replace(/"/g, '""')}"`,
+      `"${String(q.section || "").replace(/"/g, '""')}"`,
+      `"${String(q.topic || "").replace(/"/g, '""')}"`,
+      `"${String(q.prompt || q.stem || "").replace(/\r?\n/g, " ").replace(/"/g, '""')}"`,
+      `"${opts.map((o, oi) => `${String.fromCharCode(65 + oi)}. ${o}`).join(" | ").replace(/"/g, '""')}"`,
+      `"${ansText.replace(/"/g, '""')}"`,
+      `"${String(q.explanation || "").replace(/\r?\n/g, " ").replace(/"/g, '""')}"`
+    ].join(",");
+  });
+  const csv = [headers.join(","), ...rows].join("\n");
+  const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement("a");
+  link.href = url;
+  link.download = `GOALisB_Mock_Solutions_${new Date().toISOString().slice(0, 10)}.csv`;
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+  URL.revokeObjectURL(url);
+};
+
+// Inject Export CSV & Print PDF buttons into Mock History Card and Graded Result Banner
+(function attachExportButtonsObserver() {
+  setInterval(() => {
+    const histCard = document.getElementById("mock-history-log-card");
+    if (histCard && !histCard.querySelector("#btn-export-history-csv")) {
+      const resetBtn = histCard.querySelector("button[onclick*='resetAllMockLogsAndSeenPool']");
+      if (resetBtn && resetBtn.parentElement) {
+        const csvBtn = document.createElement("button");
+        csvBtn.id = "btn-export-history-csv";
+        csvBtn.type = "button";
+        csvBtn.onclick = window.downloadMockHistoryCsv;
+        csvBtn.className = "px-3.5 py-1.5 rounded-xl bg-emerald-600/20 hover:bg-emerald-600/35 border border-emerald-500/40 text-emerald-300 text-xs font-bold transition cursor-pointer";
+        csvBtn.innerHTML = "&#8681; Export Ledger CSV";
+        resetBtn.parentElement.insertBefore(csvBtn, resetBtn);
+      }
+    }
+
+    const tabEl = document.getElementById("tab-content");
+    if (tabEl && (window.IPM_STATE && window.IPM_STATE.activeTab === "tab8")) {
+      const txt = tabEl.innerText || "";
+      if (/Net Score|Submitted|Exit without Submission/i.test(txt) && !document.getElementById("btn-export-mock-sheet")) {
+        const bar = document.createElement("div");
+        bar.id = "btn-export-mock-sheet";
+        bar.className = "mt-4 p-3.5 rounded-xl bg-slate-950 border border-indigo-500/30 flex flex-wrap items-center justify-between gap-2";
+        bar.innerHTML = `
+          <span class="text-xs font-semibold text-indigo-300">Offline Review &amp; Error-Log Export:</span>
+          <div class="flex flex-wrap gap-2">
+            <button type="button" onclick="window.downloadActiveMockSolutionsCsv()" class="px-3.5 py-1.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-bold cursor-pointer">
+              &#8681; Download Questions &amp; Solutions (CSV)
+            </button>
+            <button type="button" onclick="window.print()" class="px-3.5 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 text-xs font-bold cursor-pointer">
+              &#128424; Print / Save PDF Scorecard
+            </button>
+          </div>
+        `;
+        tabEl.insertBefore(bar, tabEl.firstChild);
+      }
+    }
+  }, 500);
+})();
