@@ -67,7 +67,7 @@ window.renderRefresherCard = function (modId, accentColor) {
         <div class="pt-2">
           <div class="text-[11px] font-semibold text-amber-300">Prerequisites & Foundational Formulas to Refresh:</div>
           <ul class="list-disc list-inside text-xs text-slate-300 mt-1 space-y-1">
-            ${ref.prerequisites.map(p => `<li>${p}</li>`).join("")}
+            ${(ref.prerequisites || []).map(p => `<li>${p}</li>`).join("")}
           </ul>
         </div>
       </div>
@@ -75,7 +75,7 @@ window.renderRefresherCard = function (modId, accentColor) {
       <div class="p-4 rounded-xl bg-slate-950/90 border border-slate-800 space-y-2.5">
         <div class="text-xs font-bold uppercase tracking-wider text-indigo-300">Core Principles, Theorems & Exam Laws</div>
         <ul class="space-y-2 text-xs text-slate-300">
-          ${ref.corePrinciples.map((rule, i) => `
+          ${(ref.corePrinciples || []).map((rule, i) => `
             <li class="p-3 rounded-lg bg-slate-900 border border-slate-800 leading-relaxed">
               <strong class="text-white">Law ${i + 1}:</strong> ${rule}
             </li>
