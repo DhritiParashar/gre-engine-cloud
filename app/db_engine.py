@@ -510,7 +510,7 @@ def initiate_registration_otp(full_name: str, email: str, phone: str, password: 
 def verify_registration_otp(challenge_id: int, email_otp: str, phone_otp: str) -> dict:
     db = SessionLocal()
     try:
-        ch = db.query(OtpChallenge).filter(OtpChallenge.id == challenge_id).first()
+        ch = db.query(OtpChallenge).filter(OtpChallenge.id == int(challenge_id)).first()
         if not ch:
             return {"ok": False, "error": "OTP session expired. Please register again."}
         if ch.email_otp != email_otp.strip() or ch.phone_otp != phone_otp.strip():
@@ -635,7 +635,7 @@ def complete_password_reset(challenge_id: int, reset_otp: str, new_password: str
     try:
         if len(new_password) < 4:
             return {"ok": False, "error": "New password must be at least 4 characters."}
-        ch = db.query(OtpChallenge).filter(OtpChallenge.id == challenge_id).first()
+        ch = db.query(OtpChallenge).filter(OtpChallenge.id == int(challenge_id)).first()
         if not ch or ch.email_otp != reset_otp.strip():
             return {"ok": False, "error": "Invalid recovery OTP. Please check the 6-digit code."}
         user = db.query(UserAccount).filter(UserAccount.email == ch.email).first()

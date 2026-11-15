@@ -121,6 +121,7 @@ window.handleDashboardLogin = async function () {
   const me = await (await fetch("/api/auth/me?token=" + encodeURIComponent(data.token))).json();
   window.IPM_USER = me.ok ? me.user : data.user;
   localStorage.setItem("ipm_user_profile", JSON.stringify(window.IPM_USER));
+  const gate = document.getElementById('login-dashboard-gate'); if (gate) gate.classList.add('hidden');
   window.renderHeaderAccountBar();
   window.renderActiveTab();
 };
@@ -168,6 +169,7 @@ window.handleRegStep2Verify = async function () {
   localStorage.setItem("ipm_auth_token", data.token);
   window.IPM_USER = data.user;
   localStorage.setItem("ipm_user_profile", JSON.stringify(data.user));
+  const gate = document.getElementById('login-dashboard-gate'); if (gate) gate.classList.add('hidden');
   window.renderHeaderAccountBar();
   window.renderActiveTab();
 };

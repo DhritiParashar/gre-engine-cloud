@@ -1312,7 +1312,7 @@ class CreateVoucherReq(BaseModel):
 
 @app.post("/api/auth/register-otp/verify")
 def api_reg_otp_verify(req: OtpVerifyReq):
-    return verify_registration_otp(str(req.challenge_id or ''), req.email_otp, req.phone_otp)
+    return verify_registration_otp(int(req.challenge_id) if str(req.challenge_id or '').isdigit() else 0, req.email_otp, req.phone_otp)
 
 class EvaluationRequest(BaseModel):
     track: str
