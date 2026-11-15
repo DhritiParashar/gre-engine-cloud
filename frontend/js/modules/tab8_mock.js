@@ -44,7 +44,7 @@ window.fetchNewRandomMock = async function () {
     window.MOCK_ACTIVE_SESSION = true;
     window.MOCK_ANSWERS = {};
     window.MOCK_SUBMITTED = false;
-    const mins = window.MOCK_PAPER_TYPE === "FULL_DIAGNOSTIC" ? 60 : 40;
+    const mins = window.MOCK_PAPER_TYPE === "FULL_DIAGNOSTIC" ? 118 : 35;
     window.startMockTimer(mins);
     window.renderActiveTab();
   }
@@ -106,7 +106,7 @@ window.toggleMockNcert = function (flag) {
 window.renderTab8 = function (el) {
   const mode = window.getActiveMode();
   const papers = [
-    { id: "FULL_DIAGNOSTIC", label: "Full 45-Q All-Section Random Mock (60m)", mins: 60, qs: 45 },
+    { id: "FULL_DIAGNOSTIC", label: "Full 45-Q All-Section Random Mock (60m)", mins: 118, qs: 54 },
     { id: "QUANT_SPRINT", label: "Quant & Higher Math 30-Q Sprint (40m)", mins: 40, qs: 30 },
     { id: "NCERT_HIGHER_MATH_SPRINT", label: "Class 10/11/12 + Higher Math 30-Q Sprint (40m)", mins: 40, qs: 30 },
     { id: "DILR_SPRINT", label: "DI & LR 25-Q Sprint (40m)", mins: 40, qs: 25 },

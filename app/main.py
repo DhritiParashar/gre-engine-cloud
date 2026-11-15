@@ -1044,88 +1044,41 @@ class CreateVoucherReq(BaseModel):
     max_uses: int = 50
 
 @app.post("/api/mock/generate")
-def api_generate_mock(req: MockGenReq):
-    try:
-        qs = generate_stratified_mock(req.exam_mode, req.paper_type, req.include_ncert, req.exclude_codes)
-        if not qs:
-            seed_initial_databank()
-            qs = generate_stratified_mock(req.exam_mode, req.paper_type, req.include_ncert, req.exclude_codes)
-        return {"count": len(qs), "questions": qs, "db": db_backend_info()}
-    except Exception as e:
-        import traceback
-        traceback.print_exc()
-        return {"count": 0, "questions": [], "error": str(e), "db": db_backend_info()}
+async def api_mock_generate(request: Request):
+    import json
+    from sqlalchemy import text
+    from app.db_engine import engine, db_backend_info
+    body = await request.json()
+    paper_type = str(body.get("paper_type") or "FULL_DIAGNOSTIC").upper()
+    exclude_codes = set(body.get("exclude_codes") or [])
+    tag = "GRE_GENERAL"
 
-class EvaluationRequest(BaseModel):
-    track: str
-    prompt: str
-    student_response: str
-    mode: str = "PI_OR_WAT"
+    with engine.connect() as conn:
+        total_pool = conn.execute(text("SELECT COUNT(*) FROM ipm_questions WHERE exam_tags LIKE :t"), {"t": f"%{tag}%"}).scalar() or 0
+        def fetch_sec(sec_filter, target_n):
+            sql = f"SELECT q_code, section, topic, q_type, difficulty, prompt, options_json, answer, explanation FROM ipm_questions WHERE exam_tags LIKE :t {sec_filter} ORDER BY RANDOM() LIMIT :lim"
+            rows = conn.execute(text(sql), {"t": f"%{tag}%", "lim": target_n * 3}).mappings().all()
+            unseen = [r for r in rows if r["q_code"] not in exclude_codes]
+            seen = [r for r in rows if r["q_code"] in exclude_codes]
+            picked = (unseen + seen)[:target_n]
+            out = []
+            for r in picked:
+                opts = json.loads(r["options_json"]) if isinstance(r["options_json"], str) else (r["options_json"] or [])
+                ans_raw = str(r["answer"] or "").strip()
+                ans_val = int(ans_raw) if (opts and ans_raw.isdigit() and int(ans_raw) < len(opts)) else ans_raw
+                out.append({"id": r["q_code"], "q_code": r["q_code"], "section": r["section"], "topic": r["topic"], "q_type": r["q_type"], "difficulty": r["difficulty"], "prompt": r["prompt"], "options": opts, "answer": ans_val, "explanation": r["explanation"]})
+            return out
 
-class DoubtRequest(BaseModel):
-    track: str
-    topic: str
-    question: str
-    student_attempt: Optional[str] = ""
+        if paper_type == "QUANT_SPRINT":
+            qs = fetch_sec("AND UPPER(section) = 'QUANT_CORE'", 21)
+        elif paper_type == "DILR_SPRINT":
+            qs = fetch_sec("AND UPPER(section) = 'DILR'", 20)
+        elif paper_type == "VARC_SPRINT":
+            qs = fetch_sec("AND UPPER(section) = 'VARC'", 23)
+        else:
+            qs = fetch_sec("", 54)
 
-class CallPredictorRequest(BaseModel):
-    class10_pct: float
-    class12_pct: float
-    has_class12_math: bool
-    ipmat_indore_sa: Optional[int] = 0
-    ipmat_indore_mcq: Optional[int] = 0
-    ipmat_indore_va: Optional[int] = 0
-    ipmat_rohtak_score: Optional[int] = 0
-    jipmat_score: Optional[int] = 0
-    iimb_ug_score: Optional[int] = 0
-    jee_main_percentile: Optional[float] = 0.0
-
-class RegisterReq(BaseModel):
-    full_name: str
-    email: str
-    password: str
-    target_track: str = "ALL_IIM_MASTER"
-    category: str = "General"
-    class10_pct: float = 90.0
-    class12_pct: float = 90.0
-
-class LoginReq(BaseModel):
-    email: str
-    password: str
-
-class MockGenReq(BaseModel):
-    exam_mode: str = "ALL_IIM_MASTER"
-    paper_type: str = "FULL_DIAGNOSTIC"
-    include_ncert: bool = True
-    exclude_codes: List[str] = []
-
-class MockSubmitReq(BaseModel):
-    token: Optional[str] = None
-    exam_track: str
-    paper_type: str
-    score: float
-    max_score: float
-    accuracy_pct: float
-    attempted_q_codes: List[str] = []
-
-class ForgotInitReq(BaseModel):
-    email: str
-
-class ForgotConfirmReq(BaseModel):
-    challenge_id: int
-    reset_otp: str
-    new_password: str
-
-class RedeemVoucherReq(BaseModel):
-    token: str
-    code: str
-
-class CreateVoucherReq(BaseModel):
-    code: str
-    label: str = "Beta Tester Pass"
-    valid_days: int = 14
-    max_uses: int = 50
-
+    return {"questions": qs, "db": {"engine": db_backend_info().get("engine", "PostgreSQL"), "total_questions": total_pool}}
 @app.post("/api/mock/submit")
 def api_submit_mock(req: MockSubmitReq):
     db = SessionLocal()
@@ -2062,3 +2015,13 @@ def api_get_pyq(exam: str = "ALL", year: str = "ALL"):
         seed_batch3_cuet_and_indore_archive()
         items = get_pyq_questions_from_db("ALL", "ALL")
     return {"count": len(items), "questions": items, "db": db_backend_info()}
+
+
+@app.on_event("startup")
+def on_startup_seed_postgrad():
+    try:
+        from app.db_engine import engine
+        from app.seed_gre_postgres import seed_gre_2026_postgres
+        seed_gre_2026_postgres(engine)
+    except Exception as e:
+        print("Postgrad seed warning:", e)
