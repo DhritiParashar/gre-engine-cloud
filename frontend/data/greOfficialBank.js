@@ -214,3 +214,131 @@ window.IPM_QUANT_CORE = [
     }))
   }
 ];
+// Exhaustive GRE General Chapter Refresher, Concepts, Traps & Practice Drills (Eliminates UNDEFINED & 0 Drills)
+window.IPM_REFRESHERS = window.IPM_REFRESHERS || {};
+window.IPM_REFRESHERS["GRE-MOD-QC"] = {
+  title: "Quantitative Comparison (QC) — ETS 165–170 Mastery Guide",
+  summary: "Quantitative Comparison comprises ~40% of GRE Quant (10–11 of 27 questions). Rather than computing exact values, compare Quantity A and Quantity B via algebraic cancellation and boundary-value testing (FROZEN: Fractions, Roots, One, Zero, Extremes, Negatives).",
+  keyFormulas: [
+    "Allowed Operations: Add/subtract any expression to both quantities; multiply/divide both by a strictly POSITIVE constant.",
+    "Forbidden Operations: Multiplying/dividing by a variable whose sign is unknown, or squaring when quantities can be negative.",
+    "Choice (D) Rule: If two valid substitutions yield different comparison directions (e.g., A > B once and A < B once), the answer is immediately (D)."
+  ],
+  workedExample: "Compare x^2 vs. x^3 given x != 0. Test x = 2 -> 4 < 8 (B). Test x = -2 -> 4 > -8 (A). Different outcomes -> (D)."
+};
+window.IPM_REFRESHERS["GRE-MOD-PS"] = {
+  title: "GRE Problem Solving, Multi-Select & Numeric Entry — Complete Blueprint",
+  summary: "Covers standard 5-option MCQs, 'Select all that apply' (zero partial credit), and exact Numeric Entry boxes across Algebra, Number Properties, Coordinate Geometry, Combinatorics, and Data Analysis (Normal Distribution & Quartiles).",
+  keyFormulas: [
+    "Normal Distribution 68-95-99.7 Rule: ~34% between mean and +1 SD; ~13.5% between +1 SD and +2 SD; ~2.5% above +2 SD.",
+    "Remainder Identity: If n is not divisible by 3, n = 3k ± 1 => n^2 ≡ 1 (mod 3).",
+    "Quadratic Vieta's Formulas: Sum of roots = -b/a; Product of roots = c/a."
+  ],
+  workedExample: "If 3^(2x - 1) + 3^(2x) = 324, factor out 3^(2x - 1) * (1 + 3) = 324 => 3^(2x - 1) = 81 = 3^4 => 2x - 1 = 4 => x = 2.5."
+};
+
+window.IPM_QUANT_CORE = [
+  {
+    id: "GRE-MOD-QC",
+    pillar: "ETS QUANTITATIVE COMPARISON",
+    title: "Quantitative Comparison (Quantity A vs. Quantity B)",
+    weightage: "High Yield • 10–11 Qs across 2 Adaptive Sections",
+    concepts: [
+      {
+        heading: "The FROZEN Boundary-Testing Protocol",
+        formula: "Test: Fractions (1/2), Roots (√2), One (1), Zero (0), Extremes (100), Negatives (-2)",
+        derivation: "ETS designs QC traps where positive integers satisfy Quantity A > Quantity B, while negative numbers or fractions in (0, 1) reverse the inequality.",
+        shortcut: "Always test x = 1/2 and x = -2 whenever variables lack explicit domain restrictions."
+      },
+      {
+        heading: "Standard Deviation Invariance Under Shifts & Reflections",
+        formula: "SD(X + c) = SD(X)  |  SD(-X) = SD(X)  |  SD(kX) = |k| * SD(X)",
+        derivation: "Adding a constant translates all points equally without altering spread; multiplying by -1 reflects points across 0 without altering pairwise distances.",
+        shortcut: "Never compute explicit square roots when comparing standard deviations of shifted or negated datasets."
+      }
+    ],
+    traps: [
+      {
+        title: "Assuming Geometric Figures Are Drawn to Scale",
+        wrongStep: "Visually judging an acute angle or side length from a GRE diagram.",
+        correction: "Stretch or compress unmarked angles/sides to extreme limits while obeying given constraints.",
+        penalty: "Lost 170 Quant Ceiling"
+      }
+    ],
+    questions: [
+      {
+        id: "GRE-QC-Q1",
+        stem: "x and y are integers such that x^2 + y^2 = 25 and x > y.\n\nQuantity A: x + y\nQuantity B: 5",
+        options: ["Quantity A is greater.", "Quantity B is greater.", "The two quantities are equal.", "The relationship cannot be determined from the information given."],
+        answer: 3,
+        explanation: "(4, 3) gives x + y = 7 > 5, whereas (3, -4) gives x + y = -1 < 5. Choose (D)."
+      },
+      {
+        id: "GRE-QC-Q2",
+        stem: "Set S consists of 7 consecutive odd integers with median m > 10.\n\nQuantity A: Standard deviation of S\nQuantity B: Standard deviation of {-x : x in S}",
+        options: ["Quantity A is greater.", "Quantity B is greater.", "The two quantities are equal.", "The relationship cannot be determined from the information given."],
+        answer: 2,
+        explanation: "Negating every element preserves all pairwise distances from the mean, so both standard deviations are equal -> (C)."
+      },
+      {
+        id: "GRE-QC-Q3",
+        stem: "0 < x < 1\n\nQuantity A: x^2 + x^3\nQuantity B: x + x^4",
+        options: ["Quantity A is greater.", "Quantity B is greater.", "The two quantities are equal.", "The relationship cannot be determined from the information given."],
+        answer: 1,
+        explanation: "Subtract Quantity A from Quantity B: (x - x^2) - (x^3 - x^4) = x(1 - x) - x^3(1 - x) = x(1 - x)(1 - x^2) > 0 for 0 < x < 1. Thus Quantity B is greater -> (B)."
+      }
+    ]
+  },
+  {
+    id: "GRE-MOD-PS",
+    pillar: "ETS PROBLEM SOLVING & DATA ANALYSIS",
+    title: "Algebra, Number Properties, Combinatorics & Normal Distributions",
+    weightage: "Core Quant • 16–17 Qs (MCQ, Multi-Select & Numeric Entry)",
+    concepts: [
+      {
+        heading: "Exponential Equation Factoring",
+        formula: "a^(x+k) ± a^x = a^x * (a^k ± 1)",
+        derivation: "Factor out the smallest power of the common base to collapse sums of exponentials into a single prime-factor product.",
+        shortcut: "Factor out 3^(2x - 1) immediately when powers differ by 1."
+      },
+      {
+        heading: "Normal Distribution Percentile Benchmarks",
+        formula: "Mean ± 1 SD = 68%  |  Mean ± 2 SD = 95%  |  Above Mean + 1 SD ≈ 16%",
+        derivation: "Symmetry around the mean splits the tails cleanly into 34% / 13.5% / 2.5%.",
+        shortcut: "A score at +1 SD corresponds to the 84th percentile (50% + 34%)."
+      }
+    ],
+    traps: [
+      {
+        title: "Partial Credit Fallacy on GRE Multi-Select",
+        wrongStep: "Selecting 3 out of 4 true statements on 'Select all that apply'.",
+        correction: "ETS awards 0 points unless EVERY true option and NO false option is selected.",
+        penalty: "0 Points Awarded"
+      }
+    ],
+    questions: [
+      {
+        id: "GRE-PS-Q1",
+        stem: "If 3^(2x - 1) + 3^(2x) = 324, what is the exact value of x?",
+        options: ["2.5", "2.0", "3.0", "3.5"],
+        answer: 0,
+        explanation: "3^(2x - 1) * (1 + 3) = 324 => 3^(2x - 1) = 81 = 3^4 => 2x - 1 = 4 => x = 2.5."
+      },
+      {
+        id: "GRE-PS-Q2",
+        stem: "In a normally distributed dataset with mean 500 and standard deviation 80, approximately what percent of observations lie between 420 and 660?",
+        options: ["81.5%", "68.0%", "84.0%", "95.0%"],
+        answer: 0,
+        explanation: "420 is -1 SD (34% below mean) and 660 is +2 SD (34% + 13.5% = 47.5% above mean). Total = 34% + 47.5% = 81.5%."
+      },
+      {
+        id: "GRE-PS-Q3",
+        stem: "How many positive integers less than 100 are divisible by neither 2 nor 3?",
+        options: ["33", "32", "34", "17"],
+        answer: 0,
+        explanation: "From 1 to 99 (99 integers): multiples of 2 = 49, multiples of 3 = 33, multiples of 6 = 16. Divisible by 2 or 3 = 49 + 33 - 16 = 66. Neither = 99 - 66 = 33."
+      }
+    ]
+  }
+];
+window.IPM_HIGHER_MATH = [];
