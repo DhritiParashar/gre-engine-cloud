@@ -1228,7 +1228,7 @@ class OtpInitReq(BaseModel):
     class12_pct: float = 90.0
 
 class OtpVerifyReq(BaseModel):
-    challenge_id: str
+    challenge_id: Optional[Any] = None
     email_otp: str
     phone_otp: str
 
@@ -1312,7 +1312,7 @@ class CreateVoucherReq(BaseModel):
 
 @app.post("/api/auth/register-otp/verify")
 def api_reg_otp_verify(req: OtpVerifyReq):
-    return verify_registration_otp(req.challenge_id, req.email_otp, req.phone_otp)
+    return verify_registration_otp(str(req.challenge_id or ''), req.email_otp, req.phone_otp)
 
 class EvaluationRequest(BaseModel):
     track: str
