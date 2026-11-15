@@ -342,172 +342,387 @@ window.IPM_QUANT_CORE = [
   }
 ];
 window.IPM_HIGHER_MATH = [];
-window.IPM_DEEP_MODULES = [];
-window.IPM_CHAPTER_REFRESHERS = window.IPM_CHAPTER_REFRESHERS || {};
-window.IPM_CHAPTER_REFRESHERS["GRE-MOD-QC"] = {
-  overview: "Quantitative Comparison (QC) represents ~40% of ETS GRE Quant (10–11 questions across 2 section-adaptive modules). Instead of computing exact values, compare Quantity A and Quantity B using algebraic cancellation and systematic boundary testing (FROZEN: Fractions, Roots, One, Zero, Extremes, Negatives).",
-  prerequisites: [
-    "Allowed Transformations: Add/subtract any expression on both sides; multiply/divide by strictly POSITIVE constants only.",
-    "Forbidden Transformations: Never multiply/divide by a variable of unknown sign or square both sides when quantities may be negative.",
-    "Choice (D) Trigger: Finding two valid test values that reverse the inequality immediately proves Choice (D)."
-  ],
-  workedExamples: [
-    {
-      level: "Foundation",
-      problem: "Compare Quantity A: (x + 2)^2 vs. Quantity B: x^2 + 4 given x > 0.",
-      solution: "Expand Quantity A = x^2 + 4x + 4. Subtract (x^2 + 4) from both sides -> Compare 4x vs. 0. Since x > 0, 4x > 0 -> Quantity A is greater (A)."
-    },
-    {
-      level: "Advanced",
-      problem: "x and y are integers with x^2 + y^2 = 25 and x > y. Compare Quantity A: x + y vs. Quantity B: 5.",
-      solution: "Test (4, 3): x + y = 7 > 5. Test (3, -4): x + y = -1 < 5. Both directions occur -> Relationship cannot be determined (D)."
-    }
-  ]
-};
-window.IPM_CHAPTER_REFRESHERS["GRE-MOD-PS"] = {
-  overview: "GRE Problem Solving (16–17 questions) tests Arithmetic, Algebra, Coordinate Geometry, Combinatorics, and Data Analysis (Normal Distributions, Quartiles, Standard Deviation) across 5-choice MCQs, Multiple-Answer ('Select all that apply' — zero partial credit), and exact Numeric Entry.",
-  prerequisites: [
-    "Normal Distribution Empirical Rule: 68% within ±1 SD (34% each side), 95% within ±2 SD (47.5% each side), 99.7% within ±3 SD.",
-    "Prime Factorization & Divisors: N = p^a * q^b has (a + 1)(b + 1) positive factors.",
-    "Vieta's Formulas: For ax^2 + bx + c = 0, sum of roots = -b/a and product of roots = c/a."
-  ],
-  workedExamples: [
-    {
-      level: "Foundation",
-      problem: "Solve for exact x: 3^(2x - 1) + 3^(2x) = 324.",
-      solution: "Factor out 3^(2x - 1) * (1 + 3) = 324 => 3^(2x - 1) = 81 = 3^4 => 2x - 1 = 4 => x = 2.5."
-    },
-    {
-      level: "Advanced",
-      problem: "In a normal distribution with mean 500 and SD 80, what percentage of values fall between 420 and 660?",
-      solution: "420 is -1 SD (34% below mean) and 660 is +2 SD (47.5% above mean). Total = 34% + 47.5% = 81.5%."
-    }
-  ]
-};
+
 window.IPM_DEEP_MODULES = [];
 window.IPM_HIGHER_MATH = [];
-window.IPM_CHAPTER_REFRESHERS = {
-  "GRE-MOD-QC": {
-    overview: "Quantitative Comparison (QC) comprises ~40% of ETS GRE Quant (10–11 questions across 2 section-adaptive modules on the 130–170 scale). Instead of solving for exact numeric outputs, compare Quantity A and Quantity B using algebraic cancellation and systematic FROZEN boundary testing (Fractions, Roots, One, Zero, Extremes, Negatives).",
-    prerequisites: [
-      "Allowed Operations: Add/subtract any expression on both sides; multiply/divide by strictly POSITIVE constants only.",
-      "Forbidden Operations: Never multiply/divide by a variable of unknown sign or square both sides when quantities can be negative.",
-      "Choice (D) Rule: If two valid test substitutions produce opposite comparison directions, immediately select Choice (D)."
-    ],
-    corePrinciples: [
-      "FROZEN Boundary Law: Always test x = 1/2, x = 0, x = 1, x = -2, and x = 100 whenever variables lack explicit domain bounds.",
-      "Standard Deviation Shift/Reflection Law: SD(X + c) = SD(X) and SD(-X) = SD(X); scaling by k multiplies SD by |k|.",
-      "Diagram Non-Scale Law: Never infer acute/obtuse angles or segment ratios visually from ETS geometry figures."
-    ],
-    workedExamples: [
-      {
-        level: "Foundation",
-        problem: "Compare Quantity A: (x + 2)^2 vs. Quantity B: x^2 + 4 given x > 0.",
-        steps: [
-          "Expand Quantity A = x^2 + 4x + 4.",
-          "Subtract (x^2 + 4) from both quantities -> Compare 4x vs. 0.",
-          "Since x > 0, 4x > 0 => Quantity A is greater (Choice A)."
-        ]
-      },
-      {
-        level: "CAT 95%ile",
-        problem: "Given 0 < x < 1, compare Quantity A: x^2 + x^3 vs. Quantity B: x + x^4.",
-        steps: [
-          "Compute Quantity B - Quantity A = (x - x^2) - (x^3 - x^4).",
-          "Factor out common terms: x(1 - x) - x^3(1 - x) = x(1 - x)(1 - x^2).",
-          "Since 0 < x < 1, all three factors are strictly positive => Quantity B is greater (Choice B)."
-        ]
-      },
-      {
-        level: "CAT 99.5%ile",
-        problem: "x and y are integers such that x^2 + y^2 = 25 and x > y. Compare Quantity A: x + y vs. Quantity B: 5.",
-        steps: [
-          "Test valid integer pair (4, 3): 4^2 + 3^2 = 25 and 4 > 3 => x + y = 7 (> 5).",
-          "Test valid integer pair (3, -4): 3^2 + (-4)^2 = 25 and 3 > -4 => x + y = -1 (< 5).",
-          "Both A > B and A < B occur => Relationship cannot be determined (Choice D)."
-        ]
-      }
-    ]
-  },
-  "GRE-MOD-PS": {
-    overview: "GRE Problem Solving (16–17 questions) spans Algebra, Number Properties, Coordinate Geometry, Combinatorics, and Data Analysis (Normal Distributions, Quartiles, Percentiles) across 5-choice MCQs, Multiple-Answer ('Select all that apply' — zero partial credit), and exact Numeric Entry boxes.",
-    prerequisites: [
-      "Normal Distribution 68-95-99.7 Rule: ±1 SD = 68% (34% each side); ±2 SD = 95% (47.5% each side).",
-      "Prime Factorization Divisor Count: N = p^a * q^b has (a + 1)(b + 1) positive factors.",
-      "Quadratic Vieta Formulas: Sum of roots = -b/a; Product of roots = c/a."
-    ],
-    corePrinciples: [
-      "Exponential Common-Base Factoring Law: Factor out the lowest power of the shared base to collapse sums of exponentials.",
-      "Zero-Partial-Credit Multi-Select Law: Test every option independently on 'Select all that apply' prompts.",
-      "Inclusion-Exclusion Counting Law: |A U B| = |A| + |B| - |A ∩ B|."
-    ],
-    workedExamples: [
-      {
-        level: "Foundation",
-        problem: "[Numeric Entry] Solve for exact x: 3^(2x - 1) + 3^(2x) = 324.",
-        steps: [
-          "Factor out 3^(2x - 1): 3^(2x - 1) * (1 + 3) = 324.",
-          "Divide by 4: 3^(2x - 1) = 81 = 3^4 => 2x - 1 = 4 => x = 2.5."
-        ]
-      },
-      {
-        level: "CAT 99.5%ile",
-        problem: "In a normal distribution with mean 500 and SD 80, what percentage of observations fall between 420 and 660?",
-        steps: [
-          "420 is 1 SD below the mean (34% of distribution).",
-          "660 is 2 SDs above the mean (34% + 13.5% = 47.5% of distribution).",
-          "Total percentage between 420 and 660 = 34% + 47.5% = 81.5%."
-        ]
-      }
-    ]
-  }
+window.IPM_CHAPTER_REFRESHERS = {};
+window.IPM_CHAPTER_REFRESHERS["GRE-MOD-QC"] = {
+  "overview": "Quantitative Comparison (QC) comprises ~40% of ETS GRE Quant (10–11 questions out of 27 across two section-adaptive stages). Rather than solving for exact numeric outputs, compare Quantity A and Quantity B via symmetric algebraic cancellation and systematic FROZEN boundary testing (Fractions in (0,1), Roots, One, Zero, Extremes, Negatives). Whenever two valid test cases reverse which quantity is larger, Choice (D) is guaranteed.",
+  "prerequisites": [
+    "Allowed Operations: Add or subtract any expression on both sides; multiply or divide both sides by strictly POSITIVE constants.",
+    "Forbidden Operations: Never multiply/divide by a variable of unknown sign or square both quantities when either can be negative.",
+    "Choice (D) Trigger: Finding one valid substitution where A > B and another where A < B immediately proves (D).",
+    "Diagram Non-Scale Rule: ETS geometry diagrams are NOT drawn to scale unless explicitly noted; stretch unmarked angles/lengths to extremes."
+  ],
+  "corePrinciples": [
+    "FROZEN Substitution Law: Systematically test x = 1/2, x = -2, x = 0, x = 1, and x = 100 whenever variables lack domain bounds.",
+    "Polynomial Comparison Law: Subtract Quantity A from Quantity B and factor to inspect sign behavior over the given interval.",
+    "Standard Deviation Shift/Reflection Law: SD(X + c) = SD(X) and SD(-X) = SD(X); multiplying by k scales SD by |k|."
+  ],
+  "workedExamples": [
+    {
+      "level": "Foundation",
+      "problem": "Given x > 0, compare Quantity A: (x + 2)^2 vs. Quantity B: x^2 + 4.",
+      "steps": [
+        "Expand Quantity A = x^2 + 4x + 4.",
+        "Subtract (x^2 + 4) from both quantities -> Compare 4x vs. 0.",
+        "Since x > 0, 4x > 0 => Quantity A is greater (Choice A)."
+      ]
+    },
+    {
+      "level": "CAT 95%ile",
+      "problem": "Given 0 < x < 1, compare Quantity A: x^2 + x^3 vs. Quantity B: x + x^4.",
+      "steps": [
+        "Compute Quantity B - Quantity A = (x - x^2) - (x^3 - x^4) = x(1 - x)(1 - x^2).",
+        "For 0 < x < 1, x > 0, (1 - x) > 0, and (1 - x^2) > 0 => Quantity B is greater (Choice B)."
+      ]
+    },
+    {
+      "level": "CAT 99.5%ile",
+      "problem": "x and y are integers with x^2 + y^2 = 25 and x > y. Compare Quantity A: x + y vs. Quantity B: 5.",
+      "steps": [
+        "Test (4, 3): x + y = 7 (> 5). Test (3, -4): x + y = -1 (< 5).",
+        "Opposite comparison directions occur => Relationship cannot be determined (Choice D)."
+      ]
+    }
+  ]
 };
-
+window.IPM_CHAPTER_REFRESHERS["GRE-MOD-ALG"] = {
+  "overview": "ETS GRE Algebra tests exponential equation factoring, quadratic roots, linear systems, absolute value inequalities, and coordinate-plane slopes/intercepts across 5-choice MCQs, Multi-Select ('Select all that apply'), and exact Numeric Entry boxes.",
+  "prerequisites": [
+    "Exponent Identities: a^(m+n) = a^m * a^n; (a^m)^n = a^(mn); a^(-n) = 1/a^n.",
+    "Line Slope & Intercepts: Slope m = (y_2 - y_1)/(x_2 - x_1); perpendicular lines satisfy m_1 * m_2 = -1.",
+    "Quadratic Formula & Vieta: Sum of roots = -b/a; Product of roots = c/a."
+  ],
+  "corePrinciples": [
+    "Lowest-Power Exponential Factoring Law: Factor out a^x from a^(x+k) ± a^x to isolate prime-power constants.",
+    "Zero-Partial-Credit Multi-Select Law: Evaluate each answer choice independently as True/False on 'Select all that apply' questions."
+  ],
+  "workedExamples": [
+    {
+      "level": "Foundation",
+      "problem": "[Numeric Entry] Solve for exact x: 3^(2x - 1) + 3^(2x) = 324.",
+      "steps": [
+        "Factor out 3^(2x - 1) * (1 + 3) = 324 => 3^(2x - 1) = 81 = 3^4 => 2x - 1 = 4 => x = 2.5."
+      ]
+    },
+    {
+      "level": "CAT 99.5%ile",
+      "problem": "Line L passes through (2, -3) and is perpendicular to 3x - 4y = 12. Find the x-intercept of Line L.",
+      "steps": [
+        "Slope of 3x - 4y = 12 is 3/4 => perpendicular slope m = -4/3.",
+        "Equation of L: y + 3 = (-4/3)(x - 2). Set y = 0 => 3 = (-4/3)(x - 2) => x - 2 = -9/4 => x = -0.25."
+      ]
+    }
+  ]
+};
+window.IPM_CHAPTER_REFRESHERS["GRE-MOD-NUM"] = {
+  "overview": "High-scoring GRE Quant sections heavily test prime factorization, divisor counts, remainder arithmetic, and inclusion-exclusion counting principles.",
+  "prerequisites": [
+    "Divisor Count Formula: N = p^a * q^b has (a + 1)(b + 1) positive factors.",
+    "Inclusion-Exclusion: |A U B| = |A| + |B| - |A ∩ B|.",
+    "Modular Parity: If n is not divisible by 3, n = 3k ± 1 => n^2 ≡ 1 (mod 3)."
+  ],
+  "corePrinciples": [
+    "Residue Class Substitution Law: For divisibility modulo m, test all possible remainders r in {0, 1, ..., m - 1}.",
+    "Complementary Counting Law: Count(At least one) = Total - Count(None)."
+  ],
+  "workedExamples": [
+    {
+      "level": "Foundation",
+      "problem": "How many positive integers less than 100 are divisible by neither 2 nor 3?",
+      "steps": [
+        "From 1 to 99 (99 integers): multiples of 2 = 49, multiples of 3 = 33, multiples of 6 = 16.",
+        "Divisible by 2 or 3 = 49 + 33 - 16 = 66 => Neither = 99 - 66 = 33."
+      ]
+    }
+  ]
+};
+window.IPM_CHAPTER_REFRESHERS["GRE-MOD-GEO"] = {
+  "overview": "Unlike the GMAT Focus Edition, the ETS GRE General Test continues to test Euclidean geometry: special right triangles (30-60-90 and 45-45-90), inscribed angles, arc lengths, sector areas, and cylinders/rectangular solids.",
+  "prerequisites": [
+    "Special Right Triangles: 45-45-90 has sides 1 : 1 : sqrt(2); 30-60-90 has sides 1 : sqrt(3) : 2.",
+    "Polygon Interior Angle Sum: (n - 2) * 180 degrees.",
+    "Circle Arc & Sector: Arc = (theta/360) * 2*pi*r; Sector = (theta/360) * pi*r^2."
+  ],
+  "corePrinciples": [
+    "Triangle Inequality Law: For any triangle with sides a, b, c: |a - b| < c < a + b.",
+    "Inscribed Angle Law: An inscribed angle subtending an arc measures half the central angle."
+  ],
+  "workedExamples": [
+    {
+      "level": "Foundation",
+      "problem": "Two sides of a triangle have lengths 5 and 12. If the third side is an integer x, how many values of x are possible?",
+      "steps": [
+        "By Triangle Inequality: 12 - 5 < x < 12 + 5 => 7 < x < 17.",
+        "Integer values x in {8, 9, 10, 11, 12, 13, 14, 15, 16} => 9 possible triangles."
+      ]
+    }
+  ]
+};
+window.IPM_CHAPTER_REFRESHERS["GRE-MOD-DATA"] = {
+  "overview": "GRE Data Analysis evaluates multi-chart interpretation sets alongside Normal Distribution 68-95-99.7 benchmarks, interquartile range (IQR = Q3 - Q1), and percentile comparisons.",
+  "prerequisites": [
+    "Normal Distribution Benchmarks: Mean ± 1 SD = 68% (34% each side); Mean ± 2 SD = 95% (47.5% each side).",
+    "Interquartile Range: IQR = Q3 - Q1 (middle 50% of data)."
+  ],
+  "corePrinciples": [
+    "Normal Tail Symmetry Law: Values above Mean + 1 SD represent 50% - 34% = 16% of observations.",
+    "Percentile-to-SD Conversion Law: 84th percentile ≈ Mean + 1 SD; 97.5th percentile ≈ Mean + 2 SD."
+  ],
+  "workedExamples": [
+    {
+      "level": "CAT 95%ile",
+      "problem": "In a normal distribution with mean 500 and SD 80, what percentage of values lie between 420 and 660?",
+      "steps": [
+        "420 = Mean - 1 SD (34% below mean); 660 = Mean + 2 SD (47.5% above mean).",
+        "Total = 34% + 47.5% = 81.5%."
+      ]
+    }
+  ]
+};
 window.IPM_QUANT_CORE = [
   {
-    id: "GRE-MOD-QC",
-    pillar: "ETS QUANTITATIVE COMPARISON",
-    title: "Quantitative Comparison (Quantity A vs. Quantity B)",
-    weightage: "High Yield • 10–11 Qs across 2 Adaptive Sections (130–170 Scale)",
-    concepts: [],
-    traps: [{ title: "Assuming Diagrams Are Drawn to Scale", wrongStep: "Judging unmarked angles visually.", correction: "Test extreme valid stretches of geometric figures.", penalty: "Lost 170 Quant Ceiling" }],
-    questions: [
-      { id: "GRE-QR-QC-001", stem: "x, y integers with x^2 + y^2 = 25 and x > y.\n\nQuantity A: x + y\nQuantity B: 5", options: ["Quantity A is greater.", "Quantity B is greater.", "The two quantities are equal.", "The relationship cannot be determined from the information given."], answer: 3, explanation: "(4,3)->7 > 5 and (3,-4)->-1 < 5 => (D)." },
-      { id: "GRE-QR-QC-002", stem: "Set S: 7 consecutive odd integers with median m > 10.\n\nQuantity A: SD of S\nQuantity B: SD of -S", options: ["Quantity A is greater.", "Quantity B is greater.", "The two quantities are equal.", "The relationship cannot be determined from the information given."], answer: 2, explanation: "Reflection preserves spread => (C)." }
+    "id": "GRE-MOD-QC",
+    "pillar": "ETS QUANTITATIVE COMPARISON • PILLAR 1",
+    "title": "Quantitative Comparison (QC): Boundary Testing & Algebraic Cancellation",
+    "weightage": "High Yield • 10–11 Qs across 2 Adaptive Sections (130–170 Scale)",
+    "concepts": [
+      {
+        "heading": "FROZEN Substitution Law",
+        "formula": "Systematically test x = 1/2, x = -2, x = 0, x = 1, and x = 100 whenever variables lack domain bounds.",
+        "derivation": "Allowed Operations: Add or subtract any expression on both sides; multiply or divide both sides by strictly POSITIVE constants.",
+        "shortcut": ""
+      },
+      {
+        "heading": "Polynomial Comparison Law",
+        "formula": "Subtract Quantity A from Quantity B and factor to inspect sign behavior over the given interval.",
+        "derivation": "Forbidden Operations: Never multiply/divide by a variable of unknown sign or square both quantities when either can be negative.",
+        "shortcut": ""
+      },
+      {
+        "heading": "Standard Deviation Shift/Reflection Law",
+        "formula": "SD(X + c) = SD(X) and SD(-X) = SD(X); multiplying by k scales SD by |k|.",
+        "derivation": "Choice (D) Trigger: Finding one valid substitution where A > B and another where A < B immediately proves (D).",
+        "shortcut": ""
+      }
+    ],
+    "traps": [
+      {
+        "title": "ETS GRE Quant Trap in Quantitative Comparison (QC)",
+        "wrongStep": "Overlooking boundary cases or zero-partial-credit rules.",
+        "correction": "Allowed Operations: Add or subtract any expression on both sides; multiply or divide both sides by strictly POSITIVE constants.",
+        "penalty": "Lost 170 Ceiling"
+      }
+    ],
+    "questions": [
+      {
+        "id": "GRE-QR-QC-001",
+        "stem": "x, y integers with x^2 + y^2 = 25 and x > y.\n\nQuantity A: x + y\nQuantity B: 5",
+        "options": [
+          "Quantity A is greater.",
+          "Quantity B is greater.",
+          "The two quantities are equal.",
+          "The relationship cannot be determined from the information given."
+        ],
+        "answer": 3,
+        "explanation": "(4,3)->7 > 5 and (3,-4)->-1 < 5 => (D)."
+      },
+      {
+        "id": "GRE-QR-QC-002",
+        "stem": "Set S: 7 consecutive odd integers with median m > 10.\n\nQuantity A: SD of S\nQuantity B: SD of -S",
+        "options": [
+          "Quantity A is greater.",
+          "Quantity B is greater.",
+          "The two quantities are equal.",
+          "The relationship cannot be determined from the information given."
+        ],
+        "answer": 2,
+        "explanation": "Reflection preserves spread => (C)."
+      },
+      {
+        "id": "GRE-QR-QC-003",
+        "stem": "0 < x < 1\n\nQuantity A: x^2 + x^3\nQuantity B: x + x^4",
+        "options": [
+          "Quantity A is greater.",
+          "Quantity B is greater.",
+          "The two quantities are equal.",
+          "The relationship cannot be determined from the information given."
+        ],
+        "answer": 1,
+        "explanation": "B - A = x(1 - x)(1 - x^2) > 0 => (B)."
+      }
     ]
   },
   {
-    id: "GRE-MOD-PS",
-    pillar: "ETS PROBLEM SOLVING & DATA ANALYSIS",
-    title: "Algebra, Number Properties, Combinatorics & Normal Distributions",
-    weightage: "Core Quant • 16–17 Qs (MCQ, Multi-Select & Numeric Entry)",
-    concepts: [],
-    traps: [{ title: "Partial Credit Fallacy on GRE Multi-Select", wrongStep: "Selecting only 3 of 4 true statements.", correction: "All true statements must be checked for credit.", penalty: "0 Points Awarded" }],
-    questions: [
-      { id: "GRE-QR-PS-001", stem: "[Numeric Entry] If 3^(2x - 1) + 3^(2x) = 324, exact value of x?", options: ["2.5", "2.0", "3.0", "3.5"], answer: 0, explanation: "3^(2x - 1) * 4 = 324 => 2x - 1 = 4 => 2.5." },
-      { id: "GRE-QR-PS-002", stem: "Normal distribution mean 500, SD 80. Percent between 420 and 660?", options: ["68.0%", "81.5%", "84.0%", "95.0%", "97.5%"], answer: 1, explanation: "34% + 47.5% = 81.5%." }
+    "id": "GRE-MOD-ALG",
+    "pillar": "ETS QUANTITATIVE REASONING • PILLAR 2",
+    "title": "Algebra, Exponents, Inequalities & Functions (PS & Numeric Entry)",
+    "weightage": "Core Quant • ~5–6 Qs across 2 Adaptive Sections",
+    "concepts": [
+      {
+        "heading": "Lowest-Power Exponential Factoring Law",
+        "formula": "Factor out a^x from a^(x+k) ± a^x to isolate prime-power constants.",
+        "derivation": "Exponent Identities: a^(m+n) = a^m * a^n; (a^m)^n = a^(mn); a^(-n) = 1/a^n.",
+        "shortcut": ""
+      },
+      {
+        "heading": "Zero-Partial-Credit Multi-Select Law",
+        "formula": "Evaluate each answer choice independently as True/False on 'Select all that apply' questions.",
+        "derivation": "Line Slope & Intercepts: Slope m = (y_2 - y_1)/(x_2 - x_1); perpendicular lines satisfy m_1 * m_2 = -1.",
+        "shortcut": ""
+      }
+    ],
+    "traps": [
+      {
+        "title": "ETS GRE Quant Trap in Algebra, Exponents, Inequalities & Functions (PS & Numeric Entry)",
+        "wrongStep": "Overlooking boundary cases or zero-partial-credit rules.",
+        "correction": "Exponent Identities: a^(m+n) = a^m * a^n; (a^m)^n = a^(mn); a^(-n) = 1/a^n.",
+        "penalty": "Lost 170 Ceiling"
+      }
+    ],
+    "questions": [
+      {
+        "id": "GRE-QR-PS-001",
+        "stem": "[Numeric Entry] If 3^(2x - 1) + 3^(2x) = 324, what is the exact decimal value of x?",
+        "options": [
+          "2.5",
+          "2.0",
+          "3.0",
+          "3.5"
+        ],
+        "answer": 0,
+        "explanation": "3^(2x - 1)*4 = 324 => 2x - 1 = 4 => x = 2.5."
+      }
+    ]
+  },
+  {
+    "id": "GRE-MOD-NUM",
+    "pillar": "ETS QUANTITATIVE REASONING • PILLAR 3",
+    "title": "Number Properties, Divisibility, Remainders & Counting",
+    "weightage": "165–170 Differentiator • ~4–5 Qs per Test",
+    "concepts": [
+      {
+        "heading": "Residue Class Substitution Law",
+        "formula": "For divisibility modulo m, test all possible remainders r in {0, 1, ..., m - 1}.",
+        "derivation": "Divisor Count Formula: N = p^a * q^b has (a + 1)(b + 1) positive factors.",
+        "shortcut": ""
+      },
+      {
+        "heading": "Complementary Counting Law",
+        "formula": "Count(At least one) = Total - Count(None).",
+        "derivation": "Inclusion-Exclusion: |A U B| = |A| + |B| - |A ∩ B|.",
+        "shortcut": ""
+      }
+    ],
+    "traps": [
+      {
+        "title": "ETS GRE Quant Trap in Number Properties, Divisibility, Remainders & Counting",
+        "wrongStep": "Overlooking boundary cases or zero-partial-credit rules.",
+        "correction": "Divisor Count Formula: N = p^a * q^b has (a + 1)(b + 1) positive factors.",
+        "penalty": "Lost 170 Ceiling"
+      }
+    ],
+    "questions": [
+      {
+        "id": "GRE-QR-NUM-001",
+        "stem": "How many positive integers less than 100 are divisible by neither 2 nor 3?",
+        "options": [
+          "32",
+          "33",
+          "34",
+          "35",
+          "36"
+        ],
+        "answer": 1,
+        "explanation": "99 - (49 + 33 - 16) = 33."
+      }
+    ]
+  },
+  {
+    "id": "GRE-MOD-GEO",
+    "pillar": "ETS QUANTITATIVE REASONING • PILLAR 4",
+    "title": "Geometry: Triangles, Circles, Polygons & 3D Solids",
+    "weightage": "Core Quant • ~3–4 Qs per Test (Unlike GMAT Focus, GRE Retains Geometry)",
+    "concepts": [
+      {
+        "heading": "Triangle Inequality Law",
+        "formula": "For any triangle with sides a, b, c: |a - b| < c < a + b.",
+        "derivation": "Special Right Triangles: 45-45-90 has sides 1 : 1 : sqrt(2); 30-60-90 has sides 1 : sqrt(3) : 2.",
+        "shortcut": ""
+      },
+      {
+        "heading": "Inscribed Angle Law",
+        "formula": "An inscribed angle subtending an arc measures half the central angle.",
+        "derivation": "Polygon Interior Angle Sum: (n - 2) * 180 degrees.",
+        "shortcut": ""
+      }
+    ],
+    "traps": [
+      {
+        "title": "ETS GRE Quant Trap in Geometry",
+        "wrongStep": "Overlooking boundary cases or zero-partial-credit rules.",
+        "correction": "Special Right Triangles: 45-45-90 has sides 1 : 1 : sqrt(2); 30-60-90 has sides 1 : sqrt(3) : 2.",
+        "penalty": "Lost 170 Ceiling"
+      }
+    ],
+    "questions": [
+      {
+        "id": "GRE-QR-GEO-001",
+        "stem": "Two sides of a triangle are 5 and 12. How many integer values are possible for the third side?",
+        "options": [
+          "7",
+          "8",
+          "9",
+          "10",
+          "11"
+        ],
+        "answer": 2,
+        "explanation": "7 < x < 17 => 9 integers."
+      }
+    ]
+  },
+  {
+    "id": "GRE-MOD-DATA",
+    "pillar": "ETS QUANTITATIVE REASONING • PILLAR 5",
+    "title": "Data Analysis: Normal Distributions, Quartiles, Boxplots & Percentiles",
+    "weightage": "High Yield • ~4–5 Qs per Test (Includes Data Interpretation Set)",
+    "concepts": [
+      {
+        "heading": "Normal Tail Symmetry Law",
+        "formula": "Values above Mean + 1 SD represent 50% - 34% = 16% of observations.",
+        "derivation": "Normal Distribution Benchmarks: Mean ± 1 SD = 68% (34% each side); Mean ± 2 SD = 95% (47.5% each side).",
+        "shortcut": ""
+      },
+      {
+        "heading": "Percentile-to-SD Conversion Law",
+        "formula": "84th percentile ≈ Mean + 1 SD; 97.5th percentile ≈ Mean + 2 SD.",
+        "derivation": "Interquartile Range: IQR = Q3 - Q1 (middle 50% of data).",
+        "shortcut": ""
+      }
+    ],
+    "traps": [
+      {
+        "title": "ETS GRE Quant Trap in Data Analysis",
+        "wrongStep": "Overlooking boundary cases or zero-partial-credit rules.",
+        "correction": "Normal Distribution Benchmarks: Mean ± 1 SD = 68% (34% each side); Mean ± 2 SD = 95% (47.5% each side).",
+        "penalty": "Lost 170 Ceiling"
+      }
+    ],
+    "questions": [
+      {
+        "id": "GRE-QR-PS-002",
+        "stem": "Normal distribution mean 500, SD 80. Percent between 420 and 660?",
+        "options": [
+          "68.0%",
+          "81.5%",
+          "84.0%",
+          "95.0%",
+          "97.5%"
+        ],
+        "answer": 1,
+        "explanation": "34% + 47.5% = 81.5%."
+      }
     ]
   }
 ];
-
-(async function hydrateGreFromPostgres() {
-  try {
-    const res = await fetch("/api/questions?exam=GRE_GENERAL&limit=150&t=" + Date.now());
-    const data = await res.json();
-    if (!data || !Array.isArray(data.questions) || !data.questions.length) return;
-    window.GRE_POSTGRES_BANK = data.questions;
-    const qaItems = data.questions.filter(q => q.section === "QUANT_CORE");
-    if (qaItems.length && window.IPM_QUANT_CORE) {
-      const qc = qaItems.filter(q => /Quantitative Comparison/i.test(q.topic || ""));
-      const ps = qaItems.filter(q => !/Quantitative Comparison/i.test(q.topic || ""));
-      if (qc.length) window.IPM_QUANT_CORE[0].questions = qc.map(q => ({ id: q.id, stem: q.prompt, options: q.options, answer: Number(q.answer), explanation: q.explanation }));
-      if (ps.length) window.IPM_QUANT_CORE[1].questions = ps.map(q => ({
-        id: q.id, stem: q.prompt,
-        options: (Array.isArray(q.options) && q.options.length) ? q.options : [String(q.answer), "2.0", "3.0", "3.5"],
-        answer: (Array.isArray(q.options) && q.options.length) ? Number(q.answer) : 0,
-        explanation: q.explanation
-      }));
-    }
-    if (typeof window.renderActiveTab === "function") window.renderActiveTab();
-  } catch (e) { console.warn("GRE Postgres hydration fallback:", e); }
-})();
