@@ -1439,3 +1439,9 @@ def seed_batch3_cuet_and_indore_archive():
             })
 
 seed_batch3_cuet_and_indore_archive()
+
+try:
+    from app.seed_gre_postgres import seed_gre_general_postgres
+    seed_gre_general_postgres(engine)
+except Exception as _gre_seed_err:
+    print('GRE General Postgres seed warning:', _gre_seed_err)

@@ -384,3 +384,130 @@ window.IPM_CHAPTER_REFRESHERS["GRE-MOD-PS"] = {
     }
   ]
 };
+window.IPM_DEEP_MODULES = [];
+window.IPM_HIGHER_MATH = [];
+window.IPM_CHAPTER_REFRESHERS = {
+  "GRE-MOD-QC": {
+    overview: "Quantitative Comparison (QC) comprises ~40% of ETS GRE Quant (10–11 questions across 2 section-adaptive modules on the 130–170 scale). Instead of solving for exact numeric outputs, compare Quantity A and Quantity B using algebraic cancellation and systematic FROZEN boundary testing (Fractions, Roots, One, Zero, Extremes, Negatives).",
+    prerequisites: [
+      "Allowed Operations: Add/subtract any expression on both sides; multiply/divide by strictly POSITIVE constants only.",
+      "Forbidden Operations: Never multiply/divide by a variable of unknown sign or square both sides when quantities can be negative.",
+      "Choice (D) Rule: If two valid test substitutions produce opposite comparison directions, immediately select Choice (D)."
+    ],
+    corePrinciples: [
+      "FROZEN Boundary Law: Always test x = 1/2, x = 0, x = 1, x = -2, and x = 100 whenever variables lack explicit domain bounds.",
+      "Standard Deviation Shift/Reflection Law: SD(X + c) = SD(X) and SD(-X) = SD(X); scaling by k multiplies SD by |k|.",
+      "Diagram Non-Scale Law: Never infer acute/obtuse angles or segment ratios visually from ETS geometry figures."
+    ],
+    workedExamples: [
+      {
+        level: "Foundation",
+        problem: "Compare Quantity A: (x + 2)^2 vs. Quantity B: x^2 + 4 given x > 0.",
+        steps: [
+          "Expand Quantity A = x^2 + 4x + 4.",
+          "Subtract (x^2 + 4) from both quantities -> Compare 4x vs. 0.",
+          "Since x > 0, 4x > 0 => Quantity A is greater (Choice A)."
+        ]
+      },
+      {
+        level: "CAT 95%ile",
+        problem: "Given 0 < x < 1, compare Quantity A: x^2 + x^3 vs. Quantity B: x + x^4.",
+        steps: [
+          "Compute Quantity B - Quantity A = (x - x^2) - (x^3 - x^4).",
+          "Factor out common terms: x(1 - x) - x^3(1 - x) = x(1 - x)(1 - x^2).",
+          "Since 0 < x < 1, all three factors are strictly positive => Quantity B is greater (Choice B)."
+        ]
+      },
+      {
+        level: "CAT 99.5%ile",
+        problem: "x and y are integers such that x^2 + y^2 = 25 and x > y. Compare Quantity A: x + y vs. Quantity B: 5.",
+        steps: [
+          "Test valid integer pair (4, 3): 4^2 + 3^2 = 25 and 4 > 3 => x + y = 7 (> 5).",
+          "Test valid integer pair (3, -4): 3^2 + (-4)^2 = 25 and 3 > -4 => x + y = -1 (< 5).",
+          "Both A > B and A < B occur => Relationship cannot be determined (Choice D)."
+        ]
+      }
+    ]
+  },
+  "GRE-MOD-PS": {
+    overview: "GRE Problem Solving (16–17 questions) spans Algebra, Number Properties, Coordinate Geometry, Combinatorics, and Data Analysis (Normal Distributions, Quartiles, Percentiles) across 5-choice MCQs, Multiple-Answer ('Select all that apply' — zero partial credit), and exact Numeric Entry boxes.",
+    prerequisites: [
+      "Normal Distribution 68-95-99.7 Rule: ±1 SD = 68% (34% each side); ±2 SD = 95% (47.5% each side).",
+      "Prime Factorization Divisor Count: N = p^a * q^b has (a + 1)(b + 1) positive factors.",
+      "Quadratic Vieta Formulas: Sum of roots = -b/a; Product of roots = c/a."
+    ],
+    corePrinciples: [
+      "Exponential Common-Base Factoring Law: Factor out the lowest power of the shared base to collapse sums of exponentials.",
+      "Zero-Partial-Credit Multi-Select Law: Test every option independently on 'Select all that apply' prompts.",
+      "Inclusion-Exclusion Counting Law: |A U B| = |A| + |B| - |A ∩ B|."
+    ],
+    workedExamples: [
+      {
+        level: "Foundation",
+        problem: "[Numeric Entry] Solve for exact x: 3^(2x - 1) + 3^(2x) = 324.",
+        steps: [
+          "Factor out 3^(2x - 1): 3^(2x - 1) * (1 + 3) = 324.",
+          "Divide by 4: 3^(2x - 1) = 81 = 3^4 => 2x - 1 = 4 => x = 2.5."
+        ]
+      },
+      {
+        level: "CAT 99.5%ile",
+        problem: "In a normal distribution with mean 500 and SD 80, what percentage of observations fall between 420 and 660?",
+        steps: [
+          "420 is 1 SD below the mean (34% of distribution).",
+          "660 is 2 SDs above the mean (34% + 13.5% = 47.5% of distribution).",
+          "Total percentage between 420 and 660 = 34% + 47.5% = 81.5%."
+        ]
+      }
+    ]
+  }
+};
+
+window.IPM_QUANT_CORE = [
+  {
+    id: "GRE-MOD-QC",
+    pillar: "ETS QUANTITATIVE COMPARISON",
+    title: "Quantitative Comparison (Quantity A vs. Quantity B)",
+    weightage: "High Yield • 10–11 Qs across 2 Adaptive Sections (130–170 Scale)",
+    concepts: [],
+    traps: [{ title: "Assuming Diagrams Are Drawn to Scale", wrongStep: "Judging unmarked angles visually.", correction: "Test extreme valid stretches of geometric figures.", penalty: "Lost 170 Quant Ceiling" }],
+    questions: [
+      { id: "GRE-QR-QC-001", stem: "x, y integers with x^2 + y^2 = 25 and x > y.\n\nQuantity A: x + y\nQuantity B: 5", options: ["Quantity A is greater.", "Quantity B is greater.", "The two quantities are equal.", "The relationship cannot be determined from the information given."], answer: 3, explanation: "(4,3)->7 > 5 and (3,-4)->-1 < 5 => (D)." },
+      { id: "GRE-QR-QC-002", stem: "Set S: 7 consecutive odd integers with median m > 10.\n\nQuantity A: SD of S\nQuantity B: SD of -S", options: ["Quantity A is greater.", "Quantity B is greater.", "The two quantities are equal.", "The relationship cannot be determined from the information given."], answer: 2, explanation: "Reflection preserves spread => (C)." }
+    ]
+  },
+  {
+    id: "GRE-MOD-PS",
+    pillar: "ETS PROBLEM SOLVING & DATA ANALYSIS",
+    title: "Algebra, Number Properties, Combinatorics & Normal Distributions",
+    weightage: "Core Quant • 16–17 Qs (MCQ, Multi-Select & Numeric Entry)",
+    concepts: [],
+    traps: [{ title: "Partial Credit Fallacy on GRE Multi-Select", wrongStep: "Selecting only 3 of 4 true statements.", correction: "All true statements must be checked for credit.", penalty: "0 Points Awarded" }],
+    questions: [
+      { id: "GRE-QR-PS-001", stem: "[Numeric Entry] If 3^(2x - 1) + 3^(2x) = 324, exact value of x?", options: ["2.5", "2.0", "3.0", "3.5"], answer: 0, explanation: "3^(2x - 1) * 4 = 324 => 2x - 1 = 4 => 2.5." },
+      { id: "GRE-QR-PS-002", stem: "Normal distribution mean 500, SD 80. Percent between 420 and 660?", options: ["68.0%", "81.5%", "84.0%", "95.0%", "97.5%"], answer: 1, explanation: "34% + 47.5% = 81.5%." }
+    ]
+  }
+];
+
+(async function hydrateGreFromPostgres() {
+  try {
+    const res = await fetch("/api/questions?exam=GRE_GENERAL&limit=150&t=" + Date.now());
+    const data = await res.json();
+    if (!data || !Array.isArray(data.questions) || !data.questions.length) return;
+    window.GRE_POSTGRES_BANK = data.questions;
+    const qaItems = data.questions.filter(q => q.section === "QUANT_CORE");
+    if (qaItems.length && window.IPM_QUANT_CORE) {
+      const qc = qaItems.filter(q => /Quantitative Comparison/i.test(q.topic || ""));
+      const ps = qaItems.filter(q => !/Quantitative Comparison/i.test(q.topic || ""));
+      if (qc.length) window.IPM_QUANT_CORE[0].questions = qc.map(q => ({ id: q.id, stem: q.prompt, options: q.options, answer: Number(q.answer), explanation: q.explanation }));
+      if (ps.length) window.IPM_QUANT_CORE[1].questions = ps.map(q => ({
+        id: q.id, stem: q.prompt,
+        options: (Array.isArray(q.options) && q.options.length) ? q.options : [String(q.answer), "2.0", "3.0", "3.5"],
+        answer: (Array.isArray(q.options) && q.options.length) ? Number(q.answer) : 0,
+        explanation: q.explanation
+      }));
+    }
+    if (typeof window.renderActiveTab === "function") window.renderActiveTab();
+  } catch (e) { console.warn("GRE Postgres hydration fallback:", e); }
+})();
