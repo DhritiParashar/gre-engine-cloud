@@ -342,3 +342,45 @@ window.IPM_QUANT_CORE = [
   }
 ];
 window.IPM_HIGHER_MATH = [];
+window.IPM_DEEP_MODULES = [];
+window.IPM_CHAPTER_REFRESHERS = window.IPM_CHAPTER_REFRESHERS || {};
+window.IPM_CHAPTER_REFRESHERS["GRE-MOD-QC"] = {
+  overview: "Quantitative Comparison (QC) represents ~40% of ETS GRE Quant (10–11 questions across 2 section-adaptive modules). Instead of computing exact values, compare Quantity A and Quantity B using algebraic cancellation and systematic boundary testing (FROZEN: Fractions, Roots, One, Zero, Extremes, Negatives).",
+  prerequisites: [
+    "Allowed Transformations: Add/subtract any expression on both sides; multiply/divide by strictly POSITIVE constants only.",
+    "Forbidden Transformations: Never multiply/divide by a variable of unknown sign or square both sides when quantities may be negative.",
+    "Choice (D) Trigger: Finding two valid test values that reverse the inequality immediately proves Choice (D)."
+  ],
+  workedExamples: [
+    {
+      level: "Foundation",
+      problem: "Compare Quantity A: (x + 2)^2 vs. Quantity B: x^2 + 4 given x > 0.",
+      solution: "Expand Quantity A = x^2 + 4x + 4. Subtract (x^2 + 4) from both sides -> Compare 4x vs. 0. Since x > 0, 4x > 0 -> Quantity A is greater (A)."
+    },
+    {
+      level: "Advanced",
+      problem: "x and y are integers with x^2 + y^2 = 25 and x > y. Compare Quantity A: x + y vs. Quantity B: 5.",
+      solution: "Test (4, 3): x + y = 7 > 5. Test (3, -4): x + y = -1 < 5. Both directions occur -> Relationship cannot be determined (D)."
+    }
+  ]
+};
+window.IPM_CHAPTER_REFRESHERS["GRE-MOD-PS"] = {
+  overview: "GRE Problem Solving (16–17 questions) tests Arithmetic, Algebra, Coordinate Geometry, Combinatorics, and Data Analysis (Normal Distributions, Quartiles, Standard Deviation) across 5-choice MCQs, Multiple-Answer ('Select all that apply' — zero partial credit), and exact Numeric Entry.",
+  prerequisites: [
+    "Normal Distribution Empirical Rule: 68% within ±1 SD (34% each side), 95% within ±2 SD (47.5% each side), 99.7% within ±3 SD.",
+    "Prime Factorization & Divisors: N = p^a * q^b has (a + 1)(b + 1) positive factors.",
+    "Vieta's Formulas: For ax^2 + bx + c = 0, sum of roots = -b/a and product of roots = c/a."
+  ],
+  workedExamples: [
+    {
+      level: "Foundation",
+      problem: "Solve for exact x: 3^(2x - 1) + 3^(2x) = 324.",
+      solution: "Factor out 3^(2x - 1) * (1 + 3) = 324 => 3^(2x - 1) = 81 = 3^4 => 2x - 1 = 4 => x = 2.5."
+    },
+    {
+      level: "Advanced",
+      problem: "In a normal distribution with mean 500 and SD 80, what percentage of values fall between 420 and 660?",
+      solution: "420 is -1 SD (34% below mean) and 660 is +2 SD (47.5% above mean). Total = 34% + 47.5% = 81.5%."
+    }
+  ]
+};
