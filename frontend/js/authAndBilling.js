@@ -154,26 +154,38 @@ window.handleRegStep1 = async function () {
 
 window.handleRegStep2Verify = async function () {
   const msg = document.getElementById("dash-msg");
-  msg.textContent = "";
-  const r = await fetch("/api/auth/register-otp/verify", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      challenge_id: window.IPM_OTP_CHALLENGE_ID,
-      email_otp: document.getElementById("reg-email-otp").value.trim(),
-      phone_otp: document.getElementById("reg-phone-otp").value.trim()
-    })
-  });
-  const data = await r.json();
-  if (!data.ok) { msg.textContent = data.error || "Invalid OTP codes."; return; }
-  localStorage.setItem("ipm_auth_token", data.token);
-  window.IPM_USER = data.user;
-  localStorage.setItem("ipm_user_profile", JSON.stringify(data.user));
-  const gateEl = document.getElementById("login-dashboard-gate");
-  if (gateEl) { gateEl.classList.add("hidden"); gateEl.style.display = "none"; }
-  try { if (window.renderHeaderAccountBar) window.renderHeaderAccountBar(); } catch (e) {}
-  try { if (window.renderActiveTab) window.renderActiveTab(); else location.reload(); } catch (e) { location.reload(); }
+  if (msg) msg.textContent = "Verifying OTPs...";
+  try {
+    const r = await fetch("/api/auth/register-otp/verify", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        challenge_id: window.IPM_OTP_CHALLENGE_ID,
+        email_otp: document.getElementById("reg-email-otp").value.trim(),
+        phone_otp: document.getElementById("reg-phone-otp").value.trim()
+      })
+    });
+    const rawText = await r.text();
+    let data = {};
+    try { data = JSON.parse(rawText); } catch (e) {
+      if (msg) msg.textContent = "Server error (" + r.status + "): " + rawText.slice(0, 140);
+      return;
+    }
+    if (!r.ok || !data.ok) {
+      if (msg) msg.textContent = data.error || data.detail || ("Verification failed (" + r.status + ")");
+      return;
+    }
+    localStorage.setItem("ipm_auth_token", data.token);
+    window.IPM_USER = data.user;
+    localStorage.setItem("ipm_user_profile", JSON.stringify(data.user));
+    const gate = document.getElementById("login-dashboard-gate");
+    if (gate) { gate.classList.add("hidden"); gate.style.display = "none"; }
+    location.reload();
+  } catch (err) {
+    if (msg) msg.textContent = "Network error: " + (err && err.message ? err.message : err);
+  }
 };
+
 
 window.handleForgotStep1 = async function () {
   const msg = document.getElementById("dash-msg");
