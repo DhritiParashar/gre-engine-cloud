@@ -1,3 +1,10 @@
+import os as _os_env
+_raw_db = (_os_env.getenv("DATABASE_URL") or "").strip().strip("'").strip('"')
+if _raw_db.startswith("psql "):
+    _raw_db = _raw_db[5:].strip().strip("'").strip('"')
+if _raw_db.startswith("postgres://"):
+    _raw_db = "postgresql://" + _raw_db[len("postgres://"):]
+_os_env.environ["DATABASE_URL"] = _raw_db
 import random
 import os
 import json
