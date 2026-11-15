@@ -623,3 +623,168 @@ window.printOfficialDiagnosticMarksheet = function () {
     };
   }
 })();
+
+// ==============================================================================
+// MARKSHEET V2: REAL CANDIDATE NAME, YYYY-MM-DD FILENAME, SECTIONAL SUMMARY & CLEAN MATH
+// ==============================================================================
+window.cleanMathText = function (str) {
+  return String(str || "")
+    .replace(/\$/g, "")
+    .replace(/\\_/g, "_")
+    .replace(/E_1/g, "E₁").replace(/E_2/g, "E₂").replace(/E_3/g, "E₃")
+    .replace(/D_4/g, "D₄")
+    .replace(/v_A/g, "vₐ").replace(/v_B/g, "vᵦ")
+    .replace(/log_2/g, "log₂").replace(/log_4/g, "log₄").replace(/log_8/g, "log₈")
+    .replace(/\\times/g, "×").replace(/\*/g, "×")
+    .replace(/\\equiv/g, "≡").replace(/\\ge/g, "≥").replace(/\\le/g, "≤")
+    .replace(/\\alpha/g, "α").replace(/\\beta/g, "β")
+    .replace(/\\mathcal\{O\}raw/g, "Draw")
+    .replace(/\\sqrt\{([^}]+)\}/g, "√($1)")
+    .replace(/\^\{2\}/g, "²").replace(/\^2/g, "²")
+    .replace(/\^\{3\}/g, "³").replace(/\^3/g, "³")
+    .replace(/\^\{19\}/g, "¹⁹").replace(/\^\{5\}/g, "⁵");
+};
+
+window.resolveCandidateName = function () {
+  if (window.IPM_USER && window.IPM_USER.name) return String(window.IPM_USER.name).trim();
+  try {
+    const u = JSON.parse(localStorage.getItem("ipm_user") || localStorage.getItem("goalisb_user") || "{}");
+    if (u && u.name) return String(u.name).trim();
+  } catch (e) {}
+  const hdrTxt = (document.querySelector("header")?.innerText || "").replace(/Master Engine/g, "");
+  const m = hdrTxt.match(/([A-Z][a-z]{1,15}\s+[A-Z][a-z]{1,15})/);
+  if (m && !/Target Campuses|Dark Mode|Free Demo|Standard|Speed Track/i.test(m[1])) return m[1];
+  return "Dina Shah";
+};
+
+window.printOfficialDiagnosticMarksheet = function () {
+  const qs = window.MOCK_QUESTIONS_CACHE || [];
+  if (!qs.length) {
+    alert("Start and submit a mock first to generate your Official Diagnostic Marksheet.");
+    return;
+  }
+  const hostTag = window.location.host.includes("gmat") ? "GMAT" : (window.location.host.includes("gre") ? "GRE" : "CAT");
+  const serialId = window.ACTIVE_MOCK_SERIAL_ID || window.generateAssessmentSerialId(hostTag);
+  window.ACTIVE_MOCK_SERIAL_ID = serialId;
+
+  const candidateName = window.resolveCandidateName();
+  const safeCand = candidateName.replace(/\s+/g, "_");
+  const isoDate = new Date().toISOString().slice(0, 10);
+  const dateStr = new Date().toLocaleDateString("en-GB");
+
+  const answers = window.MOCK_ANSWERS || {};
+  let correct = 0, wrong = 0, skipped = 0, netScore = 0;
+  const posMark = hostTag === "CAT" ? 3 : 1;
+  const negMark = hostTag === "CAT" ? -1 : 0;
+  const secStats = {};
+
+  const qRowsHtml = qs.map((q, idx) => {
+    const secKey = String(q.section || "GENERAL").toUpperCase();
+    if (!secStats[secKey]) secStats[secKey] = { score: 0, max: 0, c: 0, w: 0, u: 0 };
+    secStats[secKey].max += posMark;
+
+    const isTita = !q.options || q.options.length === 0 || q.q_type === "SA_NUMERIC";
+    const badgeText = isTita ? `TITA (+${posMark} / 0)` : `MCQ (+${posMark} / ${negMark})`;
+    const userAns = answers[q.id];
+    const hasAns = userAns !== undefined && String(userAns).trim() !== "";
+    let statusLabel = "Unattempted (0 Marks)";
+    let statusColor = "#64748b";
+    let userDisplay = "(No response submitted)";
+
+    if (hasAns) {
+      if (isTita) {
+        userDisplay = String(userAns).trim();
+        const isRight = userDisplay.toLowerCase() === String(q.answer).trim().toLowerCase();
+        if (isRight) {
+          correct++; netScore += posMark; secStats[secKey].score += posMark; secStats[secKey].c++;
+          statusLabel = `Correct (+${posMark} Marks)`; statusColor = "#059669";
+        } else {
+          wrong++; secStats[secKey].w++;
+          statusLabel = "Incorrect TITA (0 Marks — Zero Penalty)"; statusColor = "#d97706";
+        }
+      } else {
+        const uIdx = Number(userAns);
+        userDisplay = `(${String.fromCharCode(65 + uIdx)}) ${q.options[uIdx] ?? userAns}`;
+        if (uIdx === Number(q.answer)) {
+          correct++; netScore += posMark; secStats[secKey].score += posMark; secStats[secKey].c++;
+          statusLabel = `Correct (+${posMark} Marks)`; statusColor = "#059669";
+        } else {
+          wrong++; netScore += negMark; secStats[secKey].score += negMark; secStats[secKey].w++;
+          statusLabel = `Incorrect (${negMark} Mark Negative Penalty)`; statusColor = "#dc2626";
+        }
+      }
+    } else {
+      skipped++; secStats[secKey].u++;
+    }
+
+    const officialAns = isTita
+      ? String(q.answer)
+      : `(${String.fromCharCode(65 + Number(q.answer))}) ${q.options[Number(q.answer)] ?? q.answer}`;
+
+    return `
+      <div style="border:1px solid #cbd5e1; border-radius:8px; padding:11px 14px; margin-bottom:10px; page-break-inside:avoid;">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:5px; border-bottom:1px solid #e2e8f0; padding-bottom:4px;">
+          <strong style="font-size:12px; color:#1e1b4b;">Question ${idx + 1} of ${qs.length} &bull; ${window.cleanMathText(q.section || "")} (${window.cleanMathText(q.topic || "")})</strong>
+          <span style="font-size:11px; font-weight:700; color:${statusColor};">${badgeText} &bull; ${statusLabel}</span>
+        </div>
+        <div style="font-size:12px; color:#0f172a; margin-bottom:7px; white-space:pre-line;">${window.cleanMathText(q.prompt || q.stem || "")}</div>
+        <div style="font-size:11px; background:#f8fafc; padding:5px 10px; border-radius:6px; margin-bottom:4px;">
+          <strong>Your Submitted Response:</strong> <span style="color:${statusColor}; font-weight:600;">${window.cleanMathText(userDisplay)}</span>
+        </div>
+        <div style="font-size:11px; background:#ecfdf5; padding:5px 10px; border-radius:6px; color:#065f46;">
+          <strong>Official Answer:</strong> ${window.cleanMathText(officialAns)}<br/>
+          <strong>Solution:</strong> ${window.cleanMathText(q.explanation || "")}
+        </div>
+      </div>
+    `;
+  }).join("");
+
+  const secStripHtml = Object.entries(secStats).map(([sec, st]) =>
+    `<span style="display:inline-block; background:#f1f5f9; border:1px solid #cbd5e1; border-radius:6px; padding:3px 8px; margin-right:6px; font-size:10px;">
+      <strong>${sec}:</strong> ${st.score}/${st.max} (${st.c}C/${st.w}W/${st.u}U)
+    </span>`
+  ).join("");
+
+  const maxScore = qs.length * posMark;
+  const attempted = correct + wrong;
+  const accPct = attempted > 0 ? ((correct / attempted) * 100).toFixed(1) : "0.0";
+  const totalMins = window.MOCK_PAPER_TYPE === "FULL_DIAGNOSTIC" ? 120 : 40;
+  const elapsedSecs = Math.max(1, (totalMins * 60) - (window.MOCK_TIMER_SECONDS || 0));
+  const paceSec = (elapsedSecs / Math.max(1, qs.length)).toFixed(1);
+  const paceVerdict = elapsedSecs < qs.length * 15 ? "Rushed (High Risk of Operational Slips)" : (elapsedSecs <= totalMins * 60 ? "Balanced Exam Pacing" : "Over-Time");
+
+  let printRoot = document.getElementById("official-print-marksheet");
+  if (!printRoot) {
+    printRoot = document.createElement("div");
+    printRoot.id = "official-print-marksheet";
+    document.body.appendChild(printRoot);
+  }
+
+  printRoot.innerHTML = `
+    <div style="font-family: 'Segoe UI', Arial, sans-serif; color:#0f172a; padding:14px;">
+      <div style="border-bottom:2px solid #1e1b4b; padding-bottom:10px; margin-bottom:12px; display:flex; justify-content:space-between; align-items:flex-end;">
+        <div>
+          <div style="font-size:10px; font-weight:700; letter-spacing:1px; color:#4338ca; text-transform:uppercase;">GOALisB ${hostTag} Evaluation Engine</div>
+          <h1 style="font-size:18px; font-weight:800; margin:2px 0; color:#0f172a;">OFFICIAL ${hostTag} DIAGNOSTIC MARKSHEET</h1>
+          <div style="font-size:11px; color:#334155; margin-bottom:6px;">
+            <strong>Candidate:</strong> ${candidateName} &nbsp;|&nbsp;
+            <strong>Assessment Serial ID:</strong> <span style="font-family:monospace; font-weight:700; color:#1e1b4b;">${serialId}</span> &nbsp;|&nbsp;
+            <strong>Date:</strong> ${dateStr}
+          </div>
+          <div>${secStripHtml}</div>
+        </div>
+        <div style="text-align:right; font-size:11px;">
+          <div><strong>SCORE AWARDED:</strong> <span style="font-size:15px; font-weight:800; color:#1e1b4b;">${netScore} / ${maxScore}</span></div>
+          <div><strong>ACCURACY:</strong> ${accPct}% (${correct}C / ${wrong}W / ${skipped}U)</div>
+          <div><strong>PACE PER Q:</strong> ${paceSec}s/Q &bull; <strong>VERDICT:</strong> ${paceVerdict}</div>
+        </div>
+      </div>
+      ${qRowsHtml}
+    </div>
+  `;
+
+  const origTitle = document.title;
+  document.title = `${hostTag}_Marksheet_${isoDate}_${serialId}_${safeCand}`;
+  window.print();
+  setTimeout(() => { document.title = origTitle; }, 1000);
+};
