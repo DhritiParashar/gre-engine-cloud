@@ -54,26 +54,77 @@ window.renderRefresherCard = function (modId, accentColor) {
   if (!ref) {
     return `<div class="p-4 rounded-xl bg-slate-950 border border-slate-800 text-xs text-slate-400">Detailed chapter refresher coming soon.</div>`;
   }
-  const baseEx = ref.workedExamples || (ref.workedExample ? [{ level: "Foundation", ...ref.workedExample }] : []); const extraEx = (window.IPM_TIER_EXPANSION || {})[modId] || []; const allEx = [...baseEx, ...extraEx];
-  const filteredEx = window.REFRESHER_LEVEL_FILTER === "ALL"
+  const baseEx = ref.workedExamples || (ref.workedExample ? [{ level: "Foundation", ...ref.workedExample }] : []);
+  const extraEx = (window.IPM_TIER_EXPANSION || {})[modId] || [];
+  const allEx = [...baseEx, ...extraEx];
+  const filteredEx = window.RESHER_LEVEL_FILTER === "ALL" || !window.REFRESHER_LEVEL_FILTER
     ? allEx
     : allEx.filter(ex => ex.level === window.REFRESHER_LEVEL_FILTER);
 
+  const paragraphs = Array.isArray(ref.overviewParagraphs) && ref.overviewParagraphs.length
+    ? ref.overviewParagraphs
+    : String(ref.overview || "").split(/\n\n+/).filter(Boolean);
+
+  const metrics = ref.examMetrics || null;
+  const bridgeTraps = ref.conceptBridgeTraps || [];
+
   return `
     <div class="space-y-4">
-      <div class="p-4 rounded-xl bg-slate-950/90 border border-${accentColor}-500/30 space-y-2">
-        <div class="text-xs font-bold uppercase tracking-wider text-${accentColor}-300">Comprehensive Chapter Overview & Concept Bridge</div>
-        <p class="text-xs md:text-sm text-slate-200 leading-relaxed">${ref.overview}</p>
-        <div class="pt-2">
-          <div class="text-[11px] font-semibold text-amber-300">Prerequisites & Foundational Formulas to Refresh:</div>
-          <ul class="list-disc list-inside text-xs text-slate-300 mt-1 space-y-1">
+      <div class="p-5 rounded-xl bg-slate-950/90 border border-${accentColor}-500/30 space-y-3.5">
+        <div class="flex flex-wrap items-center justify-between gap-2">
+          <div class="text-xs font-bold uppercase tracking-wider text-${accentColor}-300">Comprehensive Chapter Overview &amp; Concept Bridge</div>
+          <span class="text-[10px] px-2.5 py-0.5 rounded-full bg-${accentColor}-500/20 text-${accentColor}-300 font-bold">Master Study Guide</span>
+        </div>
+
+        <div class="space-y-2.5 text-xs md:text-sm text-slate-200 leading-relaxed">
+          ${paragraphs.map(p => `<p>${p}</p>`).join("")}
+        </div>
+
+        ${metrics ? `
+          <div class="grid grid-cols-2 md:grid-cols-4 gap-2.5 pt-1">
+            <div class="p-2.5 rounded-lg bg-slate-900 border border-slate-800">
+              <div class="text-[10px] uppercase text-slate-400 font-bold">Exam Weightage</div>
+              <div class="text-xs font-extrabold text-white mt-0.5">${metrics.weightage}</div>
+            </div>
+            <div class="p-2.5 rounded-lg bg-slate-900 border border-slate-800">
+              <div class="text-[10px] uppercase text-slate-400 font-bold">Target Pace</div>
+              <div class="text-xs font-extrabold text-emerald-300 mt-0.5">${metrics.targetPace}</div>
+            </div>
+            <div class="p-2.5 rounded-lg bg-slate-900 border border-slate-800">
+              <div class="text-[10px] uppercase text-slate-400 font-bold">Scoring / Format</div>
+              <div class="text-xs font-extrabold text-amber-300 mt-0.5">${metrics.format}</div>
+            </div>
+            <div class="p-2.5 rounded-lg bg-slate-900 border border-slate-800">
+              <div class="text-[10px] uppercase text-slate-400 font-bold">99%ile Strategy</div>
+              <div class="text-xs font-extrabold text-indigo-300 mt-0.5">${metrics.strategy}</div>
+            </div>
+          </div>
+        ` : ""}
+
+        <div class="pt-2 border-t border-slate-800/80">
+          <div class="text-[11px] font-bold uppercase tracking-wide text-amber-300 mb-1.5">Prerequisites &amp; Foundational Formulas to Refresh:</div>
+          <ul class="list-disc list-inside text-xs text-slate-300 space-y-1.5 leading-relaxed">
             ${(ref.prerequisites || []).map(p => `<li>${p}</li>`).join("")}
           </ul>
         </div>
+
+        ${bridgeTraps.length ? `
+          <div class="pt-2 border-t border-slate-800/80 space-y-2">
+            <div class="text-[11px] font-bold uppercase tracking-wide text-rose-300">Concept Bridge: Intuition vs. Exam-Day Reality</div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-2.5">
+              ${bridgeTraps.map(t => `
+                <div class="p-3 rounded-lg bg-slate-900 border border-rose-500/30 text-xs space-y-1">
+                  <div class="font-bold text-rose-300">${t.pitfall}</div>
+                  <div class="text-slate-300 leading-relaxed">${t.bridge}</div>
+                </div>
+              `).join("")}
+            </div>
+          </div>
+        ` : ""}
       </div>
 
       <div class="p-4 rounded-xl bg-slate-950/90 border border-slate-800 space-y-2.5">
-        <div class="text-xs font-bold uppercase tracking-wider text-indigo-300">Core Principles, Theorems & Exam Laws</div>
+        <div class="text-xs font-bold uppercase tracking-wider text-indigo-300">Core Principles, Theorems &amp; Exam Laws</div>
         <ul class="space-y-2 text-xs text-slate-300">
           ${(ref.corePrinciples || []).map((rule, i) => `
             <li class="p-3 rounded-lg bg-slate-900 border border-slate-800 leading-relaxed">
@@ -89,7 +140,7 @@ window.renderRefresherCard = function (modId, accentColor) {
             Graded Worked Examples Bank (${filteredEx.length} of ${allEx.length} Solved Step-by-Step)
           </div>
           <div class="flex flex-wrap gap-1">
-            ${["ALL", "Foundation", "GRE 162+", "GRE 168+"].map(lvl => `
+            ${["ALL", "Foundation", "CAT 95%ile", "CAT 99.5%ile"].map(lvl => `
               <button onclick="window.setRefresherLevel('${lvl}')"
                 class="px-2.5 py-1 rounded-lg text-[11px] font-bold transition ${
                   window.REFRESHER_LEVEL_FILTER === lvl
@@ -106,11 +157,11 @@ window.renderRefresherCard = function (modId, accentColor) {
               <div class="flex items-center justify-between gap-2">
                 <span class="text-xs font-bold text-white">${ex.problem}</span>
                 <span class="shrink-0 text-[10px] px-2 py-0.5 rounded font-semibold ${
-                  ex.level === "GRE 168+"
+                  ex.level === "CAT 99.5%ile"
                     ? "bg-rose-500/20 text-rose-300"
-                    : ex.level === "GRE 162+"
-                    ? "bg-amber-500/20 text-amber-300"
-                    : "bg-sky-500/20 text-sky-300"
+                    : ex.level === "CAT 95%ile"
+                      ? "bg-amber-500/20 text-amber-300"
+                      : "bg-sky-500/20 text-sky-300"
                 }">${ex.level}</span>
               </div>
               <ol class="list-decimal list-inside text-xs text-emerald-100/90 space-y-1 pt-1">

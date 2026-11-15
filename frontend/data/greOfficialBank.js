@@ -726,3 +726,56 @@ window.IPM_QUANT_CORE = [
     ]
   }
 ];
+
+(function enrichGreOverviews() {
+  const R = window.IPM_CHAPTER_REFRESHERS || {};
+  const specs = {
+    "GRE-MOD-QC": {
+      p2: "Concept Bridge: Most test-takers lose 170-level points on Quantitative Comparison by plugging in only positive integers like x = 2 or x = 3. ETS specifically constructs QC items where positive integers make Quantity A > Quantity B, while fractions in (0, 1), zero, or negative numbers reverse the relationship—making Choice (D) the true answer.",
+      metrics: { weightage: "10–11 Qs / 27 (~40% Quant)", targetPace: "1.3 – 1.5 mins / Q", format: "4-Choice QC (A / B / C / D)", strategy: "FROZEN Boundary Testing" },
+      traps: [
+        { pitfall: "Testing Only Positive Integers", bridge: "Always test x = 1/2, x = 0, x = -2, and x = 100 before committing to A, B, or C." },
+        { pitfall: "Trusting Visual Proportions in ETS Figures", bridge: "Unmarked angles and segments are not drawn to scale; stretch figures to extreme valid limits." }
+      ]
+    },
+    "GRE-MOD-ALG": {
+      p2: "Concept Bridge: GRE Problem Solving combines classic 5-choice MCQs with Multiple-Answer ('Select all that apply' — zero partial credit) and exact Numeric Entry boxes. Factor out common exponential powers and check every candidate choice independently on multi-select items.",
+      metrics: { weightage: "5–6 Qs / 27 (~20% Quant)", targetPace: "1.6 – 1.9 mins / Q", format: "MCQ, Multi-Select & Numeric Entry", strategy: "Common-Base Factoring" },
+      traps: [
+        { pitfall: "Missing One True Choice on Multi-Select", bridge: "ETS awards zero partial credit; verify all 5–6 statements individually." },
+        { pitfall: "Sign Errors on Perpendicular Line Slopes", bridge: "Perpendicular lines satisfy m_1 * m_2 = -1 (negative reciprocal)." }
+      ]
+    },
+    "GRE-MOD-NUM": {
+      p2: "Concept Bridge: High-scoring Stage 2 Hard GRE Quant sections test remainder cycles, divisor counts, and inclusion-exclusion sets. Always check boundary inclusivity ('between 1 and 100 inclusive' vs. 'less than 100').",
+      metrics: { weightage: "4–5 Qs / 27 (~17% Quant)", targetPace: "1.6 mins / Q", format: "QC, PS & Numeric Entry", strategy: "Residue Classes & Divisors" },
+      traps: [
+        { pitfall: "Inclusive vs Exclusive Endpoint Counting", bridge: "'Less than 100' positive integers means 1 to 99 (99 numbers), not 100." },
+        { pitfall: "Forgetting 1 Is Neither Prime Nor Composite", bridge: "The smallest prime number is 2 (the only even prime)." }
+      ]
+    },
+    "GRE-MOD-GEO": {
+      p2: "Concept Bridge: Unlike GMAT Focus, the ETS GRE retains Euclidean geometry—triangles, circles, polygons, and 3D solids. Memorize 30-60-90 and 45-45-90 special right-triangle ratios and central-vs-inscribed arc rules to solve geometry items without trigonometry.",
+      metrics: { weightage: "3–4 Qs / 27 (~14% Quant)", targetPace: "1.7 mins / Q", format: "QC & Problem Solving", strategy: "Special Triangles & Arc Ratios" },
+      traps: [
+        { pitfall: "Assuming a Triangle Is Right-Angled", bridge: "Never assume a 90-degree angle unless marked with a right-angle box or proven via side lengths." },
+        { pitfall: "Violating the Triangle Inequality", bridge: "Third side c must strictly satisfy |a - b| < c < a + b." }
+      ]
+    },
+    "GRE-MOD-DATA": {
+      p2: "Concept Bridge: GRE Data Analysis includes a dedicated multi-question Data Interpretation chart set plus standalone Normal Distribution and Quartile/Boxplot questions. Anchor 68% (±1 SD) and 95% (±2 SD) to compute tail percentages in seconds.",
+      metrics: { weightage: "4–5 Qs / 27 (~17% Quant)", targetPace: "1.8 mins / Q", format: "DI Chart Set + Normal Curve", strategy: "68-95-99.7 Tail Symmetry" },
+      traps: [
+        { pitfall: "Confusing Percent Change with Percentage-Point Change", bridge: "Moving from 20% to 25% is a +5 percentage-point increase, but a +25% relative increase." },
+        { pitfall: "Assuming Equal Counts in Boxplot Whiskers", bridge: "Each quartile segment holds 25% of observations regardless of visual whisker length." }
+      ]
+    }
+  };
+  for (const [id, cfg] of Object.entries(specs)) {
+    if (R[id]) {
+      R[id].overviewParagraphs = [R[id].overview, cfg.p2];
+      R[id].examMetrics = cfg.metrics;
+      R[id].conceptBridgeTraps = cfg.traps;
+    }
+  }
+})();
