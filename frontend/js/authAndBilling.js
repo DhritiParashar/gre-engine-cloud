@@ -169,9 +169,10 @@ window.handleRegStep2Verify = async function () {
   localStorage.setItem("ipm_auth_token", data.token);
   window.IPM_USER = data.user;
   localStorage.setItem("ipm_user_profile", JSON.stringify(data.user));
-  const gate = document.getElementById('login-dashboard-gate'); if (gate) gate.classList.add('hidden');
-  window.renderHeaderAccountBar();
-  window.renderActiveTab();
+  const gateEl = document.getElementById("login-dashboard-gate");
+  if (gateEl) { gateEl.classList.add("hidden"); gateEl.style.display = "none"; }
+  try { if (window.renderHeaderAccountBar) window.renderHeaderAccountBar(); } catch (e) {}
+  try { if (window.renderActiveTab) window.renderActiveTab(); else location.reload(); } catch (e) { location.reload(); }
 };
 
 window.handleForgotStep1 = async function () {
@@ -241,10 +242,10 @@ window.completeProPayment = async function (method) {
   if (!data.ok) { alert(data.error || "Payment failed."); return; }
   window.IPM_USER = data.user;
   localStorage.setItem("ipm_user_profile", JSON.stringify(data.user));
-  window.renderHeaderAccountBar();
-  window.closePaymentModal();
-  alert("Payment Confirmed (" + data.order_ref + ")! Welcome to PRO LEARNER — All 9 Modules Unlocked.");
-  window.renderActiveTab();
+  const gateEl = document.getElementById("login-dashboard-gate");
+  if (gateEl) { gateEl.classList.add("hidden"); gateEl.style.display = "none"; }
+  try { if (window.renderHeaderAccountBar) window.renderHeaderAccountBar(); } catch (e) {}
+  try { if (window.renderActiveTab) window.renderActiveTab(); else location.reload(); } catch (e) { location.reload(); }
 };
 
 window.buildProLockOverlay = function (title, detail) {
@@ -446,8 +447,8 @@ window.redeemBetaVoucherCode = async function () {
   if (!data.ok) { alert(data.error || "Voucher redemption failed."); return; }
   window.IPM_USER = data.user;
   localStorage.setItem("ipm_user_profile", JSON.stringify(data.user));
-  window.renderHeaderAccountBar();
-  window.closePaymentModal();
-  alert(`Beta Voucher Activated (${data.label})! Full Pro Learner access unlocked for ${data.valid_days} days.`);
-  window.renderActiveTab();
+  const gateEl = document.getElementById("login-dashboard-gate");
+  if (gateEl) { gateEl.classList.add("hidden"); gateEl.style.display = "none"; }
+  try { if (window.renderHeaderAccountBar) window.renderHeaderAccountBar(); } catch (e) {}
+  try { if (window.renderActiveTab) window.renderActiveTab(); else location.reload(); } catch (e) { location.reload(); }
 };
