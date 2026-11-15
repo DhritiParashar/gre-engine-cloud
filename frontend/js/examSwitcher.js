@@ -57,7 +57,7 @@ window.renderRefresherCard = function (modId, accentColor) {
   const baseEx = ref.workedExamples || (ref.workedExample ? [{ level: "Foundation", ...ref.workedExample }] : []);
   const extraEx = (window.IPM_TIER_EXPANSION || {})[modId] || [];
   const allEx = [...baseEx, ...extraEx];
-  const filteredEx = window.RESHER_LEVEL_FILTER === "ALL" || !window.REFRESHER_LEVEL_FILTER
+  const filteredEx = window.REFRESHER_LEVEL_FILTER === "ALL" || !window.REFRESHER_LEVEL_FILTER
     ? allEx
     : allEx.filter(ex => ex.level === window.REFRESHER_LEVEL_FILTER);
 
