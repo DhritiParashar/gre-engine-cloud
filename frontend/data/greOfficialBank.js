@@ -185,8 +185,32 @@ window.IPM_VARC_BANK = window.GRE_OFFICIAL_BANK.verbal.textCompletion.map(q => (
   options: q.blanks[0], answer: q.correct[0], explanation: q.explanation
 }));
 window.IPM_DILR_VARC_BANK = window.IPM_VARC_BANK;
-window.IPM_QUANT_CORE = window.GRE_OFFICIAL_BANK.quant.map(q => ({
-  id: q.id, topic: q.subtype, difficulty: q.difficulty,
-  question: q.quantityA ? `${q.stem}\nQuantity A: ${q.quantityA} | Quantity B: ${q.quantityB}` : q.stem,
-  options: q.options, answer: q.correct[0], explanation: q.explanation
-}));
+window.IPM_QUANT_CORE = [
+  {
+    id: "GRE-MOD-QC",
+    title: "Quantitative Comparison (Quantity A vs. Quantity B)",
+    weightage: "High Yield • ~10–11 Qs across 2 GRE Quant Sections",
+    refresher: "Always test boundary cases: negative numbers, fractions between 0 and 1, zero, and extreme values. If substituting two valid test cases reverses which quantity is larger, immediately select (D) The relationship cannot be determined.",
+    shortcuts: [
+      "Subtract or add identical terms from both Quantity A and Quantity B to simplify algebraic expressions.",
+      "Never assume geometric figures are drawn to scale unless explicitly stated."
+    ],
+    drills: window.GRE_OFFICIAL_BANK.quant.filter(q => q.subtype.includes("Quantitative Comparison")).map(q => ({
+      id: q.id, question: `${q.stem}\n\nQuantity A: ${q.quantityA}\nQuantity B: ${q.quantityB}`,
+      options: q.options, answer: q.correct[0], explanation: q.explanation
+    }))
+  },
+  {
+    id: "GRE-MOD-PS",
+    title: "Problem Solving, Multi-Select & Numeric Entry",
+    weightage: "Core Quant • ~16–17 Qs (Algebra, Number Properties, Data Analysis)",
+    refresher: "GRE Problem Solving includes standard 5-choice MCQs, Multiple-Answer ('Select all that apply' — zero partial credit), and exact Numeric Entry boxes.",
+    shortcuts: [
+      "For remainders and divisibility (e.g., n not divisible by 3), test n = 1 and n = 2 or write n = 3k ± 1.",
+      "In Numeric Entry, convert fractions or radicals cleanly to exact decimals when prompted."
+    ],
+    drills: window.GRE_OFFICIAL_BANK.quant.filter(q => !q.subtype.includes("Quantitative Comparison")).map(q => ({
+      id: q.id, question: q.stem, options: q.options, answer: q.correct[0], explanation: q.explanation
+    }))
+  }
+];
