@@ -2025,3 +2025,59 @@ def on_startup_seed_postgrad():
         seed_gre_2026_postgres(engine)
     except Exception as e:
         print("Postgrad seed warning:", e)
+
+# --- POSTGRADUATE PYQ & CHAPTER-BOOK INGESTION / FILTER ENDPOINTS ---
+@app.get("/api/questions/catalog")
+async def api_questions_catalog(source_type: str = "", chapter: str = "", section: str = "", limit: int = 100):
+    import json
+    from sqlalchemy import text
+    from app.db_engine import engine
+    from app.ingest_postgrad_bank import ensure_postgrad_schema
+    ensure_postgrad_schema(engine)
+
+    clauses = ["1=1"]
+    params = {"lim": min(max(1, limit), 300)}
+    if source_type:
+        clauses.append("UPPER(source_type) = :st")
+        params["st"] = source_type.upper()
+    if chapter:
+        clauses.append("LOWER(chapter_name) LIKE :ch")
+        params["ch"] = f"%{chapter.lower()}%"
+    if section:
+        clauses.append("UPPER(section) = :sec")
+        params["sec"] = section.upper()
+
+    where_sql = " AND ".join(clauses)
+    with engine.connect() as conn:
+        rows = conn.execute(text(f"""
+            SELECT q_code, source_type, book_title, chapter_name, paper_slot, passage_group_id,
+                   passage_order, section, topic, q_type, difficulty, prompt, options_json,
+                   answer, explanation, solution_rubric_json
+            FROM ipm_questions
+            WHERE {where_sql}
+            ORDER BY passage_group_id ASC, passage_order ASC, q_code ASC
+            LIMIT :lim
+        """), params).mappings().all()
+
+        chapters = [r[0] for r in conn.execute(text(
+            "SELECT DISTINCT chapter_name FROM ipm_questions WHERE chapter_name <> '' ORDER BY chapter_name"
+        )).fetchall()]
+
+    items = []
+    for r in rows:
+        items.append({
+            **dict(r),
+            "options": json.loads(r["options_json"] or "[]"),
+            "solution_rubric": json.loads(r["solution_rubric_json"] or "{}")
+        })
+    return {"count": len(items), "chapters": chapters, "questions": items}
+
+@app.post("/api/admin/ingest-bank")
+async def api_admin_ingest_bank(request: Request):
+    from app.db_engine import engine
+    from app.ingest_postgrad_bank import ingest_question_records
+    payload = await request.json()
+    records = payload.get("questions") or []
+    exam_tag = str(payload.get("exam_tag") or "CAT_2026")
+    stats = ingest_question_records(engine, records, exam_tag)
+    return {"status": "ok", **stats}
