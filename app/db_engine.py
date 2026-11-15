@@ -517,20 +517,33 @@ def verify_registration_otp(challenge_id: int, email_otp: str, phone_otp: str) -
             return {"ok": False, "error": "Incorrect Email OTP or Phone OTP. Please re-check both 6-digit codes."}
 
         ch.verified = True
-        user = UserAccount(
-            full_name=ch.full_name,
-            email=ch.email,
-            password_hash=ch.password_hash,
-            class10_pct=ch.class10_pct,
-            class12_pct=ch.class12_pct
-        )
-        db.add(user)
+        user = db.query(UserAccount).filter(UserAccount.email == ch.email).first()
+        if user:
+            user.full_name = ch.full_name
+            user.password_hash = ch.password_hash
+            user.class10_pct = ch.class10_pct
+            user.class12_pct = ch.class12_pct
+        else:
+            user = UserAccount(
+                full_name=ch.full_name,
+                email=ch.email,
+                password_hash=ch.password_hash,
+                class10_pct=ch.class10_pct,
+                class12_pct=ch.class12_pct
+            )
+            db.add(user)
         db.commit()
         db.refresh(user)
-        db.execute(
-            text("UPDATE ipm_users SET phone = :p, plan_tier = 'FREE', is_verified = TRUE WHERE id = :uid"),
-            {"p": ch.phone, "uid": user.id}
-        )
+
+        try:
+            db.execute(
+                text("UPDATE ipm_users SET phone = :p, plan_tier = 'FREE', is_verified = 1 WHERE id = :uid"),
+                {"p": ch.phone, "uid": user.id}
+            )
+            db.commit()
+        except Exception:
+            db.rollback()
+
         token = secrets.token_urlsafe(32)
         db.add(UserSession(user_id=user.id, token=token))
         db.commit()
@@ -548,8 +561,12 @@ def verify_registration_otp(challenge_id: int, email_otp: str, phone_otp: str) -
                 "is_verified": True
             }
         }
+    except Exception as exc:
+        db.rollback()
+        return {"ok": False, "error": f"Registration DB error: {exc}"}
     finally:
         db.close()
+
 
 def get_user_by_token(token: str) -> dict:
     if not token:
