@@ -1,4 +1,4 @@
-window.renderTab6 = function (el) {
+window.legacyRenderTab6 = function (el) {
   el.innerHTML = `
     <div class="grid grid-cols-1 lg:grid-cols-12 gap-5">
       <div class="lg:col-span-5 bg-slate-900/90 border border-slate-800 rounded-2xl p-5 space-y-3 lg:h-[calc(100vh-225px)] lg:overflow-y-auto pane-scroll">
