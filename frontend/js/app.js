@@ -29,18 +29,39 @@ document.addEventListener("DOMContentLoaded", () => {
   window.switchTab("tab1");
 });
 
-// Enable independent Left & Right vertical scrolling on split chapter workspaces
+// Universal Independent Left & Right Scroll Enforcer across Tabs 1, 2 & 3
 window.applySplitPaneScroll = function () {
-  const ws = document.getElementById("main-workspace");
-  if (!ws) return;
-  const grids = ws.querySelectorAll(".grid");
-  grids.forEach(g => {
-    const cls = g.className || "";
-    if ((cls.includes("lg:grid-cols-12") || cls.includes("md:grid-cols-12")) && g.children.length === 2) {
-      g.classList.add("split-pane-layout");
-      g.children[0].classList.add("split-pane-left", "pane-scroll");
-      g.children[1].classList.add("split-pane-right", "pane-scroll");
-    }
+  // Skip Tabs 4, 5, 6 (Mock Simulator, Trap Doctor, Forecaster)
+  const activeTabBtn = Array.from(document.querySelectorAll("button")).find(b =>
+    ((b.className || "").includes("bg-indigo-600") || b.classList.contains("active")) && /^[1-6]\./.test((b.textContent || "").trim())
+  );
+  const tabNum = activeTabBtn ? parseInt((activeTabBtn.textContent || "").trim()[0], 10) : 1;
+  if (tabNum > 3) return;
+
+  const roots = [document.getElementById("main-workspace"), document.getElementById("tab-content")].filter(Boolean);
+  roots.forEach(root => {
+    const candidates = root.querySelectorAll("div");
+    candidates.forEach(container => {
+      if (container.children.length !== 2) return;
+      const cls = container.className || "";
+      const isTwoColLayout =
+        cls.includes("lg:grid-cols-") ||
+        cls.includes("md:grid-cols-") ||
+        cls.includes("lg:flex-row") ||
+        cls.includes("md:flex-row");
+      if (!isTwoColLayout) return;
+
+      const left = container.children[0];
+      const right = container.children[1];
+      // Verify left looks like a chapter/module list and right is the study workspace
+      const hasChapterHeading = (left.textContent || "").includes("MODULES") || (left.textContent || "").includes("CHAPTERS") || left.querySelectorAll("button, [onclick]").length >= 3;
+      const hasStudyPanel = (right.textContent || "").includes("Refresher") || (right.textContent || "").includes("OVERVIEW") || (right.textContent || "").includes("Drills") || right.innerHTML.length > 600;
+      if (hasChapterHeading && hasStudyPanel) {
+        container.classList.add("split-pane-layout");
+        left.classList.add("split-pane-left", "pane-scroll");
+        right.classList.add("split-pane-right", "pane-scroll");
+      }
+    });
   });
 };
 

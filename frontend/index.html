@@ -115,22 +115,25 @@
     body.light-mode #login-dashboard-gate [class*="from-indigo-950"] .text-slate-400 { color: #cbd5e1 !important; }
     body.light-mode #reg-otp-banner { background-color: #eef2ff !important; color: #1e1b4b !important; }
   
-/* Independent Left & Right Split-Pane Scrolling for Tabs 1-3 */
+
+/* Universal Independent Left & Right Split-Pane Scrolling for Tabs 1, 2 & 3 */
 @media (min-width: 1024px) {
-  #main-workspace .split-pane-layout {
-    height: calc(100vh - 210px);
-    min-height: 540px;
-    overflow: hidden;
+  .split-pane-layout {
+    height: calc(100vh - 215px) !important;
+    min-height: 520px !important;
+    max-height: calc(100vh - 215px) !important;
+    overflow: hidden !important;
+    align-items: stretch !important;
   }
-  #main-workspace .split-pane-left,
-  #main-workspace .split-pane-right {
-    height: 100%;
-    overflow-y: auto;
+  .split-pane-left,
+  .split-pane-right {
+    height: 100% !important;
+    max-height: 100% !important;
+    overflow-y: auto !important;
     overscroll-behavior: contain;
-    padding-right: 0.35rem;
+    padding-right: 0.4rem;
   }
-}
-</style>
+}</style>
 
   <script>
     window.applyTheme = function (mode) {
@@ -1422,9 +1425,9 @@
 <script src="js/modules/tab8_mock.js?v=3"></script>
 <script src="js/modules/tab9_pyq.js?v=3"></script>
 <script src="js/modules/tab9_pyq_vault.js?v=3"></script>
-<script src="js/modules/tab2_dilr.js?v=20261117k"></script>
-<script src="js/modules/tab3_verbal.js?v=20261117k"></script>
-<script src="js/modules/tab5_traps.js?v=20261117k"></script>
-<script src="js/modules/tab6_college_predictor.js?v=20261117k"></script>
+<script src="js/modules/tab2_dilr.js?v=20261117m"></script>
+<script src="js/modules/tab3_verbal.js?v=20261117m"></script>
+<script src="js/modules/tab5_traps.js?v=20261117m"></script>
+<script src="js/modules/tab6_college_predictor.js?v=20261117m"></script>
 </body>
 </html>
