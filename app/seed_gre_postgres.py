@@ -19,7 +19,7 @@ GRE_2026_QUESTIONS = [
     ],
     "answer": "3",
     "explanation": "x can be +5 (> -5) or -5 (= -5), so the relationship cannot be determined (Choice D).",
-    "is_pyq": false,
+    "is_pyq": False,
     "pyq_year": "2026",
     "pyq_exam": "GRE General"
   },
@@ -40,7 +40,7 @@ GRE_2026_QUESTIONS = [
     ],
     "answer": "1",
     "explanation": "For 0 < x < 1, x^2 < x and x^3 < x, so x^2 + x^3 < 2x (Quantity B is greater).",
-    "is_pyq": false,
+    "is_pyq": False,
     "pyq_year": "2026",
     "pyq_exam": "GRE General"
   },
@@ -61,7 +61,7 @@ GRE_2026_QUESTIONS = [
     ],
     "answer": "2",
     "explanation": "For odd n, 7^n + 11^n is always divisible by 7 + 11 = 18, leaving remainder 0 (Equal).",
-    "is_pyq": false,
+    "is_pyq": False,
     "pyq_year": "2026",
     "pyq_exam": "GRE General"
   },
@@ -82,7 +82,7 @@ GRE_2026_QUESTIONS = [
     ],
     "answer": "1",
     "explanation": "Hypotenuse = 15, R = 7.5, r = 3 => Euler distance = sqrt(7.5^2 - 2*7.5*3) = sqrt(11.25) \u2248 3.35 < 3.5 (Quantity B is greater).",
-    "is_pyq": false,
+    "is_pyq": False,
     "pyq_year": "2026",
     "pyq_exam": "GRE General"
   },
@@ -103,7 +103,7 @@ GRE_2026_QUESTIONS = [
     ],
     "answer": "0",
     "explanation": "Both sets have mean 30, but Set S has wider dispersion around 30 than Set T (Quantity A is greater).",
-    "is_pyq": false,
+    "is_pyq": False,
     "pyq_year": "2026",
     "pyq_exam": "GRE General"
   },
@@ -124,7 +124,7 @@ GRE_2026_QUESTIONS = [
     ],
     "answer": "3",
     "explanation": "x can be +5 (> -5) or -5 (= -5), so the relationship cannot be determined (Choice D).",
-    "is_pyq": false,
+    "is_pyq": False,
     "pyq_year": "2026",
     "pyq_exam": "GRE General"
   },
@@ -145,7 +145,7 @@ GRE_2026_QUESTIONS = [
     ],
     "answer": "1",
     "explanation": "For 0 < x < 1, x^2 < x and x^3 < x, so x^2 + x^3 < 2x (Quantity B is greater).",
-    "is_pyq": false,
+    "is_pyq": False,
     "pyq_year": "2026",
     "pyq_exam": "GRE General"
   },
@@ -166,7 +166,7 @@ GRE_2026_QUESTIONS = [
     ],
     "answer": "2",
     "explanation": "For odd n, 7^n + 11^n is always divisible by 7 + 11 = 18, leaving remainder 0 (Equal).",
-    "is_pyq": false,
+    "is_pyq": False,
     "pyq_year": "2026",
     "pyq_exam": "GRE General"
   },
@@ -187,7 +187,7 @@ GRE_2026_QUESTIONS = [
     ],
     "answer": "1",
     "explanation": "Hypotenuse = 15, R = 7.5, r = 3 => Euler distance = sqrt(7.5^2 - 2*7.5*3) = sqrt(11.25) \u2248 3.35 < 3.5 (Quantity B is greater).",
-    "is_pyq": false,
+    "is_pyq": False,
     "pyq_year": "2026",
     "pyq_exam": "GRE General"
   },
@@ -208,7 +208,7 @@ GRE_2026_QUESTIONS = [
     ],
     "answer": "0",
     "explanation": "Both sets have mean 30, but Set S has wider dispersion around 30 than Set T (Quantity A is greater).",
-    "is_pyq": false,
+    "is_pyq": False,
     "pyq_year": "2026",
     "pyq_exam": "GRE General"
   },
@@ -229,7 +229,7 @@ GRE_2026_QUESTIONS = [
     ],
     "answer": "3",
     "explanation": "x can be +5 (> -5) or -5 (= -5), so the relationship cannot be determined (Choice D).",
-    "is_pyq": false,
+    "is_pyq": False,
     "pyq_year": "2026",
     "pyq_exam": "GRE General"
   },
@@ -250,7 +250,7 @@ GRE_2026_QUESTIONS = [
     ],
     "answer": "1",
     "explanation": "For 0 < x < 1, x^2 < x and x^3 < x, so x^2 + x^3 < 2x (Quantity B is greater).",
-    "is_pyq": false,
+    "is_pyq": False,
     "pyq_year": "2026",
     "pyq_exam": "GRE General"
   },
@@ -271,7 +271,7 @@ GRE_2026_QUESTIONS = [
     ],
     "answer": "2",
     "explanation": "For odd n, 7^n + 11^n is always divisible by 7 + 11 = 18, leaving remainder 0 (Equal).",
-    "is_pyq": false,
+    "is_pyq": False,
     "pyq_year": "2026",
     "pyq_exam": "GRE General"
   },
@@ -292,7 +292,7 @@ GRE_2026_QUESTIONS = [
     ],
     "answer": "1",
     "explanation": "Hypotenuse = 15, R = 7.5, r = 3 => Euler distance = sqrt(7.5^2 - 2*7.5*3) = sqrt(11.25) \u2248 3.35 < 3.5 (Quantity B is greater).",
-    "is_pyq": false,
+    "is_pyq": False,
     "pyq_year": "2026",
     "pyq_exam": "GRE General"
   },
@@ -313,7 +313,7 @@ GRE_2026_QUESTIONS = [
     ],
     "answer": "0",
     "explanation": "Both sets have mean 30, but Set S has wider dispersion around 30 than Set T (Quantity A is greater).",
-    "is_pyq": false,
+    "is_pyq": False,
     "pyq_year": "2026",
     "pyq_exam": "GRE General"
   },
@@ -334,7 +334,7 @@ GRE_2026_QUESTIONS = [
     ],
     "answer": "3",
     "explanation": "x can be +5 (> -5) or -5 (= -5), so the relationship cannot be determined (Choice D).",
-    "is_pyq": false,
+    "is_pyq": False,
     "pyq_year": "2026",
     "pyq_exam": "GRE General"
   },
@@ -355,7 +355,7 @@ GRE_2026_QUESTIONS = [
     ],
     "answer": "1",
     "explanation": "For 0 < x < 1, x^2 < x and x^3 < x, so x^2 + x^3 < 2x (Quantity B is greater).",
-    "is_pyq": false,
+    "is_pyq": False,
     "pyq_year": "2026",
     "pyq_exam": "GRE General"
   },
@@ -376,7 +376,7 @@ GRE_2026_QUESTIONS = [
     ],
     "answer": "2",
     "explanation": "For odd n, 7^n + 11^n is always divisible by 7 + 11 = 18, leaving remainder 0 (Equal).",
-    "is_pyq": false,
+    "is_pyq": False,
     "pyq_year": "2026",
     "pyq_exam": "GRE General"
   },
@@ -397,7 +397,7 @@ GRE_2026_QUESTIONS = [
     ],
     "answer": "1",
     "explanation": "Hypotenuse = 15, R = 7.5, r = 3 => Euler distance = sqrt(7.5^2 - 2*7.5*3) = sqrt(11.25) \u2248 3.35 < 3.5 (Quantity B is greater).",
-    "is_pyq": false,
+    "is_pyq": False,
     "pyq_year": "2026",
     "pyq_exam": "GRE General"
   },
@@ -418,7 +418,7 @@ GRE_2026_QUESTIONS = [
     ],
     "answer": "0",
     "explanation": "Both sets have mean 30, but Set S has wider dispersion around 30 than Set T (Quantity A is greater).",
-    "is_pyq": false,
+    "is_pyq": False,
     "pyq_year": "2026",
     "pyq_exam": "GRE General"
   },
@@ -439,7 +439,7 @@ GRE_2026_QUESTIONS = [
     ],
     "answer": "3",
     "explanation": "x can be +5 (> -5) or -5 (= -5), so the relationship cannot be determined (Choice D).",
-    "is_pyq": false,
+    "is_pyq": False,
     "pyq_year": "2026",
     "pyq_exam": "GRE General"
   },
@@ -460,7 +460,7 @@ GRE_2026_QUESTIONS = [
     ],
     "answer": "1",
     "explanation": "For 0 < x < 1, x^2 < x and x^3 < x, so x^2 + x^3 < 2x (Quantity B is greater).",
-    "is_pyq": false,
+    "is_pyq": False,
     "pyq_year": "2026",
     "pyq_exam": "GRE General"
   },
@@ -481,7 +481,7 @@ GRE_2026_QUESTIONS = [
     ],
     "answer": "2",
     "explanation": "For odd n, 7^n + 11^n is always divisible by 7 + 11 = 18, leaving remainder 0 (Equal).",
-    "is_pyq": false,
+    "is_pyq": False,
     "pyq_year": "2026",
     "pyq_exam": "GRE General"
   },
@@ -502,7 +502,7 @@ GRE_2026_QUESTIONS = [
     ],
     "answer": "1",
     "explanation": "Hypotenuse = 15, R = 7.5, r = 3 => Euler distance = sqrt(7.5^2 - 2*7.5*3) = sqrt(11.25) \u2248 3.35 < 3.5 (Quantity B is greater).",
-    "is_pyq": false,
+    "is_pyq": False,
     "pyq_year": "2026",
     "pyq_exam": "GRE General"
   },
@@ -523,7 +523,7 @@ GRE_2026_QUESTIONS = [
     ],
     "answer": "0",
     "explanation": "Both sets have mean 30, but Set S has wider dispersion around 30 than Set T (Quantity A is greater).",
-    "is_pyq": false,
+    "is_pyq": False,
     "pyq_year": "2026",
     "pyq_exam": "GRE General"
   },
@@ -544,7 +544,7 @@ GRE_2026_QUESTIONS = [
     ],
     "answer": "3",
     "explanation": "x can be +5 (> -5) or -5 (= -5), so the relationship cannot be determined (Choice D).",
-    "is_pyq": false,
+    "is_pyq": False,
     "pyq_year": "2026",
     "pyq_exam": "GRE General"
   },
@@ -565,7 +565,7 @@ GRE_2026_QUESTIONS = [
     ],
     "answer": "1",
     "explanation": "For 0 < x < 1, x^2 < x and x^3 < x, so x^2 + x^3 < 2x (Quantity B is greater).",
-    "is_pyq": false,
+    "is_pyq": False,
     "pyq_year": "2026",
     "pyq_exam": "GRE General"
   },
@@ -586,7 +586,7 @@ GRE_2026_QUESTIONS = [
     ],
     "answer": "2",
     "explanation": "For odd n, 7^n + 11^n is always divisible by 7 + 11 = 18, leaving remainder 0 (Equal).",
-    "is_pyq": false,
+    "is_pyq": False,
     "pyq_year": "2026",
     "pyq_exam": "GRE General"
   },
@@ -607,7 +607,7 @@ GRE_2026_QUESTIONS = [
     ],
     "answer": "1",
     "explanation": "Hypotenuse = 15, R = 7.5, r = 3 => Euler distance = sqrt(7.5^2 - 2*7.5*3) = sqrt(11.25) \u2248 3.35 < 3.5 (Quantity B is greater).",
-    "is_pyq": false,
+    "is_pyq": False,
     "pyq_year": "2026",
     "pyq_exam": "GRE General"
   },
@@ -628,7 +628,7 @@ GRE_2026_QUESTIONS = [
     ],
     "answer": "0",
     "explanation": "Both sets have mean 30, but Set S has wider dispersion around 30 than Set T (Quantity A is greater).",
-    "is_pyq": false,
+    "is_pyq": False,
     "pyq_year": "2026",
     "pyq_exam": "GRE General"
   },
@@ -649,7 +649,7 @@ GRE_2026_QUESTIONS = [
     ],
     "answer": "3",
     "explanation": "x can be +5 (> -5) or -5 (= -5), so the relationship cannot be determined (Choice D).",
-    "is_pyq": false,
+    "is_pyq": False,
     "pyq_year": "2026",
     "pyq_exam": "GRE General"
   },
@@ -670,7 +670,7 @@ GRE_2026_QUESTIONS = [
     ],
     "answer": "1",
     "explanation": "For 0 < x < 1, x^2 < x and x^3 < x, so x^2 + x^3 < 2x (Quantity B is greater).",
-    "is_pyq": false,
+    "is_pyq": False,
     "pyq_year": "2026",
     "pyq_exam": "GRE General"
   },
@@ -691,7 +691,7 @@ GRE_2026_QUESTIONS = [
     ],
     "answer": "2",
     "explanation": "For odd n, 7^n + 11^n is always divisible by 7 + 11 = 18, leaving remainder 0 (Equal).",
-    "is_pyq": false,
+    "is_pyq": False,
     "pyq_year": "2026",
     "pyq_exam": "GRE General"
   },
@@ -712,7 +712,7 @@ GRE_2026_QUESTIONS = [
     ],
     "answer": "1",
     "explanation": "Hypotenuse = 15, R = 7.5, r = 3 => Euler distance = sqrt(7.5^2 - 2*7.5*3) = sqrt(11.25) \u2248 3.35 < 3.5 (Quantity B is greater).",
-    "is_pyq": false,
+    "is_pyq": False,
     "pyq_year": "2026",
     "pyq_exam": "GRE General"
   },
@@ -733,7 +733,7 @@ GRE_2026_QUESTIONS = [
     ],
     "answer": "0",
     "explanation": "Both sets have mean 30, but Set S has wider dispersion around 30 than Set T (Quantity A is greater).",
-    "is_pyq": false,
+    "is_pyq": False,
     "pyq_year": "2026",
     "pyq_exam": "GRE General"
   },
@@ -754,7 +754,7 @@ GRE_2026_QUESTIONS = [
     ],
     "answer": "3",
     "explanation": "x can be +5 (> -5) or -5 (= -5), so the relationship cannot be determined (Choice D).",
-    "is_pyq": false,
+    "is_pyq": False,
     "pyq_year": "2026",
     "pyq_exam": "GRE General"
   },
@@ -775,7 +775,7 @@ GRE_2026_QUESTIONS = [
     ],
     "answer": "1",
     "explanation": "For 0 < x < 1, x^2 < x and x^3 < x, so x^2 + x^3 < 2x (Quantity B is greater).",
-    "is_pyq": false,
+    "is_pyq": False,
     "pyq_year": "2026",
     "pyq_exam": "GRE General"
   },
@@ -796,7 +796,7 @@ GRE_2026_QUESTIONS = [
     ],
     "answer": "2",
     "explanation": "For odd n, 7^n + 11^n is always divisible by 7 + 11 = 18, leaving remainder 0 (Equal).",
-    "is_pyq": false,
+    "is_pyq": False,
     "pyq_year": "2026",
     "pyq_exam": "GRE General"
   },
@@ -817,7 +817,7 @@ GRE_2026_QUESTIONS = [
     ],
     "answer": "1",
     "explanation": "Hypotenuse = 15, R = 7.5, r = 3 => Euler distance = sqrt(7.5^2 - 2*7.5*3) = sqrt(11.25) \u2248 3.35 < 3.5 (Quantity B is greater).",
-    "is_pyq": false,
+    "is_pyq": False,
     "pyq_year": "2026",
     "pyq_exam": "GRE General"
   },
@@ -838,7 +838,7 @@ GRE_2026_QUESTIONS = [
     ],
     "answer": "0",
     "explanation": "Both sets have mean 30, but Set S has wider dispersion around 30 than Set T (Quantity A is greater).",
-    "is_pyq": false,
+    "is_pyq": False,
     "pyq_year": "2026",
     "pyq_exam": "GRE General"
   },
@@ -859,7 +859,7 @@ GRE_2026_QUESTIONS = [
     ],
     "answer": "3",
     "explanation": "x can be +5 (> -5) or -5 (= -5), so the relationship cannot be determined (Choice D).",
-    "is_pyq": false,
+    "is_pyq": False,
     "pyq_year": "2026",
     "pyq_exam": "GRE General"
   },
@@ -880,7 +880,7 @@ GRE_2026_QUESTIONS = [
     ],
     "answer": "1",
     "explanation": "For 0 < x < 1, x^2 < x and x^3 < x, so x^2 + x^3 < 2x (Quantity B is greater).",
-    "is_pyq": false,
+    "is_pyq": False,
     "pyq_year": "2026",
     "pyq_exam": "GRE General"
   },
@@ -901,7 +901,7 @@ GRE_2026_QUESTIONS = [
     ],
     "answer": "2",
     "explanation": "For odd n, 7^n + 11^n is always divisible by 7 + 11 = 18, leaving remainder 0 (Equal).",
-    "is_pyq": false,
+    "is_pyq": False,
     "pyq_year": "2026",
     "pyq_exam": "GRE General"
   },
@@ -922,7 +922,7 @@ GRE_2026_QUESTIONS = [
     ],
     "answer": "1",
     "explanation": "Hypotenuse = 15, R = 7.5, r = 3 => Euler distance = sqrt(7.5^2 - 2*7.5*3) = sqrt(11.25) \u2248 3.35 < 3.5 (Quantity B is greater).",
-    "is_pyq": false,
+    "is_pyq": False,
     "pyq_year": "2026",
     "pyq_exam": "GRE General"
   },
@@ -943,7 +943,7 @@ GRE_2026_QUESTIONS = [
     ],
     "answer": "0",
     "explanation": "Both sets have mean 30, but Set S has wider dispersion around 30 than Set T (Quantity A is greater).",
-    "is_pyq": false,
+    "is_pyq": False,
     "pyq_year": "2026",
     "pyq_exam": "GRE General"
   },
@@ -964,7 +964,7 @@ GRE_2026_QUESTIONS = [
     ],
     "answer": "3",
     "explanation": "x can be +5 (> -5) or -5 (= -5), so the relationship cannot be determined (Choice D).",
-    "is_pyq": false,
+    "is_pyq": False,
     "pyq_year": "2026",
     "pyq_exam": "GRE General"
   },
@@ -985,7 +985,7 @@ GRE_2026_QUESTIONS = [
     ],
     "answer": "1",
     "explanation": "For 0 < x < 1, x^2 < x and x^3 < x, so x^2 + x^3 < 2x (Quantity B is greater).",
-    "is_pyq": false,
+    "is_pyq": False,
     "pyq_year": "2026",
     "pyq_exam": "GRE General"
   },
@@ -1006,7 +1006,7 @@ GRE_2026_QUESTIONS = [
     ],
     "answer": "2",
     "explanation": "For odd n, 7^n + 11^n is always divisible by 7 + 11 = 18, leaving remainder 0 (Equal).",
-    "is_pyq": false,
+    "is_pyq": False,
     "pyq_year": "2026",
     "pyq_exam": "GRE General"
   },
@@ -1027,7 +1027,7 @@ GRE_2026_QUESTIONS = [
     ],
     "answer": "1",
     "explanation": "Hypotenuse = 15, R = 7.5, r = 3 => Euler distance = sqrt(7.5^2 - 2*7.5*3) = sqrt(11.25) \u2248 3.35 < 3.5 (Quantity B is greater).",
-    "is_pyq": false,
+    "is_pyq": False,
     "pyq_year": "2026",
     "pyq_exam": "GRE General"
   },
@@ -1048,7 +1048,7 @@ GRE_2026_QUESTIONS = [
     ],
     "answer": "0",
     "explanation": "Both sets have mean 30, but Set S has wider dispersion around 30 than Set T (Quantity A is greater).",
-    "is_pyq": false,
+    "is_pyq": False,
     "pyq_year": "2026",
     "pyq_exam": "GRE General"
   },
@@ -1069,7 +1069,7 @@ GRE_2026_QUESTIONS = [
     ],
     "answer": "3",
     "explanation": "x can be +5 (> -5) or -5 (= -5), so the relationship cannot be determined (Choice D).",
-    "is_pyq": false,
+    "is_pyq": False,
     "pyq_year": "2026",
     "pyq_exam": "GRE General"
   },
@@ -1090,7 +1090,7 @@ GRE_2026_QUESTIONS = [
     ],
     "answer": "1",
     "explanation": "For 0 < x < 1, x^2 < x and x^3 < x, so x^2 + x^3 < 2x (Quantity B is greater).",
-    "is_pyq": false,
+    "is_pyq": False,
     "pyq_year": "2026",
     "pyq_exam": "GRE General"
   },
@@ -1111,7 +1111,7 @@ GRE_2026_QUESTIONS = [
     ],
     "answer": "2",
     "explanation": "For odd n, 7^n + 11^n is always divisible by 7 + 11 = 18, leaving remainder 0 (Equal).",
-    "is_pyq": false,
+    "is_pyq": False,
     "pyq_year": "2026",
     "pyq_exam": "GRE General"
   },
@@ -1132,7 +1132,7 @@ GRE_2026_QUESTIONS = [
     ],
     "answer": "1",
     "explanation": "Hypotenuse = 15, R = 7.5, r = 3 => Euler distance = sqrt(7.5^2 - 2*7.5*3) = sqrt(11.25) \u2248 3.35 < 3.5 (Quantity B is greater).",
-    "is_pyq": false,
+    "is_pyq": False,
     "pyq_year": "2026",
     "pyq_exam": "GRE General"
   },
@@ -1153,7 +1153,7 @@ GRE_2026_QUESTIONS = [
     ],
     "answer": "0",
     "explanation": "Both sets have mean 30, but Set S has wider dispersion around 30 than Set T (Quantity A is greater).",
-    "is_pyq": false,
+    "is_pyq": False,
     "pyq_year": "2026",
     "pyq_exam": "GRE General"
   },
@@ -1174,7 +1174,7 @@ GRE_2026_QUESTIONS = [
     ],
     "answer": "3",
     "explanation": "x can be +5 (> -5) or -5 (= -5), so the relationship cannot be determined (Choice D).",
-    "is_pyq": false,
+    "is_pyq": False,
     "pyq_year": "2026",
     "pyq_exam": "GRE General"
   },
@@ -1195,7 +1195,7 @@ GRE_2026_QUESTIONS = [
     ],
     "answer": "1",
     "explanation": "For 0 < x < 1, x^2 < x and x^3 < x, so x^2 + x^3 < 2x (Quantity B is greater).",
-    "is_pyq": false,
+    "is_pyq": False,
     "pyq_year": "2026",
     "pyq_exam": "GRE General"
   },
@@ -1216,7 +1216,7 @@ GRE_2026_QUESTIONS = [
     ],
     "answer": "2",
     "explanation": "For odd n, 7^n + 11^n is always divisible by 7 + 11 = 18, leaving remainder 0 (Equal).",
-    "is_pyq": false,
+    "is_pyq": False,
     "pyq_year": "2026",
     "pyq_exam": "GRE General"
   },
@@ -1237,7 +1237,7 @@ GRE_2026_QUESTIONS = [
     ],
     "answer": "1",
     "explanation": "Hypotenuse = 15, R = 7.5, r = 3 => Euler distance = sqrt(7.5^2 - 2*7.5*3) = sqrt(11.25) \u2248 3.35 < 3.5 (Quantity B is greater).",
-    "is_pyq": false,
+    "is_pyq": False,
     "pyq_year": "2026",
     "pyq_exam": "GRE General"
   },
@@ -1258,7 +1258,7 @@ GRE_2026_QUESTIONS = [
     ],
     "answer": "0",
     "explanation": "Both sets have mean 30, but Set S has wider dispersion around 30 than Set T (Quantity A is greater).",
-    "is_pyq": false,
+    "is_pyq": False,
     "pyq_year": "2026",
     "pyq_exam": "GRE General"
   },
@@ -1279,7 +1279,7 @@ GRE_2026_QUESTIONS = [
     ],
     "answer": "3",
     "explanation": "x can be +5 (> -5) or -5 (= -5), so the relationship cannot be determined (Choice D).",
-    "is_pyq": false,
+    "is_pyq": False,
     "pyq_year": "2026",
     "pyq_exam": "GRE General"
   },
@@ -1300,7 +1300,7 @@ GRE_2026_QUESTIONS = [
     ],
     "answer": "1",
     "explanation": "For 0 < x < 1, x^2 < x and x^3 < x, so x^2 + x^3 < 2x (Quantity B is greater).",
-    "is_pyq": false,
+    "is_pyq": False,
     "pyq_year": "2026",
     "pyq_exam": "GRE General"
   },
@@ -1321,7 +1321,7 @@ GRE_2026_QUESTIONS = [
     ],
     "answer": "2",
     "explanation": "For odd n, 7^n + 11^n is always divisible by 7 + 11 = 18, leaving remainder 0 (Equal).",
-    "is_pyq": false,
+    "is_pyq": False,
     "pyq_year": "2026",
     "pyq_exam": "GRE General"
   },
@@ -1342,7 +1342,7 @@ GRE_2026_QUESTIONS = [
     ],
     "answer": "1",
     "explanation": "Hypotenuse = 15, R = 7.5, r = 3 => Euler distance = sqrt(7.5^2 - 2*7.5*3) = sqrt(11.25) \u2248 3.35 < 3.5 (Quantity B is greater).",
-    "is_pyq": false,
+    "is_pyq": False,
     "pyq_year": "2026",
     "pyq_exam": "GRE General"
   },
@@ -1363,7 +1363,7 @@ GRE_2026_QUESTIONS = [
     ],
     "answer": "0",
     "explanation": "Both sets have mean 30, but Set S has wider dispersion around 30 than Set T (Quantity A is greater).",
-    "is_pyq": false,
+    "is_pyq": False,
     "pyq_year": "2026",
     "pyq_exam": "GRE General"
   },
@@ -1384,7 +1384,7 @@ GRE_2026_QUESTIONS = [
     ],
     "answer": "3",
     "explanation": "x can be +5 (> -5) or -5 (= -5), so the relationship cannot be determined (Choice D).",
-    "is_pyq": false,
+    "is_pyq": False,
     "pyq_year": "2026",
     "pyq_exam": "GRE General"
   },
@@ -1405,7 +1405,7 @@ GRE_2026_QUESTIONS = [
     ],
     "answer": "1",
     "explanation": "For 0 < x < 1, x^2 < x and x^3 < x, so x^2 + x^3 < 2x (Quantity B is greater).",
-    "is_pyq": false,
+    "is_pyq": False,
     "pyq_year": "2026",
     "pyq_exam": "GRE General"
   },
@@ -1426,7 +1426,7 @@ GRE_2026_QUESTIONS = [
     ],
     "answer": "2",
     "explanation": "For odd n, 7^n + 11^n is always divisible by 7 + 11 = 18, leaving remainder 0 (Equal).",
-    "is_pyq": false,
+    "is_pyq": False,
     "pyq_year": "2026",
     "pyq_exam": "GRE General"
   },
@@ -1447,7 +1447,7 @@ GRE_2026_QUESTIONS = [
     ],
     "answer": "1",
     "explanation": "Hypotenuse = 15, R = 7.5, r = 3 => Euler distance = sqrt(7.5^2 - 2*7.5*3) = sqrt(11.25) \u2248 3.35 < 3.5 (Quantity B is greater).",
-    "is_pyq": false,
+    "is_pyq": False,
     "pyq_year": "2026",
     "pyq_exam": "GRE General"
   },
@@ -1468,7 +1468,7 @@ GRE_2026_QUESTIONS = [
     ],
     "answer": "0",
     "explanation": "Both sets have mean 30, but Set S has wider dispersion around 30 than Set T (Quantity A is greater).",
-    "is_pyq": false,
+    "is_pyq": False,
     "pyq_year": "2026",
     "pyq_exam": "GRE General"
   },
@@ -1489,7 +1489,7 @@ GRE_2026_QUESTIONS = [
     ],
     "answer": "3",
     "explanation": "x can be +5 (> -5) or -5 (= -5), so the relationship cannot be determined (Choice D).",
-    "is_pyq": false,
+    "is_pyq": False,
     "pyq_year": "2026",
     "pyq_exam": "GRE General"
   },
@@ -1510,7 +1510,7 @@ GRE_2026_QUESTIONS = [
     ],
     "answer": "1",
     "explanation": "For 0 < x < 1, x^2 < x and x^3 < x, so x^2 + x^3 < 2x (Quantity B is greater).",
-    "is_pyq": false,
+    "is_pyq": False,
     "pyq_year": "2026",
     "pyq_exam": "GRE General"
   },
@@ -1531,7 +1531,7 @@ GRE_2026_QUESTIONS = [
     ],
     "answer": "2",
     "explanation": "For odd n, 7^n + 11^n is always divisible by 7 + 11 = 18, leaving remainder 0 (Equal).",
-    "is_pyq": false,
+    "is_pyq": False,
     "pyq_year": "2026",
     "pyq_exam": "GRE General"
   },
@@ -1552,7 +1552,7 @@ GRE_2026_QUESTIONS = [
     ],
     "answer": "1",
     "explanation": "Hypotenuse = 15, R = 7.5, r = 3 => Euler distance = sqrt(7.5^2 - 2*7.5*3) = sqrt(11.25) \u2248 3.35 < 3.5 (Quantity B is greater).",
-    "is_pyq": false,
+    "is_pyq": False,
     "pyq_year": "2026",
     "pyq_exam": "GRE General"
   },
@@ -1573,7 +1573,7 @@ GRE_2026_QUESTIONS = [
     ],
     "answer": "0",
     "explanation": "Both sets have mean 30, but Set S has wider dispersion around 30 than Set T (Quantity A is greater).",
-    "is_pyq": false,
+    "is_pyq": False,
     "pyq_year": "2026",
     "pyq_exam": "GRE General"
   },
@@ -1594,7 +1594,7 @@ GRE_2026_QUESTIONS = [
     ],
     "answer": "3",
     "explanation": "x can be +5 (> -5) or -5 (= -5), so the relationship cannot be determined (Choice D).",
-    "is_pyq": false,
+    "is_pyq": False,
     "pyq_year": "2026",
     "pyq_exam": "GRE General"
   },
@@ -1615,7 +1615,7 @@ GRE_2026_QUESTIONS = [
     ],
     "answer": "1",
     "explanation": "For 0 < x < 1, x^2 < x and x^3 < x, so x^2 + x^3 < 2x (Quantity B is greater).",
-    "is_pyq": false,
+    "is_pyq": False,
     "pyq_year": "2026",
     "pyq_exam": "GRE General"
   },
@@ -1636,7 +1636,7 @@ GRE_2026_QUESTIONS = [
     ],
     "answer": "2",
     "explanation": "For odd n, 7^n + 11^n is always divisible by 7 + 11 = 18, leaving remainder 0 (Equal).",
-    "is_pyq": false,
+    "is_pyq": False,
     "pyq_year": "2026",
     "pyq_exam": "GRE General"
   },
@@ -1657,7 +1657,7 @@ GRE_2026_QUESTIONS = [
     ],
     "answer": "1",
     "explanation": "Hypotenuse = 15, R = 7.5, r = 3 => Euler distance = sqrt(7.5^2 - 2*7.5*3) = sqrt(11.25) \u2248 3.35 < 3.5 (Quantity B is greater).",
-    "is_pyq": false,
+    "is_pyq": False,
     "pyq_year": "2026",
     "pyq_exam": "GRE General"
   },
@@ -1678,7 +1678,7 @@ GRE_2026_QUESTIONS = [
     ],
     "answer": "0",
     "explanation": "Both sets have mean 30, but Set S has wider dispersion around 30 than Set T (Quantity A is greater).",
-    "is_pyq": false,
+    "is_pyq": False,
     "pyq_year": "2026",
     "pyq_exam": "GRE General"
   },
@@ -1694,7 +1694,7 @@ GRE_2026_QUESTIONS = [
     "options": [],
     "answer": "36",
     "explanation": "Stars and bars: C(10 - 1, 3 - 1) = 36.",
-    "is_pyq": false,
+    "is_pyq": False,
     "pyq_year": "2026",
     "pyq_exam": "GRE General"
   },
@@ -1710,7 +1710,7 @@ GRE_2026_QUESTIONS = [
     "options": [],
     "answer": "45",
     "explanation": "Stars and bars: C(11 - 1, 3 - 1) = 45.",
-    "is_pyq": false,
+    "is_pyq": False,
     "pyq_year": "2026",
     "pyq_exam": "GRE General"
   },
@@ -1726,7 +1726,7 @@ GRE_2026_QUESTIONS = [
     "options": [],
     "answer": "55",
     "explanation": "Stars and bars: C(12 - 1, 3 - 1) = 55.",
-    "is_pyq": false,
+    "is_pyq": False,
     "pyq_year": "2026",
     "pyq_exam": "GRE General"
   },
@@ -1742,7 +1742,7 @@ GRE_2026_QUESTIONS = [
     "options": [],
     "answer": "66",
     "explanation": "Stars and bars: C(13 - 1, 3 - 1) = 66.",
-    "is_pyq": false,
+    "is_pyq": False,
     "pyq_year": "2026",
     "pyq_exam": "GRE General"
   },
@@ -1758,7 +1758,7 @@ GRE_2026_QUESTIONS = [
     "options": [],
     "answer": "78",
     "explanation": "Stars and bars: C(14 - 1, 3 - 1) = 78.",
-    "is_pyq": false,
+    "is_pyq": False,
     "pyq_year": "2026",
     "pyq_exam": "GRE General"
   },
@@ -1774,7 +1774,7 @@ GRE_2026_QUESTIONS = [
     "options": [],
     "answer": "91",
     "explanation": "Stars and bars: C(15 - 1, 3 - 1) = 91.",
-    "is_pyq": false,
+    "is_pyq": False,
     "pyq_year": "2026",
     "pyq_exam": "GRE General"
   },
@@ -1790,7 +1790,7 @@ GRE_2026_QUESTIONS = [
     "options": [],
     "answer": "105",
     "explanation": "Stars and bars: C(16 - 1, 3 - 1) = 105.",
-    "is_pyq": false,
+    "is_pyq": False,
     "pyq_year": "2026",
     "pyq_exam": "GRE General"
   },
@@ -1806,7 +1806,7 @@ GRE_2026_QUESTIONS = [
     "options": [],
     "answer": "136",
     "explanation": "Stars and bars: C(18 - 1, 3 - 1) = 136.",
-    "is_pyq": false,
+    "is_pyq": False,
     "pyq_year": "2026",
     "pyq_exam": "GRE General"
   },
@@ -1822,7 +1822,7 @@ GRE_2026_QUESTIONS = [
     "options": [],
     "answer": "171",
     "explanation": "Stars and bars: C(20 - 1, 3 - 1) = 171.",
-    "is_pyq": false,
+    "is_pyq": False,
     "pyq_year": "2026",
     "pyq_exam": "GRE General"
   },
@@ -1838,7 +1838,7 @@ GRE_2026_QUESTIONS = [
     "options": [],
     "answer": "210",
     "explanation": "Stars and bars: C(22 - 1, 3 - 1) = 210.",
-    "is_pyq": false,
+    "is_pyq": False,
     "pyq_year": "2026",
     "pyq_exam": "GRE General"
   },
@@ -1854,7 +1854,7 @@ GRE_2026_QUESTIONS = [
     "options": [],
     "answer": "56",
     "explanation": "Stars and bars: C(9 - 1, 4 - 1) = 56.",
-    "is_pyq": false,
+    "is_pyq": False,
     "pyq_year": "2026",
     "pyq_exam": "GRE General"
   },
@@ -1870,7 +1870,7 @@ GRE_2026_QUESTIONS = [
     "options": [],
     "answer": "84",
     "explanation": "Stars and bars: C(10 - 1, 4 - 1) = 84.",
-    "is_pyq": false,
+    "is_pyq": False,
     "pyq_year": "2026",
     "pyq_exam": "GRE General"
   },
@@ -1886,7 +1886,7 @@ GRE_2026_QUESTIONS = [
     "options": [],
     "answer": "120",
     "explanation": "Stars and bars: C(11 - 1, 4 - 1) = 120.",
-    "is_pyq": false,
+    "is_pyq": False,
     "pyq_year": "2026",
     "pyq_exam": "GRE General"
   },
@@ -1902,7 +1902,7 @@ GRE_2026_QUESTIONS = [
     "options": [],
     "answer": "165",
     "explanation": "Stars and bars: C(12 - 1, 4 - 1) = 165.",
-    "is_pyq": false,
+    "is_pyq": False,
     "pyq_year": "2026",
     "pyq_exam": "GRE General"
   },
@@ -1918,7 +1918,7 @@ GRE_2026_QUESTIONS = [
     "options": [],
     "answer": "220",
     "explanation": "Stars and bars: C(13 - 1, 4 - 1) = 220.",
-    "is_pyq": false,
+    "is_pyq": False,
     "pyq_year": "2026",
     "pyq_exam": "GRE General"
   },
@@ -1934,7 +1934,7 @@ GRE_2026_QUESTIONS = [
     "options": [],
     "answer": "286",
     "explanation": "Stars and bars: C(14 - 1, 4 - 1) = 286.",
-    "is_pyq": false,
+    "is_pyq": False,
     "pyq_year": "2026",
     "pyq_exam": "GRE General"
   },
@@ -1950,7 +1950,7 @@ GRE_2026_QUESTIONS = [
     "options": [],
     "answer": "364",
     "explanation": "Stars and bars: C(15 - 1, 4 - 1) = 364.",
-    "is_pyq": false,
+    "is_pyq": False,
     "pyq_year": "2026",
     "pyq_exam": "GRE General"
   },
@@ -1966,7 +1966,7 @@ GRE_2026_QUESTIONS = [
     "options": [],
     "answer": "455",
     "explanation": "Stars and bars: C(16 - 1, 4 - 1) = 455.",
-    "is_pyq": false,
+    "is_pyq": False,
     "pyq_year": "2026",
     "pyq_exam": "GRE General"
   },
@@ -1982,7 +1982,7 @@ GRE_2026_QUESTIONS = [
     "options": [],
     "answer": "680",
     "explanation": "Stars and bars: C(18 - 1, 4 - 1) = 680.",
-    "is_pyq": false,
+    "is_pyq": False,
     "pyq_year": "2026",
     "pyq_exam": "GRE General"
   },
@@ -1998,7 +1998,7 @@ GRE_2026_QUESTIONS = [
     "options": [],
     "answer": "969",
     "explanation": "Stars and bars: C(20 - 1, 4 - 1) = 969.",
-    "is_pyq": false,
+    "is_pyq": False,
     "pyq_year": "2026",
     "pyq_exam": "GRE General"
   },
@@ -2014,7 +2014,7 @@ GRE_2026_QUESTIONS = [
     "options": [],
     "answer": "126",
     "explanation": "Stars and bars: C(10 - 1, 5 - 1) = 126.",
-    "is_pyq": false,
+    "is_pyq": False,
     "pyq_year": "2026",
     "pyq_exam": "GRE General"
   },
@@ -2030,7 +2030,7 @@ GRE_2026_QUESTIONS = [
     "options": [],
     "answer": "210",
     "explanation": "Stars and bars: C(11 - 1, 5 - 1) = 210.",
-    "is_pyq": false,
+    "is_pyq": False,
     "pyq_year": "2026",
     "pyq_exam": "GRE General"
   },
@@ -2046,7 +2046,7 @@ GRE_2026_QUESTIONS = [
     "options": [],
     "answer": "330",
     "explanation": "Stars and bars: C(12 - 1, 5 - 1) = 330.",
-    "is_pyq": false,
+    "is_pyq": False,
     "pyq_year": "2026",
     "pyq_exam": "GRE General"
   },
@@ -2062,7 +2062,7 @@ GRE_2026_QUESTIONS = [
     "options": [],
     "answer": "495",
     "explanation": "Stars and bars: C(13 - 1, 5 - 1) = 495.",
-    "is_pyq": false,
+    "is_pyq": False,
     "pyq_year": "2026",
     "pyq_exam": "GRE General"
   },
@@ -2078,7 +2078,7 @@ GRE_2026_QUESTIONS = [
     "options": [],
     "answer": "715",
     "explanation": "Stars and bars: C(14 - 1, 5 - 1) = 715.",
-    "is_pyq": false,
+    "is_pyq": False,
     "pyq_year": "2026",
     "pyq_exam": "GRE General"
   },
@@ -2094,7 +2094,7 @@ GRE_2026_QUESTIONS = [
     "options": [],
     "answer": "1001",
     "explanation": "Stars and bars: C(15 - 1, 5 - 1) = 1001.",
-    "is_pyq": false,
+    "is_pyq": False,
     "pyq_year": "2026",
     "pyq_exam": "GRE General"
   },
@@ -2110,7 +2110,7 @@ GRE_2026_QUESTIONS = [
     "options": [],
     "answer": "1365",
     "explanation": "Stars and bars: C(16 - 1, 5 - 1) = 1365.",
-    "is_pyq": false,
+    "is_pyq": False,
     "pyq_year": "2026",
     "pyq_exam": "GRE General"
   },
@@ -2126,7 +2126,7 @@ GRE_2026_QUESTIONS = [
     "options": [],
     "answer": "1820",
     "explanation": "Stars and bars: C(17 - 1, 5 - 1) = 1820.",
-    "is_pyq": false,
+    "is_pyq": False,
     "pyq_year": "2026",
     "pyq_exam": "GRE General"
   },
@@ -2142,7 +2142,7 @@ GRE_2026_QUESTIONS = [
     "options": [],
     "answer": "2380",
     "explanation": "Stars and bars: C(18 - 1, 5 - 1) = 2380.",
-    "is_pyq": false,
+    "is_pyq": False,
     "pyq_year": "2026",
     "pyq_exam": "GRE General"
   },
@@ -2158,7 +2158,7 @@ GRE_2026_QUESTIONS = [
     "options": [],
     "answer": "3876",
     "explanation": "Stars and bars: C(20 - 1, 5 - 1) = 3876.",
-    "is_pyq": false,
+    "is_pyq": False,
     "pyq_year": "2026",
     "pyq_exam": "GRE General"
   },
@@ -2174,7 +2174,7 @@ GRE_2026_QUESTIONS = [
     "options": [],
     "answer": "462",
     "explanation": "Stars and bars: C(12 - 1, 6 - 1) = 462.",
-    "is_pyq": false,
+    "is_pyq": False,
     "pyq_year": "2026",
     "pyq_exam": "GRE General"
   },
@@ -2190,7 +2190,7 @@ GRE_2026_QUESTIONS = [
     "options": [],
     "answer": "792",
     "explanation": "Stars and bars: C(13 - 1, 6 - 1) = 792.",
-    "is_pyq": false,
+    "is_pyq": False,
     "pyq_year": "2026",
     "pyq_exam": "GRE General"
   },
@@ -2206,7 +2206,7 @@ GRE_2026_QUESTIONS = [
     "options": [],
     "answer": "1287",
     "explanation": "Stars and bars: C(14 - 1, 6 - 1) = 1287.",
-    "is_pyq": false,
+    "is_pyq": False,
     "pyq_year": "2026",
     "pyq_exam": "GRE General"
   },
@@ -2222,7 +2222,7 @@ GRE_2026_QUESTIONS = [
     "options": [],
     "answer": "2002",
     "explanation": "Stars and bars: C(15 - 1, 6 - 1) = 2002.",
-    "is_pyq": false,
+    "is_pyq": False,
     "pyq_year": "2026",
     "pyq_exam": "GRE General"
   },
@@ -2238,7 +2238,7 @@ GRE_2026_QUESTIONS = [
     "options": [],
     "answer": "3003",
     "explanation": "Stars and bars: C(16 - 1, 6 - 1) = 3003.",
-    "is_pyq": false,
+    "is_pyq": False,
     "pyq_year": "2026",
     "pyq_exam": "GRE General"
   },
@@ -2254,7 +2254,7 @@ GRE_2026_QUESTIONS = [
     "options": [],
     "answer": "4368",
     "explanation": "Stars and bars: C(17 - 1, 6 - 1) = 4368.",
-    "is_pyq": false,
+    "is_pyq": False,
     "pyq_year": "2026",
     "pyq_exam": "GRE General"
   },
@@ -2270,7 +2270,7 @@ GRE_2026_QUESTIONS = [
     "options": [],
     "answer": "6188",
     "explanation": "Stars and bars: C(18 - 1, 6 - 1) = 6188.",
-    "is_pyq": false,
+    "is_pyq": False,
     "pyq_year": "2026",
     "pyq_exam": "GRE General"
   },
@@ -2286,7 +2286,7 @@ GRE_2026_QUESTIONS = [
     "options": [],
     "answer": "8568",
     "explanation": "Stars and bars: C(19 - 1, 6 - 1) = 8568.",
-    "is_pyq": false,
+    "is_pyq": False,
     "pyq_year": "2026",
     "pyq_exam": "GRE General"
   },
@@ -2302,7 +2302,7 @@ GRE_2026_QUESTIONS = [
     "options": [],
     "answer": "11628",
     "explanation": "Stars and bars: C(20 - 1, 6 - 1) = 11628.",
-    "is_pyq": false,
+    "is_pyq": False,
     "pyq_year": "2026",
     "pyq_exam": "GRE General"
   },
@@ -2318,7 +2318,7 @@ GRE_2026_QUESTIONS = [
     "options": [],
     "answer": "15504",
     "explanation": "Stars and bars: C(21 - 1, 6 - 1) = 15504.",
-    "is_pyq": false,
+    "is_pyq": False,
     "pyq_year": "2026",
     "pyq_exam": "GRE General"
   },
@@ -2334,7 +2334,7 @@ GRE_2026_QUESTIONS = [
     "options": [],
     "answer": "1716",
     "explanation": "Stars and bars: C(14 - 1, 7 - 1) = 1716.",
-    "is_pyq": false,
+    "is_pyq": False,
     "pyq_year": "2026",
     "pyq_exam": "GRE General"
   },
@@ -2350,7 +2350,7 @@ GRE_2026_QUESTIONS = [
     "options": [],
     "answer": "3003",
     "explanation": "Stars and bars: C(15 - 1, 7 - 1) = 3003.",
-    "is_pyq": false,
+    "is_pyq": False,
     "pyq_year": "2026",
     "pyq_exam": "GRE General"
   },
@@ -2366,7 +2366,7 @@ GRE_2026_QUESTIONS = [
     "options": [],
     "answer": "5005",
     "explanation": "Stars and bars: C(16 - 1, 7 - 1) = 5005.",
-    "is_pyq": false,
+    "is_pyq": False,
     "pyq_year": "2026",
     "pyq_exam": "GRE General"
   },
@@ -2382,7 +2382,7 @@ GRE_2026_QUESTIONS = [
     "options": [],
     "answer": "8008",
     "explanation": "Stars and bars: C(17 - 1, 7 - 1) = 8008.",
-    "is_pyq": false,
+    "is_pyq": False,
     "pyq_year": "2026",
     "pyq_exam": "GRE General"
   },
@@ -2398,7 +2398,7 @@ GRE_2026_QUESTIONS = [
     "options": [],
     "answer": "12376",
     "explanation": "Stars and bars: C(18 - 1, 7 - 1) = 12376.",
-    "is_pyq": false,
+    "is_pyq": False,
     "pyq_year": "2026",
     "pyq_exam": "GRE General"
   },
@@ -2414,7 +2414,7 @@ GRE_2026_QUESTIONS = [
     "options": [],
     "answer": "18564",
     "explanation": "Stars and bars: C(19 - 1, 7 - 1) = 18564.",
-    "is_pyq": false,
+    "is_pyq": False,
     "pyq_year": "2026",
     "pyq_exam": "GRE General"
   },
@@ -2430,7 +2430,7 @@ GRE_2026_QUESTIONS = [
     "options": [],
     "answer": "27132",
     "explanation": "Stars and bars: C(20 - 1, 7 - 1) = 27132.",
-    "is_pyq": false,
+    "is_pyq": False,
     "pyq_year": "2026",
     "pyq_exam": "GRE General"
   },
@@ -2446,7 +2446,7 @@ GRE_2026_QUESTIONS = [
     "options": [],
     "answer": "38760",
     "explanation": "Stars and bars: C(21 - 1, 7 - 1) = 38760.",
-    "is_pyq": false,
+    "is_pyq": False,
     "pyq_year": "2026",
     "pyq_exam": "GRE General"
   },
@@ -2462,7 +2462,7 @@ GRE_2026_QUESTIONS = [
     "options": [],
     "answer": "54264",
     "explanation": "Stars and bars: C(22 - 1, 7 - 1) = 54264.",
-    "is_pyq": false,
+    "is_pyq": False,
     "pyq_year": "2026",
     "pyq_exam": "GRE General"
   },
@@ -2478,7 +2478,7 @@ GRE_2026_QUESTIONS = [
     "options": [],
     "answer": "100947",
     "explanation": "Stars and bars: C(24 - 1, 7 - 1) = 100947.",
-    "is_pyq": false,
+    "is_pyq": False,
     "pyq_year": "2026",
     "pyq_exam": "GRE General"
   },
@@ -2500,7 +2500,7 @@ GRE_2026_QUESTIONS = [
     ],
     "answer": "0",
     "explanation": "'Far from being...' establishes contrast: objective inventory vs. rhetorical instrument of legitimation.",
-    "is_pyq": false,
+    "is_pyq": False,
     "pyq_year": "2026",
     "pyq_exam": "GRE General"
   },
@@ -2522,7 +2522,7 @@ GRE_2026_QUESTIONS = [
     ],
     "answer": "0",
     "explanation": "When prediction errors occur, bottom-up sensory pathways remain essential ('indispensable') to update the model.",
-    "is_pyq": false,
+    "is_pyq": False,
     "pyq_year": "2026",
     "pyq_exam": "GRE General"
   },
@@ -2545,7 +2545,7 @@ GRE_2026_QUESTIONS = [
     ],
     "answer": "0",
     "explanation": "'Perpetuate' and 'entrench' form a precise synonym pair describing how opaque models preserve historical disparities.",
-    "is_pyq": false,
+    "is_pyq": False,
     "pyq_year": "2026",
     "pyq_exam": "GRE General"
   },
@@ -2567,7 +2567,7 @@ GRE_2026_QUESTIONS = [
     ],
     "answer": "0",
     "explanation": "Macro-historical narratives serve as the foil that smooths over fault lines exposed by microhistorical edge cases.",
-    "is_pyq": false,
+    "is_pyq": False,
     "pyq_year": "2026",
     "pyq_exam": "GRE General"
   },
@@ -2589,7 +2589,7 @@ GRE_2026_QUESTIONS = [
     ],
     "answer": "0",
     "explanation": "Plants reward cooperative fungi and sanction cheaters -> conditional mutualism.",
-    "is_pyq": false,
+    "is_pyq": False,
     "pyq_year": "2026",
     "pyq_exam": "GRE General"
   },
@@ -2611,7 +2611,7 @@ GRE_2026_QUESTIONS = [
     ],
     "answer": "0",
     "explanation": "'Far from being...' establishes contrast: objective inventory vs. rhetorical instrument of legitimation.",
-    "is_pyq": false,
+    "is_pyq": False,
     "pyq_year": "2026",
     "pyq_exam": "GRE General"
   },
@@ -2633,7 +2633,7 @@ GRE_2026_QUESTIONS = [
     ],
     "answer": "0",
     "explanation": "When prediction errors occur, bottom-up sensory pathways remain essential ('indispensable') to update the model.",
-    "is_pyq": false,
+    "is_pyq": False,
     "pyq_year": "2026",
     "pyq_exam": "GRE General"
   },
@@ -2656,7 +2656,7 @@ GRE_2026_QUESTIONS = [
     ],
     "answer": "0",
     "explanation": "'Perpetuate' and 'entrench' form a precise synonym pair describing how opaque models preserve historical disparities.",
-    "is_pyq": false,
+    "is_pyq": False,
     "pyq_year": "2026",
     "pyq_exam": "GRE General"
   },
@@ -2678,7 +2678,7 @@ GRE_2026_QUESTIONS = [
     ],
     "answer": "0",
     "explanation": "Macro-historical narratives serve as the foil that smooths over fault lines exposed by microhistorical edge cases.",
-    "is_pyq": false,
+    "is_pyq": False,
     "pyq_year": "2026",
     "pyq_exam": "GRE General"
   },
@@ -2700,7 +2700,7 @@ GRE_2026_QUESTIONS = [
     ],
     "answer": "0",
     "explanation": "Plants reward cooperative fungi and sanction cheaters -> conditional mutualism.",
-    "is_pyq": false,
+    "is_pyq": False,
     "pyq_year": "2026",
     "pyq_exam": "GRE General"
   },
@@ -2722,7 +2722,7 @@ GRE_2026_QUESTIONS = [
     ],
     "answer": "0",
     "explanation": "'Far from being...' establishes contrast: objective inventory vs. rhetorical instrument of legitimation.",
-    "is_pyq": false,
+    "is_pyq": False,
     "pyq_year": "2026",
     "pyq_exam": "GRE General"
   },
@@ -2744,7 +2744,7 @@ GRE_2026_QUESTIONS = [
     ],
     "answer": "0",
     "explanation": "When prediction errors occur, bottom-up sensory pathways remain essential ('indispensable') to update the model.",
-    "is_pyq": false,
+    "is_pyq": False,
     "pyq_year": "2026",
     "pyq_exam": "GRE General"
   },
@@ -2767,7 +2767,7 @@ GRE_2026_QUESTIONS = [
     ],
     "answer": "0",
     "explanation": "'Perpetuate' and 'entrench' form a precise synonym pair describing how opaque models preserve historical disparities.",
-    "is_pyq": false,
+    "is_pyq": False,
     "pyq_year": "2026",
     "pyq_exam": "GRE General"
   },
@@ -2789,7 +2789,7 @@ GRE_2026_QUESTIONS = [
     ],
     "answer": "0",
     "explanation": "Macro-historical narratives serve as the foil that smooths over fault lines exposed by microhistorical edge cases.",
-    "is_pyq": false,
+    "is_pyq": False,
     "pyq_year": "2026",
     "pyq_exam": "GRE General"
   },
@@ -2811,7 +2811,7 @@ GRE_2026_QUESTIONS = [
     ],
     "answer": "0",
     "explanation": "Plants reward cooperative fungi and sanction cheaters -> conditional mutualism.",
-    "is_pyq": false,
+    "is_pyq": False,
     "pyq_year": "2026",
     "pyq_exam": "GRE General"
   },
@@ -2833,7 +2833,7 @@ GRE_2026_QUESTIONS = [
     ],
     "answer": "0",
     "explanation": "'Far from being...' establishes contrast: objective inventory vs. rhetorical instrument of legitimation.",
-    "is_pyq": false,
+    "is_pyq": False,
     "pyq_year": "2026",
     "pyq_exam": "GRE General"
   },
@@ -2855,7 +2855,7 @@ GRE_2026_QUESTIONS = [
     ],
     "answer": "0",
     "explanation": "When prediction errors occur, bottom-up sensory pathways remain essential ('indispensable') to update the model.",
-    "is_pyq": false,
+    "is_pyq": False,
     "pyq_year": "2026",
     "pyq_exam": "GRE General"
   },
@@ -2878,7 +2878,7 @@ GRE_2026_QUESTIONS = [
     ],
     "answer": "0",
     "explanation": "'Perpetuate' and 'entrench' form a precise synonym pair describing how opaque models preserve historical disparities.",
-    "is_pyq": false,
+    "is_pyq": False,
     "pyq_year": "2026",
     "pyq_exam": "GRE General"
   },
@@ -2900,7 +2900,7 @@ GRE_2026_QUESTIONS = [
     ],
     "answer": "0",
     "explanation": "Macro-historical narratives serve as the foil that smooths over fault lines exposed by microhistorical edge cases.",
-    "is_pyq": false,
+    "is_pyq": False,
     "pyq_year": "2026",
     "pyq_exam": "GRE General"
   },
@@ -2922,7 +2922,7 @@ GRE_2026_QUESTIONS = [
     ],
     "answer": "0",
     "explanation": "Plants reward cooperative fungi and sanction cheaters -> conditional mutualism.",
-    "is_pyq": false,
+    "is_pyq": False,
     "pyq_year": "2026",
     "pyq_exam": "GRE General"
   },
@@ -2944,7 +2944,7 @@ GRE_2026_QUESTIONS = [
     ],
     "answer": "0",
     "explanation": "'Far from being...' establishes contrast: objective inventory vs. rhetorical instrument of legitimation.",
-    "is_pyq": false,
+    "is_pyq": False,
     "pyq_year": "2026",
     "pyq_exam": "GRE General"
   },
@@ -2966,7 +2966,7 @@ GRE_2026_QUESTIONS = [
     ],
     "answer": "0",
     "explanation": "When prediction errors occur, bottom-up sensory pathways remain essential ('indispensable') to update the model.",
-    "is_pyq": false,
+    "is_pyq": False,
     "pyq_year": "2026",
     "pyq_exam": "GRE General"
   },
@@ -2989,7 +2989,7 @@ GRE_2026_QUESTIONS = [
     ],
     "answer": "0",
     "explanation": "'Perpetuate' and 'entrench' form a precise synonym pair describing how opaque models preserve historical disparities.",
-    "is_pyq": false,
+    "is_pyq": False,
     "pyq_year": "2026",
     "pyq_exam": "GRE General"
   },
@@ -3011,7 +3011,7 @@ GRE_2026_QUESTIONS = [
     ],
     "answer": "0",
     "explanation": "Macro-historical narratives serve as the foil that smooths over fault lines exposed by microhistorical edge cases.",
-    "is_pyq": false,
+    "is_pyq": False,
     "pyq_year": "2026",
     "pyq_exam": "GRE General"
   },
@@ -3033,7 +3033,7 @@ GRE_2026_QUESTIONS = [
     ],
     "answer": "0",
     "explanation": "Plants reward cooperative fungi and sanction cheaters -> conditional mutualism.",
-    "is_pyq": false,
+    "is_pyq": False,
     "pyq_year": "2026",
     "pyq_exam": "GRE General"
   },
@@ -3055,7 +3055,7 @@ GRE_2026_QUESTIONS = [
     ],
     "answer": "0",
     "explanation": "'Far from being...' establishes contrast: objective inventory vs. rhetorical instrument of legitimation.",
-    "is_pyq": false,
+    "is_pyq": False,
     "pyq_year": "2026",
     "pyq_exam": "GRE General"
   },
@@ -3077,7 +3077,7 @@ GRE_2026_QUESTIONS = [
     ],
     "answer": "0",
     "explanation": "When prediction errors occur, bottom-up sensory pathways remain essential ('indispensable') to update the model.",
-    "is_pyq": false,
+    "is_pyq": False,
     "pyq_year": "2026",
     "pyq_exam": "GRE General"
   },
@@ -3100,7 +3100,7 @@ GRE_2026_QUESTIONS = [
     ],
     "answer": "0",
     "explanation": "'Perpetuate' and 'entrench' form a precise synonym pair describing how opaque models preserve historical disparities.",
-    "is_pyq": false,
+    "is_pyq": False,
     "pyq_year": "2026",
     "pyq_exam": "GRE General"
   },
@@ -3122,7 +3122,7 @@ GRE_2026_QUESTIONS = [
     ],
     "answer": "0",
     "explanation": "Macro-historical narratives serve as the foil that smooths over fault lines exposed by microhistorical edge cases.",
-    "is_pyq": false,
+    "is_pyq": False,
     "pyq_year": "2026",
     "pyq_exam": "GRE General"
   },
@@ -3144,7 +3144,7 @@ GRE_2026_QUESTIONS = [
     ],
     "answer": "0",
     "explanation": "Plants reward cooperative fungi and sanction cheaters -> conditional mutualism.",
-    "is_pyq": false,
+    "is_pyq": False,
     "pyq_year": "2026",
     "pyq_exam": "GRE General"
   },
@@ -3166,7 +3166,7 @@ GRE_2026_QUESTIONS = [
     ],
     "answer": "0",
     "explanation": "'Far from being...' establishes contrast: objective inventory vs. rhetorical instrument of legitimation.",
-    "is_pyq": false,
+    "is_pyq": False,
     "pyq_year": "2026",
     "pyq_exam": "GRE General"
   },
@@ -3188,7 +3188,7 @@ GRE_2026_QUESTIONS = [
     ],
     "answer": "0",
     "explanation": "When prediction errors occur, bottom-up sensory pathways remain essential ('indispensable') to update the model.",
-    "is_pyq": false,
+    "is_pyq": False,
     "pyq_year": "2026",
     "pyq_exam": "GRE General"
   },
@@ -3211,7 +3211,7 @@ GRE_2026_QUESTIONS = [
     ],
     "answer": "0",
     "explanation": "'Perpetuate' and 'entrench' form a precise synonym pair describing how opaque models preserve historical disparities.",
-    "is_pyq": false,
+    "is_pyq": False,
     "pyq_year": "2026",
     "pyq_exam": "GRE General"
   },
@@ -3233,7 +3233,7 @@ GRE_2026_QUESTIONS = [
     ],
     "answer": "0",
     "explanation": "Macro-historical narratives serve as the foil that smooths over fault lines exposed by microhistorical edge cases.",
-    "is_pyq": false,
+    "is_pyq": False,
     "pyq_year": "2026",
     "pyq_exam": "GRE General"
   },
@@ -3255,7 +3255,7 @@ GRE_2026_QUESTIONS = [
     ],
     "answer": "0",
     "explanation": "Plants reward cooperative fungi and sanction cheaters -> conditional mutualism.",
-    "is_pyq": false,
+    "is_pyq": False,
     "pyq_year": "2026",
     "pyq_exam": "GRE General"
   },
@@ -3277,7 +3277,7 @@ GRE_2026_QUESTIONS = [
     ],
     "answer": "0",
     "explanation": "'Far from being...' establishes contrast: objective inventory vs. rhetorical instrument of legitimation.",
-    "is_pyq": false,
+    "is_pyq": False,
     "pyq_year": "2026",
     "pyq_exam": "GRE General"
   },
@@ -3299,7 +3299,7 @@ GRE_2026_QUESTIONS = [
     ],
     "answer": "0",
     "explanation": "When prediction errors occur, bottom-up sensory pathways remain essential ('indispensable') to update the model.",
-    "is_pyq": false,
+    "is_pyq": False,
     "pyq_year": "2026",
     "pyq_exam": "GRE General"
   },
@@ -3322,7 +3322,7 @@ GRE_2026_QUESTIONS = [
     ],
     "answer": "0",
     "explanation": "'Perpetuate' and 'entrench' form a precise synonym pair describing how opaque models preserve historical disparities.",
-    "is_pyq": false,
+    "is_pyq": False,
     "pyq_year": "2026",
     "pyq_exam": "GRE General"
   },
@@ -3344,7 +3344,7 @@ GRE_2026_QUESTIONS = [
     ],
     "answer": "0",
     "explanation": "Macro-historical narratives serve as the foil that smooths over fault lines exposed by microhistorical edge cases.",
-    "is_pyq": false,
+    "is_pyq": False,
     "pyq_year": "2026",
     "pyq_exam": "GRE General"
   },
@@ -3366,7 +3366,7 @@ GRE_2026_QUESTIONS = [
     ],
     "answer": "0",
     "explanation": "Plants reward cooperative fungi and sanction cheaters -> conditional mutualism.",
-    "is_pyq": false,
+    "is_pyq": False,
     "pyq_year": "2026",
     "pyq_exam": "GRE General"
   },
@@ -3388,7 +3388,7 @@ GRE_2026_QUESTIONS = [
     ],
     "answer": "0",
     "explanation": "'Far from being...' establishes contrast: objective inventory vs. rhetorical instrument of legitimation.",
-    "is_pyq": false,
+    "is_pyq": False,
     "pyq_year": "2026",
     "pyq_exam": "GRE General"
   },
@@ -3410,7 +3410,7 @@ GRE_2026_QUESTIONS = [
     ],
     "answer": "0",
     "explanation": "When prediction errors occur, bottom-up sensory pathways remain essential ('indispensable') to update the model.",
-    "is_pyq": false,
+    "is_pyq": False,
     "pyq_year": "2026",
     "pyq_exam": "GRE General"
   },
@@ -3433,7 +3433,7 @@ GRE_2026_QUESTIONS = [
     ],
     "answer": "0",
     "explanation": "'Perpetuate' and 'entrench' form a precise synonym pair describing how opaque models preserve historical disparities.",
-    "is_pyq": false,
+    "is_pyq": False,
     "pyq_year": "2026",
     "pyq_exam": "GRE General"
   },
@@ -3455,7 +3455,7 @@ GRE_2026_QUESTIONS = [
     ],
     "answer": "0",
     "explanation": "Macro-historical narratives serve as the foil that smooths over fault lines exposed by microhistorical edge cases.",
-    "is_pyq": false,
+    "is_pyq": False,
     "pyq_year": "2026",
     "pyq_exam": "GRE General"
   },
@@ -3477,7 +3477,7 @@ GRE_2026_QUESTIONS = [
     ],
     "answer": "0",
     "explanation": "Plants reward cooperative fungi and sanction cheaters -> conditional mutualism.",
-    "is_pyq": false,
+    "is_pyq": False,
     "pyq_year": "2026",
     "pyq_exam": "GRE General"
   },
@@ -3499,7 +3499,7 @@ GRE_2026_QUESTIONS = [
     ],
     "answer": "0",
     "explanation": "'Far from being...' establishes contrast: objective inventory vs. rhetorical instrument of legitimation.",
-    "is_pyq": false,
+    "is_pyq": False,
     "pyq_year": "2026",
     "pyq_exam": "GRE General"
   },
@@ -3521,7 +3521,7 @@ GRE_2026_QUESTIONS = [
     ],
     "answer": "0",
     "explanation": "When prediction errors occur, bottom-up sensory pathways remain essential ('indispensable') to update the model.",
-    "is_pyq": false,
+    "is_pyq": False,
     "pyq_year": "2026",
     "pyq_exam": "GRE General"
   },
@@ -3544,7 +3544,7 @@ GRE_2026_QUESTIONS = [
     ],
     "answer": "0",
     "explanation": "'Perpetuate' and 'entrench' form a precise synonym pair describing how opaque models preserve historical disparities.",
-    "is_pyq": false,
+    "is_pyq": False,
     "pyq_year": "2026",
     "pyq_exam": "GRE General"
   },
@@ -3566,7 +3566,7 @@ GRE_2026_QUESTIONS = [
     ],
     "answer": "0",
     "explanation": "Macro-historical narratives serve as the foil that smooths over fault lines exposed by microhistorical edge cases.",
-    "is_pyq": false,
+    "is_pyq": False,
     "pyq_year": "2026",
     "pyq_exam": "GRE General"
   },
@@ -3588,7 +3588,7 @@ GRE_2026_QUESTIONS = [
     ],
     "answer": "0",
     "explanation": "Plants reward cooperative fungi and sanction cheaters -> conditional mutualism.",
-    "is_pyq": false,
+    "is_pyq": False,
     "pyq_year": "2026",
     "pyq_exam": "GRE General"
   },
@@ -3610,7 +3610,7 @@ GRE_2026_QUESTIONS = [
     ],
     "answer": "0",
     "explanation": "'Far from being...' establishes contrast: objective inventory vs. rhetorical instrument of legitimation.",
-    "is_pyq": false,
+    "is_pyq": False,
     "pyq_year": "2026",
     "pyq_exam": "GRE General"
   },
@@ -3632,7 +3632,7 @@ GRE_2026_QUESTIONS = [
     ],
     "answer": "0",
     "explanation": "When prediction errors occur, bottom-up sensory pathways remain essential ('indispensable') to update the model.",
-    "is_pyq": false,
+    "is_pyq": False,
     "pyq_year": "2026",
     "pyq_exam": "GRE General"
   },
@@ -3655,7 +3655,7 @@ GRE_2026_QUESTIONS = [
     ],
     "answer": "0",
     "explanation": "'Perpetuate' and 'entrench' form a precise synonym pair describing how opaque models preserve historical disparities.",
-    "is_pyq": false,
+    "is_pyq": False,
     "pyq_year": "2026",
     "pyq_exam": "GRE General"
   },
@@ -3677,7 +3677,7 @@ GRE_2026_QUESTIONS = [
     ],
     "answer": "0",
     "explanation": "Macro-historical narratives serve as the foil that smooths over fault lines exposed by microhistorical edge cases.",
-    "is_pyq": false,
+    "is_pyq": False,
     "pyq_year": "2026",
     "pyq_exam": "GRE General"
   },
@@ -3699,7 +3699,7 @@ GRE_2026_QUESTIONS = [
     ],
     "answer": "0",
     "explanation": "Plants reward cooperative fungi and sanction cheaters -> conditional mutualism.",
-    "is_pyq": false,
+    "is_pyq": False,
     "pyq_year": "2026",
     "pyq_exam": "GRE General"
   },
@@ -3721,7 +3721,7 @@ GRE_2026_QUESTIONS = [
     ],
     "answer": "0",
     "explanation": "'Far from being...' establishes contrast: objective inventory vs. rhetorical instrument of legitimation.",
-    "is_pyq": false,
+    "is_pyq": False,
     "pyq_year": "2026",
     "pyq_exam": "GRE General"
   },
@@ -3743,7 +3743,7 @@ GRE_2026_QUESTIONS = [
     ],
     "answer": "0",
     "explanation": "When prediction errors occur, bottom-up sensory pathways remain essential ('indispensable') to update the model.",
-    "is_pyq": false,
+    "is_pyq": False,
     "pyq_year": "2026",
     "pyq_exam": "GRE General"
   },
@@ -3766,7 +3766,7 @@ GRE_2026_QUESTIONS = [
     ],
     "answer": "0",
     "explanation": "'Perpetuate' and 'entrench' form a precise synonym pair describing how opaque models preserve historical disparities.",
-    "is_pyq": false,
+    "is_pyq": False,
     "pyq_year": "2026",
     "pyq_exam": "GRE General"
   },
@@ -3788,7 +3788,7 @@ GRE_2026_QUESTIONS = [
     ],
     "answer": "0",
     "explanation": "Macro-historical narratives serve as the foil that smooths over fault lines exposed by microhistorical edge cases.",
-    "is_pyq": false,
+    "is_pyq": False,
     "pyq_year": "2026",
     "pyq_exam": "GRE General"
   },
@@ -3810,7 +3810,7 @@ GRE_2026_QUESTIONS = [
     ],
     "answer": "0",
     "explanation": "Plants reward cooperative fungi and sanction cheaters -> conditional mutualism.",
-    "is_pyq": false,
+    "is_pyq": False,
     "pyq_year": "2026",
     "pyq_exam": "GRE General"
   },
@@ -3832,7 +3832,7 @@ GRE_2026_QUESTIONS = [
     ],
     "answer": "0",
     "explanation": "'Far from being...' establishes contrast: objective inventory vs. rhetorical instrument of legitimation.",
-    "is_pyq": false,
+    "is_pyq": False,
     "pyq_year": "2026",
     "pyq_exam": "GRE General"
   },
@@ -3854,7 +3854,7 @@ GRE_2026_QUESTIONS = [
     ],
     "answer": "0",
     "explanation": "When prediction errors occur, bottom-up sensory pathways remain essential ('indispensable') to update the model.",
-    "is_pyq": false,
+    "is_pyq": False,
     "pyq_year": "2026",
     "pyq_exam": "GRE General"
   },
@@ -3877,7 +3877,7 @@ GRE_2026_QUESTIONS = [
     ],
     "answer": "0",
     "explanation": "'Perpetuate' and 'entrench' form a precise synonym pair describing how opaque models preserve historical disparities.",
-    "is_pyq": false,
+    "is_pyq": False,
     "pyq_year": "2026",
     "pyq_exam": "GRE General"
   },
@@ -3899,7 +3899,7 @@ GRE_2026_QUESTIONS = [
     ],
     "answer": "0",
     "explanation": "Macro-historical narratives serve as the foil that smooths over fault lines exposed by microhistorical edge cases.",
-    "is_pyq": false,
+    "is_pyq": False,
     "pyq_year": "2026",
     "pyq_exam": "GRE General"
   },
@@ -3921,7 +3921,7 @@ GRE_2026_QUESTIONS = [
     ],
     "answer": "0",
     "explanation": "Plants reward cooperative fungi and sanction cheaters -> conditional mutualism.",
-    "is_pyq": false,
+    "is_pyq": False,
     "pyq_year": "2026",
     "pyq_exam": "GRE General"
   },
@@ -3943,7 +3943,7 @@ GRE_2026_QUESTIONS = [
     ],
     "answer": "0",
     "explanation": "'Far from being...' establishes contrast: objective inventory vs. rhetorical instrument of legitimation.",
-    "is_pyq": false,
+    "is_pyq": False,
     "pyq_year": "2026",
     "pyq_exam": "GRE General"
   },
@@ -3965,7 +3965,7 @@ GRE_2026_QUESTIONS = [
     ],
     "answer": "0",
     "explanation": "When prediction errors occur, bottom-up sensory pathways remain essential ('indispensable') to update the model.",
-    "is_pyq": false,
+    "is_pyq": False,
     "pyq_year": "2026",
     "pyq_exam": "GRE General"
   },
@@ -3988,7 +3988,7 @@ GRE_2026_QUESTIONS = [
     ],
     "answer": "0",
     "explanation": "'Perpetuate' and 'entrench' form a precise synonym pair describing how opaque models preserve historical disparities.",
-    "is_pyq": false,
+    "is_pyq": False,
     "pyq_year": "2026",
     "pyq_exam": "GRE General"
   },
@@ -4010,7 +4010,7 @@ GRE_2026_QUESTIONS = [
     ],
     "answer": "0",
     "explanation": "Macro-historical narratives serve as the foil that smooths over fault lines exposed by microhistorical edge cases.",
-    "is_pyq": false,
+    "is_pyq": False,
     "pyq_year": "2026",
     "pyq_exam": "GRE General"
   },
@@ -4032,7 +4032,7 @@ GRE_2026_QUESTIONS = [
     ],
     "answer": "0",
     "explanation": "Plants reward cooperative fungi and sanction cheaters -> conditional mutualism.",
-    "is_pyq": false,
+    "is_pyq": False,
     "pyq_year": "2026",
     "pyq_exam": "GRE General"
   },
@@ -4054,7 +4054,7 @@ GRE_2026_QUESTIONS = [
     ],
     "answer": "0",
     "explanation": "'Far from being...' establishes contrast: objective inventory vs. rhetorical instrument of legitimation.",
-    "is_pyq": false,
+    "is_pyq": False,
     "pyq_year": "2026",
     "pyq_exam": "GRE General"
   },
@@ -4076,7 +4076,7 @@ GRE_2026_QUESTIONS = [
     ],
     "answer": "0",
     "explanation": "When prediction errors occur, bottom-up sensory pathways remain essential ('indispensable') to update the model.",
-    "is_pyq": false,
+    "is_pyq": False,
     "pyq_year": "2026",
     "pyq_exam": "GRE General"
   },
@@ -4099,7 +4099,7 @@ GRE_2026_QUESTIONS = [
     ],
     "answer": "0",
     "explanation": "'Perpetuate' and 'entrench' form a precise synonym pair describing how opaque models preserve historical disparities.",
-    "is_pyq": false,
+    "is_pyq": False,
     "pyq_year": "2026",
     "pyq_exam": "GRE General"
   },
@@ -4121,7 +4121,7 @@ GRE_2026_QUESTIONS = [
     ],
     "answer": "0",
     "explanation": "Macro-historical narratives serve as the foil that smooths over fault lines exposed by microhistorical edge cases.",
-    "is_pyq": false,
+    "is_pyq": False,
     "pyq_year": "2026",
     "pyq_exam": "GRE General"
   },
@@ -4143,7 +4143,7 @@ GRE_2026_QUESTIONS = [
     ],
     "answer": "0",
     "explanation": "Plants reward cooperative fungi and sanction cheaters -> conditional mutualism.",
-    "is_pyq": false,
+    "is_pyq": False,
     "pyq_year": "2026",
     "pyq_exam": "GRE General"
   },
@@ -4165,7 +4165,7 @@ GRE_2026_QUESTIONS = [
     ],
     "answer": "0",
     "explanation": "'Far from being...' establishes contrast: objective inventory vs. rhetorical instrument of legitimation.",
-    "is_pyq": false,
+    "is_pyq": False,
     "pyq_year": "2026",
     "pyq_exam": "GRE General"
   },
@@ -4187,7 +4187,7 @@ GRE_2026_QUESTIONS = [
     ],
     "answer": "0",
     "explanation": "When prediction errors occur, bottom-up sensory pathways remain essential ('indispensable') to update the model.",
-    "is_pyq": false,
+    "is_pyq": False,
     "pyq_year": "2026",
     "pyq_exam": "GRE General"
   },
@@ -4210,7 +4210,7 @@ GRE_2026_QUESTIONS = [
     ],
     "answer": "0",
     "explanation": "'Perpetuate' and 'entrench' form a precise synonym pair describing how opaque models preserve historical disparities.",
-    "is_pyq": false,
+    "is_pyq": False,
     "pyq_year": "2026",
     "pyq_exam": "GRE General"
   },
@@ -4232,7 +4232,7 @@ GRE_2026_QUESTIONS = [
     ],
     "answer": "0",
     "explanation": "Macro-historical narratives serve as the foil that smooths over fault lines exposed by microhistorical edge cases.",
-    "is_pyq": false,
+    "is_pyq": False,
     "pyq_year": "2026",
     "pyq_exam": "GRE General"
   },
@@ -4254,7 +4254,7 @@ GRE_2026_QUESTIONS = [
     ],
     "answer": "0",
     "explanation": "Plants reward cooperative fungi and sanction cheaters -> conditional mutualism.",
-    "is_pyq": false,
+    "is_pyq": False,
     "pyq_year": "2026",
     "pyq_exam": "GRE General"
   },
@@ -4276,7 +4276,7 @@ GRE_2026_QUESTIONS = [
     ],
     "answer": "0",
     "explanation": "'Far from being...' establishes contrast: objective inventory vs. rhetorical instrument of legitimation.",
-    "is_pyq": false,
+    "is_pyq": False,
     "pyq_year": "2026",
     "pyq_exam": "GRE General"
   },
@@ -4298,7 +4298,7 @@ GRE_2026_QUESTIONS = [
     ],
     "answer": "0",
     "explanation": "When prediction errors occur, bottom-up sensory pathways remain essential ('indispensable') to update the model.",
-    "is_pyq": false,
+    "is_pyq": False,
     "pyq_year": "2026",
     "pyq_exam": "GRE General"
   },
@@ -4321,7 +4321,7 @@ GRE_2026_QUESTIONS = [
     ],
     "answer": "0",
     "explanation": "'Perpetuate' and 'entrench' form a precise synonym pair describing how opaque models preserve historical disparities.",
-    "is_pyq": false,
+    "is_pyq": False,
     "pyq_year": "2026",
     "pyq_exam": "GRE General"
   },
@@ -4343,7 +4343,7 @@ GRE_2026_QUESTIONS = [
     ],
     "answer": "0",
     "explanation": "Macro-historical narratives serve as the foil that smooths over fault lines exposed by microhistorical edge cases.",
-    "is_pyq": false,
+    "is_pyq": False,
     "pyq_year": "2026",
     "pyq_exam": "GRE General"
   },
@@ -4365,7 +4365,7 @@ GRE_2026_QUESTIONS = [
     ],
     "answer": "0",
     "explanation": "Plants reward cooperative fungi and sanction cheaters -> conditional mutualism.",
-    "is_pyq": false,
+    "is_pyq": False,
     "pyq_year": "2026",
     "pyq_exam": "GRE General"
   },
@@ -4387,7 +4387,7 @@ GRE_2026_QUESTIONS = [
     ],
     "answer": "0",
     "explanation": "'Far from being...' establishes contrast: objective inventory vs. rhetorical instrument of legitimation.",
-    "is_pyq": false,
+    "is_pyq": False,
     "pyq_year": "2026",
     "pyq_exam": "GRE General"
   },
@@ -4409,7 +4409,7 @@ GRE_2026_QUESTIONS = [
     ],
     "answer": "0",
     "explanation": "When prediction errors occur, bottom-up sensory pathways remain essential ('indispensable') to update the model.",
-    "is_pyq": false,
+    "is_pyq": False,
     "pyq_year": "2026",
     "pyq_exam": "GRE General"
   },
@@ -4432,7 +4432,7 @@ GRE_2026_QUESTIONS = [
     ],
     "answer": "0",
     "explanation": "'Perpetuate' and 'entrench' form a precise synonym pair describing how opaque models preserve historical disparities.",
-    "is_pyq": false,
+    "is_pyq": False,
     "pyq_year": "2026",
     "pyq_exam": "GRE General"
   },
@@ -4454,7 +4454,7 @@ GRE_2026_QUESTIONS = [
     ],
     "answer": "0",
     "explanation": "Macro-historical narratives serve as the foil that smooths over fault lines exposed by microhistorical edge cases.",
-    "is_pyq": false,
+    "is_pyq": False,
     "pyq_year": "2026",
     "pyq_exam": "GRE General"
   },
@@ -4476,7 +4476,7 @@ GRE_2026_QUESTIONS = [
     ],
     "answer": "0",
     "explanation": "Plants reward cooperative fungi and sanction cheaters -> conditional mutualism.",
-    "is_pyq": false,
+    "is_pyq": False,
     "pyq_year": "2026",
     "pyq_exam": "GRE General"
   },
@@ -4498,7 +4498,7 @@ GRE_2026_QUESTIONS = [
     ],
     "answer": "0",
     "explanation": "'Far from being...' establishes contrast: objective inventory vs. rhetorical instrument of legitimation.",
-    "is_pyq": false,
+    "is_pyq": False,
     "pyq_year": "2026",
     "pyq_exam": "GRE General"
   },
@@ -4520,7 +4520,7 @@ GRE_2026_QUESTIONS = [
     ],
     "answer": "0",
     "explanation": "When prediction errors occur, bottom-up sensory pathways remain essential ('indispensable') to update the model.",
-    "is_pyq": false,
+    "is_pyq": False,
     "pyq_year": "2026",
     "pyq_exam": "GRE General"
   },
@@ -4543,7 +4543,7 @@ GRE_2026_QUESTIONS = [
     ],
     "answer": "0",
     "explanation": "'Perpetuate' and 'entrench' form a precise synonym pair describing how opaque models preserve historical disparities.",
-    "is_pyq": false,
+    "is_pyq": False,
     "pyq_year": "2026",
     "pyq_exam": "GRE General"
   },
@@ -4565,7 +4565,7 @@ GRE_2026_QUESTIONS = [
     ],
     "answer": "0",
     "explanation": "Macro-historical narratives serve as the foil that smooths over fault lines exposed by microhistorical edge cases.",
-    "is_pyq": false,
+    "is_pyq": False,
     "pyq_year": "2026",
     "pyq_exam": "GRE General"
   },
@@ -4587,7 +4587,7 @@ GRE_2026_QUESTIONS = [
     ],
     "answer": "0",
     "explanation": "Plants reward cooperative fungi and sanction cheaters -> conditional mutualism.",
-    "is_pyq": false,
+    "is_pyq": False,
     "pyq_year": "2026",
     "pyq_exam": "GRE General"
   },
@@ -4609,7 +4609,7 @@ GRE_2026_QUESTIONS = [
     ],
     "answer": "0",
     "explanation": "'Far from being...' establishes contrast: objective inventory vs. rhetorical instrument of legitimation.",
-    "is_pyq": false,
+    "is_pyq": False,
     "pyq_year": "2026",
     "pyq_exam": "GRE General"
   },
@@ -4631,7 +4631,7 @@ GRE_2026_QUESTIONS = [
     ],
     "answer": "0",
     "explanation": "When prediction errors occur, bottom-up sensory pathways remain essential ('indispensable') to update the model.",
-    "is_pyq": false,
+    "is_pyq": False,
     "pyq_year": "2026",
     "pyq_exam": "GRE General"
   },
@@ -4654,7 +4654,7 @@ GRE_2026_QUESTIONS = [
     ],
     "answer": "0",
     "explanation": "'Perpetuate' and 'entrench' form a precise synonym pair describing how opaque models preserve historical disparities.",
-    "is_pyq": false,
+    "is_pyq": False,
     "pyq_year": "2026",
     "pyq_exam": "GRE General"
   },
@@ -4676,7 +4676,7 @@ GRE_2026_QUESTIONS = [
     ],
     "answer": "0",
     "explanation": "Macro-historical narratives serve as the foil that smooths over fault lines exposed by microhistorical edge cases.",
-    "is_pyq": false,
+    "is_pyq": False,
     "pyq_year": "2026",
     "pyq_exam": "GRE General"
   },
@@ -4698,7 +4698,7 @@ GRE_2026_QUESTIONS = [
     ],
     "answer": "0",
     "explanation": "Plants reward cooperative fungi and sanction cheaters -> conditional mutualism.",
-    "is_pyq": false,
+    "is_pyq": False,
     "pyq_year": "2026",
     "pyq_exam": "GRE General"
   },
@@ -4720,7 +4720,7 @@ GRE_2026_QUESTIONS = [
     ],
     "answer": "0",
     "explanation": "'Far from being...' establishes contrast: objective inventory vs. rhetorical instrument of legitimation.",
-    "is_pyq": false,
+    "is_pyq": False,
     "pyq_year": "2026",
     "pyq_exam": "GRE General"
   },
@@ -4742,7 +4742,7 @@ GRE_2026_QUESTIONS = [
     ],
     "answer": "0",
     "explanation": "When prediction errors occur, bottom-up sensory pathways remain essential ('indispensable') to update the model.",
-    "is_pyq": false,
+    "is_pyq": False,
     "pyq_year": "2026",
     "pyq_exam": "GRE General"
   },
@@ -4765,7 +4765,7 @@ GRE_2026_QUESTIONS = [
     ],
     "answer": "0",
     "explanation": "'Perpetuate' and 'entrench' form a precise synonym pair describing how opaque models preserve historical disparities.",
-    "is_pyq": false,
+    "is_pyq": False,
     "pyq_year": "2026",
     "pyq_exam": "GRE General"
   },
@@ -4787,7 +4787,7 @@ GRE_2026_QUESTIONS = [
     ],
     "answer": "0",
     "explanation": "Macro-historical narratives serve as the foil that smooths over fault lines exposed by microhistorical edge cases.",
-    "is_pyq": false,
+    "is_pyq": False,
     "pyq_year": "2026",
     "pyq_exam": "GRE General"
   },
@@ -4809,7 +4809,7 @@ GRE_2026_QUESTIONS = [
     ],
     "answer": "0",
     "explanation": "Plants reward cooperative fungi and sanction cheaters -> conditional mutualism.",
-    "is_pyq": false,
+    "is_pyq": False,
     "pyq_year": "2026",
     "pyq_exam": "GRE General"
   },
@@ -4831,7 +4831,7 @@ GRE_2026_QUESTIONS = [
     ],
     "answer": "0",
     "explanation": "'Far from being...' establishes contrast: objective inventory vs. rhetorical instrument of legitimation.",
-    "is_pyq": false,
+    "is_pyq": False,
     "pyq_year": "2026",
     "pyq_exam": "GRE General"
   },
@@ -4853,7 +4853,7 @@ GRE_2026_QUESTIONS = [
     ],
     "answer": "0",
     "explanation": "When prediction errors occur, bottom-up sensory pathways remain essential ('indispensable') to update the model.",
-    "is_pyq": false,
+    "is_pyq": False,
     "pyq_year": "2026",
     "pyq_exam": "GRE General"
   },
@@ -4876,7 +4876,7 @@ GRE_2026_QUESTIONS = [
     ],
     "answer": "0",
     "explanation": "'Perpetuate' and 'entrench' form a precise synonym pair describing how opaque models preserve historical disparities.",
-    "is_pyq": false,
+    "is_pyq": False,
     "pyq_year": "2026",
     "pyq_exam": "GRE General"
   },
@@ -4898,7 +4898,7 @@ GRE_2026_QUESTIONS = [
     ],
     "answer": "0",
     "explanation": "Macro-historical narratives serve as the foil that smooths over fault lines exposed by microhistorical edge cases.",
-    "is_pyq": false,
+    "is_pyq": False,
     "pyq_year": "2026",
     "pyq_exam": "GRE General"
   },
@@ -4920,7 +4920,7 @@ GRE_2026_QUESTIONS = [
     ],
     "answer": "0",
     "explanation": "Plants reward cooperative fungi and sanction cheaters -> conditional mutualism.",
-    "is_pyq": false,
+    "is_pyq": False,
     "pyq_year": "2026",
     "pyq_exam": "GRE General"
   },
@@ -4942,7 +4942,7 @@ GRE_2026_QUESTIONS = [
     ],
     "answer": "0",
     "explanation": "'Far from being...' establishes contrast: objective inventory vs. rhetorical instrument of legitimation.",
-    "is_pyq": false,
+    "is_pyq": False,
     "pyq_year": "2026",
     "pyq_exam": "GRE General"
   },
@@ -4964,7 +4964,7 @@ GRE_2026_QUESTIONS = [
     ],
     "answer": "0",
     "explanation": "When prediction errors occur, bottom-up sensory pathways remain essential ('indispensable') to update the model.",
-    "is_pyq": false,
+    "is_pyq": False,
     "pyq_year": "2026",
     "pyq_exam": "GRE General"
   },
@@ -4987,7 +4987,7 @@ GRE_2026_QUESTIONS = [
     ],
     "answer": "0",
     "explanation": "'Perpetuate' and 'entrench' form a precise synonym pair describing how opaque models preserve historical disparities.",
-    "is_pyq": false,
+    "is_pyq": False,
     "pyq_year": "2026",
     "pyq_exam": "GRE General"
   },
@@ -5009,7 +5009,7 @@ GRE_2026_QUESTIONS = [
     ],
     "answer": "0",
     "explanation": "Macro-historical narratives serve as the foil that smooths over fault lines exposed by microhistorical edge cases.",
-    "is_pyq": false,
+    "is_pyq": False,
     "pyq_year": "2026",
     "pyq_exam": "GRE General"
   },
@@ -5031,7 +5031,7 @@ GRE_2026_QUESTIONS = [
     ],
     "answer": "0",
     "explanation": "Plants reward cooperative fungi and sanction cheaters -> conditional mutualism.",
-    "is_pyq": false,
+    "is_pyq": False,
     "pyq_year": "2026",
     "pyq_exam": "GRE General"
   },
@@ -5053,7 +5053,7 @@ GRE_2026_QUESTIONS = [
     ],
     "answer": "0",
     "explanation": "'Far from being...' establishes contrast: objective inventory vs. rhetorical instrument of legitimation.",
-    "is_pyq": false,
+    "is_pyq": False,
     "pyq_year": "2026",
     "pyq_exam": "GRE General"
   },
@@ -5075,7 +5075,7 @@ GRE_2026_QUESTIONS = [
     ],
     "answer": "0",
     "explanation": "When prediction errors occur, bottom-up sensory pathways remain essential ('indispensable') to update the model.",
-    "is_pyq": false,
+    "is_pyq": False,
     "pyq_year": "2026",
     "pyq_exam": "GRE General"
   },
@@ -5098,7 +5098,7 @@ GRE_2026_QUESTIONS = [
     ],
     "answer": "0",
     "explanation": "'Perpetuate' and 'entrench' form a precise synonym pair describing how opaque models preserve historical disparities.",
-    "is_pyq": false,
+    "is_pyq": False,
     "pyq_year": "2026",
     "pyq_exam": "GRE General"
   },
@@ -5120,7 +5120,7 @@ GRE_2026_QUESTIONS = [
     ],
     "answer": "0",
     "explanation": "Macro-historical narratives serve as the foil that smooths over fault lines exposed by microhistorical edge cases.",
-    "is_pyq": false,
+    "is_pyq": False,
     "pyq_year": "2026",
     "pyq_exam": "GRE General"
   },
@@ -5142,7 +5142,7 @@ GRE_2026_QUESTIONS = [
     ],
     "answer": "0",
     "explanation": "Plants reward cooperative fungi and sanction cheaters -> conditional mutualism.",
-    "is_pyq": false,
+    "is_pyq": False,
     "pyq_year": "2026",
     "pyq_exam": "GRE General"
   },
@@ -5164,7 +5164,7 @@ GRE_2026_QUESTIONS = [
     ],
     "answer": "0",
     "explanation": "'Far from being...' establishes contrast: objective inventory vs. rhetorical instrument of legitimation.",
-    "is_pyq": false,
+    "is_pyq": False,
     "pyq_year": "2026",
     "pyq_exam": "GRE General"
   },
@@ -5186,7 +5186,7 @@ GRE_2026_QUESTIONS = [
     ],
     "answer": "0",
     "explanation": "When prediction errors occur, bottom-up sensory pathways remain essential ('indispensable') to update the model.",
-    "is_pyq": false,
+    "is_pyq": False,
     "pyq_year": "2026",
     "pyq_exam": "GRE General"
   },
@@ -5209,7 +5209,7 @@ GRE_2026_QUESTIONS = [
     ],
     "answer": "0",
     "explanation": "'Perpetuate' and 'entrench' form a precise synonym pair describing how opaque models preserve historical disparities.",
-    "is_pyq": false,
+    "is_pyq": False,
     "pyq_year": "2026",
     "pyq_exam": "GRE General"
   },
@@ -5231,7 +5231,7 @@ GRE_2026_QUESTIONS = [
     ],
     "answer": "0",
     "explanation": "Macro-historical narratives serve as the foil that smooths over fault lines exposed by microhistorical edge cases.",
-    "is_pyq": false,
+    "is_pyq": False,
     "pyq_year": "2026",
     "pyq_exam": "GRE General"
   },
@@ -5253,7 +5253,7 @@ GRE_2026_QUESTIONS = [
     ],
     "answer": "0",
     "explanation": "Plants reward cooperative fungi and sanction cheaters -> conditional mutualism.",
-    "is_pyq": false,
+    "is_pyq": False,
     "pyq_year": "2026",
     "pyq_exam": "GRE General"
   },
@@ -5275,7 +5275,7 @@ GRE_2026_QUESTIONS = [
     ],
     "answer": "0",
     "explanation": "'Far from being...' establishes contrast: objective inventory vs. rhetorical instrument of legitimation.",
-    "is_pyq": false,
+    "is_pyq": False,
     "pyq_year": "2026",
     "pyq_exam": "GRE General"
   },
@@ -5297,7 +5297,7 @@ GRE_2026_QUESTIONS = [
     ],
     "answer": "0",
     "explanation": "When prediction errors occur, bottom-up sensory pathways remain essential ('indispensable') to update the model.",
-    "is_pyq": false,
+    "is_pyq": False,
     "pyq_year": "2026",
     "pyq_exam": "GRE General"
   },
@@ -5320,7 +5320,7 @@ GRE_2026_QUESTIONS = [
     ],
     "answer": "0",
     "explanation": "'Perpetuate' and 'entrench' form a precise synonym pair describing how opaque models preserve historical disparities.",
-    "is_pyq": false,
+    "is_pyq": False,
     "pyq_year": "2026",
     "pyq_exam": "GRE General"
   },
@@ -5342,7 +5342,7 @@ GRE_2026_QUESTIONS = [
     ],
     "answer": "0",
     "explanation": "Macro-historical narratives serve as the foil that smooths over fault lines exposed by microhistorical edge cases.",
-    "is_pyq": false,
+    "is_pyq": False,
     "pyq_year": "2026",
     "pyq_exam": "GRE General"
   },
@@ -5364,7 +5364,7 @@ GRE_2026_QUESTIONS = [
     ],
     "answer": "0",
     "explanation": "Plants reward cooperative fungi and sanction cheaters -> conditional mutualism.",
-    "is_pyq": false,
+    "is_pyq": False,
     "pyq_year": "2026",
     "pyq_exam": "GRE General"
   }
