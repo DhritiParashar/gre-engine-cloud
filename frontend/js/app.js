@@ -28,3 +28,37 @@ document.addEventListener("DOMContentLoaded", () => {
   window.renderExamSwitcher();
   window.switchTab("tab1");
 });
+
+// Enable independent Left & Right vertical scrolling on split chapter workspaces
+window.applySplitPaneScroll = function () {
+  const ws = document.getElementById("main-workspace");
+  if (!ws) return;
+  const grids = ws.querySelectorAll(".grid");
+  grids.forEach(g => {
+    const cls = g.className || "";
+    if ((cls.includes("lg:grid-cols-12") || cls.includes("md:grid-cols-12")) && g.children.length === 2) {
+      g.classList.add("split-pane-layout");
+      g.children[0].classList.add("split-pane-left", "pane-scroll");
+      g.children[1].classList.add("split-pane-right", "pane-scroll");
+    }
+  });
+};
+
+document.addEventListener("click", (e) => {
+  const leftCard = e.target.closest(".split-pane-left button, .split-pane-left [onclick]");
+  if (leftCard) {
+    setTimeout(() => {
+      const rightPane = document.querySelector("#main-workspace .split-pane-right");
+      if (rightPane) rightPane.scrollTop = 0;
+    }, 30);
+  }
+});
+
+const _splitObs = new MutationObserver(() => {
+  if (typeof window.applySplitPaneScroll === "function") window.applySplitPaneScroll();
+});
+window.addEventListener("DOMContentLoaded", () => {
+  const ws = document.getElementById("main-workspace");
+  if (ws) _splitObs.observe(ws, { childList: true, subtree: true });
+  setTimeout(() => window.applySplitPaneScroll(), 200);
+});
