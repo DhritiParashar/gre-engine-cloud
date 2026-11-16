@@ -15,6 +15,19 @@ load_dotenv()
 
 app = FastAPI(title="GOALisB GRE General Master Engine API", version="1.0.0")
 
+# UptimeRobot HEAD & Health Check Support (200 OK)
+from fastapi import Response as _UptimeResponse
+
+@app.middleware("http")
+async def _uptime_head_middleware(request, call_next):
+    if request.method == "HEAD":
+        return _UptimeResponse(status_code=200)
+    return await call_next(request)
+
+@app.api_route("/health", methods=["GET", "HEAD"])
+async def _health_check():
+    return {"status": "ok"}
+
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -2081,3 +2094,17 @@ async def api_admin_ingest_bank(request: Request):
     exam_tag = str(payload.get("exam_tag") or "CAT_2026")
     stats = ingest_question_records(engine, records, exam_tag)
     return {"status": "ok", **stats}
+
+from fastapi.responses import JSONResponse
+
+@app.api_route("/health", methods=["GET", "HEAD"])
+async def health_check():
+    return JSONResponse({"status": "ok"})
+
+from starlette.responses import Response
+
+@app.middleware("http")
+async def head_ping_middleware(request, call_next):
+    if request.method == "HEAD":
+        return Response(status_code=200)
+    return await call_next(request)
