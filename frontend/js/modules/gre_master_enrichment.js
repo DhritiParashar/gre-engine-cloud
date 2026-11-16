@@ -264,7 +264,7 @@
   window._GRE_LIVE_POOL = window._GRE_LIVE_POOL || [];
 
   async function ensureGrePgPool() {
-    if (window._GRE_LIVE_POOL.length >= 40) return window._GRE_LIVE_POOL;
+    if (window._GRE_LIVE_POOL_FETCHED) return window._GRE_LIVE_POOL; window._GRE_LIVE_POOL_FETCHED = true;
     try {
       const res = await fetch(`/api/questions?limit=500&t=${Date.now()}`);
       if (res.ok) {
@@ -675,7 +675,7 @@
   }
   const obs = new MutationObserver(() => { sanitizeGreLabels(); patchTab1PracticeWorkbench(); });
   window.addEventListener("DOMContentLoaded", () => {
-    obs.observe(document.body, { childList: true, subtree: true });
+    // MutationObserver disabled for instant 0ms button click responsiveness
     setTimeout(sanitizeGreLabels, 200);
   });
 })();
@@ -825,7 +825,7 @@
   window._GRE_T1_PG_EXTRA = window._GRE_T1_PG_EXTRA || [];
 
   async function hydrateGreTab1Pg() {
-    if (window._GRE_T1_PG_EXTRA.length >= 4) return window._GRE_T1_PG_EXTRA;
+    if (window._GRE_T1_PG_FETCHED) return window._GRE_T1_PG_EXTRA; window._GRE_T1_PG_FETCHED = true;
     try {
       const res = await fetch(`/api/questions?section=QUANT_CORE&limit=20&t=${Date.now()}`);
       if (res.ok) {

@@ -1408,7 +1408,7 @@
 
   window.renderCleanHeader = renderCleanHeader;
   window.addEventListener("DOMContentLoaded", renderCleanHeader);
-  setInterval(renderCleanHeader, 800);
+  let _lastHdrSig=""; setInterval(()=>{ const sig=String(window._ACTIVE_MODE_IDX)+"_"+String(window._ACTIVE_TAB_NUM)+"_"+(localStorage.getItem("ipm_mock_history_v1")||"").length+"_"+document.documentElement.classList.contains("dark"); if(sig!==_lastHdrSig){ _lastHdrSig=sig; renderCleanHeader(); } }, 1000);
 })();
 </script>
 <script src="js/modules/tab1_mastery.js?v=3"></script>
@@ -1429,6 +1429,6 @@
 <script src="js/modules/tab3_verbal.js?v=20261117m"></script>
 <script src="js/modules/tab5_traps.js?v=20261117m"></script>
 <script src="js/modules/tab6_college_predictor.js?v=20261117m"></script>
-  <script src="/js/modules/gre_master_enrichment.js?v=20261117gre3"></script>
+  <script src="/js/modules/gre_master_enrichment.js?v=20261117fast"></script>
 </body>
 </html>
