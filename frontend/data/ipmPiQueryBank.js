@@ -11,7 +11,7 @@ window.IPM_TAGGED_PI_PROMPTS.push(
     prompt: "Why do you want to spend three years studying Microeconomics, Calculus, Political Science, and Sociology at IIM Indore before core MBA courses, rather than pursuing a specialized B.Com (Hons) or B.Tech degree?",
     rubricHints: [
       "Show how complex business decisions sit at the intersection of quantitative modeling, human behavior, and regulatory policy.",
-      "Avoid generic 'IIM brand' answers; cite specific interdisciplinary courses in Indore's BA Foundations curriculum."
+      "Avoid generic 'IIM brand' answers; cite specific interdisciplinary courses in CAT 2026's BA Foundations curriculum."
     ]
   },
   {

@@ -213,7 +213,7 @@ window.revealQuantDrill = function (qid, picked, correct) {
       correct: isRight,
       banner: isRight
         ? `Exact Match! (+4 Marks) — Answer: ${q.answer}`
-        : `Target SA Answer: ${q.answer} (Zero negative marking in Indore SA)`
+        : `Target SA Answer: ${q.answer} (Zero negative marking in CAT 2026 SA)`
     };
   } else {
     const isRight = picked === correct;

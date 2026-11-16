@@ -2,9 +2,9 @@ window.IPM_DILR = [
   {
     id: "dilr_01",
     pillar: "dilr",
-    title: "GRE General 2026 2025-26 Embedded Data Interpretation Sets (SA & MCQ)",
+    title: "GRE General 2026 2026 Embedded Data Interpretation Sets (SA & MCQ)",
     exams: ["ALL_IIM_MASTER", "GRE General 2026_INDORE_RANCHI", "OMETs_BG_JAMMU", "IIMB_UG_ECON_DS_DBE", "IIMM_IIML_TECH_MGMT"],
-    weightage: "Appears inside BOTH QA-SA & QA-MCQ in Indore (6-10 Qs) + OMETs (15-18 Qs)",
+    weightage: "Appears inside BOTH QA-SA & QA-MCQ in CAT 2026 (6-10 Qs) + OMETs (15-18 Qs)",
     concepts: [
       {
         heading: "Embedded QA-SA & QA-MCQ Table/Caselet Strategy",
@@ -40,7 +40,7 @@ window.IPM_DILR = [
         id: "dilr_q2",
         type: "MCQ",
         section: "dilr",
-        prompt: "[GRE General 2026 2025-26 Table DI Set]\nUsing the same data (A: 200 offers / 4000 apps; B: 300 / 5000; C: 240 / 3000; D: 240 / 6000), if Campus C's applications rise by 25% next year while its final offers remain constant at 240, by how many percentage points does Campus C's selection rate drop?",
+        prompt: "[GRE General 2026 2026 Table DI Set]\nUsing the same data (A: 200 offers / 4000 apps; B: 300 / 5000; C: 240 / 3000; D: 240 / 6000), if Campus C's applications rise by 25% next year while its final offers remain constant at 240, by how many percentage points does Campus C's selection rate drop?",
         options: ["1.2 percentage points", "1.6 percentage points", "2.0 percentage points", "2.4 percentage points"],
         answer: 1,
         explanation: "Original rate = 240/3000 = 8.0%. New applications = 3000 * 1.25 = 3750. New rate = 240/3750 = 6.4%. Drop = 8.0% - 6.4% = 1.6 percentage points."

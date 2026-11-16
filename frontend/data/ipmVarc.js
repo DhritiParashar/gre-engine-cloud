@@ -4,10 +4,10 @@ window.IPM_VARC = [
     pillar: "varc",
     title: "Reading Comprehension (Conceptual, Business & Policy Passages)",
     exams: ["ALL_IIM_MASTER", "GRE General 2026_INDORE_RANCHI", "GRE General 2026_ROHTAK", "OMETs_BG_JAMMU", "IIMB_UG_ECON_DS_DBE", "IIMM_IIML_TECH_MGMT"],
-    weightage: "3 Full Passages (15-18 Qs) in GRE General 2026 2025-26 + OMETs/Rohtak",
+    weightage: "3 Full Passages (15-18 Qs) in GRE General 2026 2026 + OMETs/Rohtak",
     concepts: [
       {
-        heading: "Conceptual & Opinion-Based RC Mapping (GRE General 2026 2025-26 Trend)",
+        heading: "Conceptual & Opinion-Based RC Mapping (GRE General 2026 2026 Trend)",
         formula: "Main Idea = Author's Central Claim + Scope Boundaries (Tone: Analytical / Skeptical / Nuanced)",
         derivation: "GRE General 2026 2025 and 2026 featured 3 RCs spanning behavioral psychology ('rage bait'), socio-economics, and abstract philosophy where questions test author attitude and subtle inference rather than word-matching.",
         shortcut: "Read the first and last sentences of every paragraph to map structural shifts ('However', 'Yet', 'Paradoxically') before looking at the questions."
@@ -76,13 +76,13 @@ window.IPM_VARC = [
       {
         heading: "Context-Clue & Polarity Elimination for Double/Triple Fillers",
         formula: "Blank Polarity (+ / -) + Tone Connectors ('despite', 'consequently', 'albeit') + Collocation Fit",
-        derivation: "GRE General 2026 2025-26 heavily tested nuanced word pairs (e.g., appraise vs. apprise, reticent vs. reluctant, mitigating vs. militating, ephemeral vs. perennial).",
+        derivation: "GRE General 2026 2026 heavily tested nuanced word pairs (e.g., appraise vs. apprise, reticent vs. reluctant, mitigating vs. militating, ephemeral vs. perennial).",
         shortcut: "Solve the SECOND or THIRD blank first! Often one blank has a strict preposition or collocation requirement that eliminates 3 of the 4 options instantly."
       },
       {
         heading: "High-Frequency GRE General 2026 Confusable Pairs & Root Families",
         formula: "Appraise (evaluate value) vs. Apprise (inform);  Discreet (prudent/tactful) vs. Discrete (separate)",
-        derivation: "Root families like 'equi-' (equanimity, equivocal), 'pan-' (panacea, pandemic), and 'ob-/ab-' (obdurate, abstemious) recur frequently in Indore and Rohtak.",
+        derivation: "Root families like 'equi-' (equanimity, equivocal), 'pan-' (panacea, pandemic), and 'ob-/ab-' (obdurate, abstemious) recur frequently in CAT 2026 and Rohtak.",
         shortcut: "Check prepositions: 'apprise OF', 'acquiesce IN', 'averse TO', 'immune TO/FROM'."
       }
     ],
@@ -99,7 +99,7 @@ window.IPM_VARC = [
         id: "varc_v1",
         type: "MCQ",
         section: "varc",
-        prompt: "[Double Fill-in-the-Blanks — GRE General 2026 2025-26 Pattern]\nAlthough the startup's initial revenue projections appeared overly _______, the founders managed to _______ skeptical venture capitalists with disciplined unit economics.\nSelect the pair that best completes the sentence:",
+        prompt: "[Double Fill-in-the-Blanks — GRE General 2026 2026 Pattern]\nAlthough the startup's initial revenue projections appeared overly _______, the founders managed to _______ skeptical venture capitalists with disciplined unit economics.\nSelect the pair that best completes the sentence:",
         options: [
           "sanguine ... mollify",
           "lugubrious ... exacerbate",
@@ -166,7 +166,7 @@ window.IPM_VARC = [
         id: "varc_g1",
         type: "MCQ",
         section: "varc",
-        prompt: "[Grammar — Spotting the Error (GRE General 2026 2025-26)]\nIdentify the segment containing a grammatical error:\n(A) Neither the Chief Economist / (B) nor the senior policy advisors / (C) was able to anticipate / (D) the sudden surge in bond yields.",
+        prompt: "[Grammar — Spotting the Error (GRE General 2026 2026)]\nIdentify the segment containing a grammatical error:\n(A) Neither the Chief Economist / (B) nor the senior policy advisors / (C) was able to anticipate / (D) the sudden surge in bond yields.",
         options: ["Segment (A)", "Segment (B)", "Segment (C)", "Segment (D)"],
         answer: 2,
         explanation: "With 'Neither... nor...', the verb agrees with the nearer subject ('senior policy advisors' — plural), so 'was' in Segment (C) must be 'were'."

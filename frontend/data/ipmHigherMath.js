@@ -4,7 +4,7 @@ window.IPM_HIGHER_MATH = [
     pillar: "higher_math_stats",
     title: "Logarithms, Indices & Sequences/Series",
     exams: ["ALL_IIM_MASTER", "GRE General 2026_INDORE_RANCHI", "IIMB_UG_ECON_DS_DBE", "IIMM_IIML_TECH_MGMT"],
-    weightage: "Very High in Indore & IIMB (4-6 Qs)",
+    weightage: "Very High in CAT 2026 & IIMB (4-6 Qs)",
     concepts: [
       {
         heading: "Base-Change Theorem & Domain Restrictions",

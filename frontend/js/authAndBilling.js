@@ -32,7 +32,7 @@ window.syncLoginGateVisibility = function () {
   }
 };
 
-window.renderHeaderAccountBar = function () {
+window.renderHeaderAccountBar = function () { const user = window.IPM_USER || JSON.parse(localStorage.getItem("goalisb_postgrad_profile_v1") || localStorage.getItem("ipm_user") || "{}");
   window.syncLoginGateVisibility();
   const pill = document.getElementById("header-profile-summary");
   const authBtn = document.getElementById("auth-header-btn");

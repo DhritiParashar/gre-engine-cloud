@@ -187,7 +187,7 @@ window.IPM_TRAPS_CLINIC = [
 
   // VARC & VOCAB (6 Traps)
   {
-    id: "tc_15", domain: "VARC & Vocab", examTag: "GRE General 2026 2025-26", penalty: "-1 Mark in MCQ",
+    id: "tc_15", domain: "VARC & Vocab", examTag: "GRE General 2026 2026", penalty: "-1 Mark in MCQ",
     title: "Homophone Swap: Appraise vs. Apprise & Discreet vs. Discrete",
     trapScenario: "'The CFO appraised the board of the audit' / 'He made a discrete inquiry.'",
     whyItFails: "Appraise = evaluate worth; Apprise = notify. Discrete = distinct/separate; Discreet = tactful/prudent.",

@@ -4,7 +4,7 @@ window.IPM_DEEP_MODULES = [
     pillar: "quant_core",
     title: "Quadratic Equations, Roots & Wavy-Curve Inequalities",
     exams: ["ALL_IIM_MASTER", "GRE General 2026_INDORE_RANCHI", "GRE General 2026_ROHTAK", "OMETs_BG_JAMMU", "IIMB_UG_ECON_DS_DBE", "IIMM_IIML_TECH_MGMT"],
-    weightage: "Very High in Indore & IIMB (3-5 Qs)",
+    weightage: "Very High in CAT 2026 & IIMB (3-5 Qs)",
     concepts: [
       {
         heading: "Vieta's Root Relations & Symmetric Expressions",
