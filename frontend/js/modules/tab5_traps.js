@@ -153,6 +153,15 @@ window.renderTrapClinic5 = function (el) {
 
   const defusedCount = ALL_TRAPS.filter((_, i) => window._DEFUSED_TRAPS[`${exam}_${i}`]).length;
 
+  window.resetDefusedTraps5 = function () {
+    if (!confirm(`Reset all defused trap checkmarks for ${exam} and return filter to All Sections?`)) return;
+    Object.keys(window._DEFUSED_TRAPS).forEach(k => {
+      if (k.startsWith(`${exam}_`)) delete window._DEFUSED_TRAPS[k];
+    });
+    localStorage.setItem("ipm_defused_traps_v1", JSON.stringify(window._DEFUSED_TRAPS));
+    window._TRAP_SEC_FILTER = "ALL";
+    window.renderTrapClinic5(document.getElementById("main-workspace"));
+  };
   window.toggleTrapDefused5 = function (globalIdx) {
     const key = `${exam}_${globalIdx}`;
     window._DEFUSED_TRAPS[key] = !window._DEFUSED_TRAPS[key];
@@ -256,7 +265,7 @@ window.renderTrapClinic5 = function (el) {
             <h2 class="text-xl font-extrabold text-slate-900 dark:text-white mt-0.5">Trap Doctor Clinic (${ALL_TRAPS.length} High-Frequency Traps &bull; 12 Per Section)</h2>
             <p class="text-xs text-slate-500 mt-0.5">Mastered &amp; Defused: <strong class="text-emerald-600">${defusedCount} / ${ALL_TRAPS.length}</strong> traps across ${SECS.join(", ")}.</p>
           </div>
-          <div class="flex flex-wrap gap-2">${secButtons}</div>
+          <div class="flex flex-wrap items-center gap-2">${secButtons}<button type="button" onclick="window.resetDefusedTraps5()" class="px-3.5 py-1.5 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 hover:bg-rose-50 hover:text-rose-700 text-slate-700 dark:text-slate-200 text-xs font-extrabold cursor-pointer transition">&#8634; Reset Traps</button></div>
         </div>
 
         <div class="grid grid-cols-1 lg:grid-cols-12 gap-5">
