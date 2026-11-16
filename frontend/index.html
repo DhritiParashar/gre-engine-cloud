@@ -1370,5 +1370,415 @@
 <script src="js/modules/tab8_mock.js?v=3"></script>
 <script src="js/modules/tab9_pyq.js?v=3"></script>
 <script src="js/modules/tab9_pyq_vault.js?v=3"></script>
+<script id="pg-unified-modules-bundle">
+window.GRE_DI_MODULES = [
+  {
+    id: "gre_di_charts",
+    badge: "GRE QUANTITATIVE • DATA INTERPRETATION LAB",
+    title: "Multi-Chart Data Interpretation: Compound Growth, Percentiles & Weighted Distributions",
+    subtitle: "3–4 Qs per Quant Section • Linked Tables, Scatter Plots & Boxplots",
+    overview: "ETS GRE Data Interpretation sets present 2 linked visual displays (stacked bar charts, percentile tables, or logarithmic distributions) followed by 3–4 questions including Numeric Entry and Check-All-That-Apply items.",
+    bridge: "Use the on-screen GRE calculator strictly for messy 3-digit divisions; for percentage comparisons, estimate ratios visually first and verify whether the prompt asks for percentage change vs. percentage-point difference.",
+    drills: [
+      { q: "A university's graduate applicant pool rose from 4,000 to 5,000 while the admit rate dropped from 20% to 15%. By what percentage did the absolute number of admitted students change?", opts: ["-25.0%", "-6.25%", "0%", "+6.25%", "+12.5%"], ans: 1, exp: "Prior admits = 0.20 * 4000 = 800. New admits = 0.15 * 5000 = 750. Change = -50 / 800 = -6.25%." },
+      { q: "In a dataset of 50 graduate salaries, the median is $112,000 and the interquartile range (IQR) is $28,000. If every salary increases by a flat $5,000 bonus, what is the new IQR?", opts: ["$23,000", "$28,000", "$33,000", "$35,000", "Cannot be determined"], ans: 1, exp: "Adding a constant shift (+$5,000) translates Q1 and Q3 equally, leaving IQR = Q3 - Q1 unchanged at $28,000." }
+    ]
+  },
+  {
+    id: "gre_awa_studio",
+    badge: "GRE ANALYTICAL WRITING • 5.5–6.0 ISSUE ESSAY STUDIO",
+    title: "Analytical Writing (AWA): 30-Minute Issue Task Architecture & Counter-Thesis Rubric",
+    subtitle: "1 Essay • 30 Minutes • Scored 0.0–6.0 in 0.5 Increments",
+    overview: "The current GRE General Test features a single 30-minute Analyze an Issue task. Top PhD, MS, and MBA programs look for AWA ≥ 4.5–5.0, demonstrating nuanced conditional reasoning rather than one-sided assertions.",
+    bridge: "Structure in 4 crisp paragraphs: (1) Qualified Thesis stating when the claim holds vs. fails, (2) Primary Supporting Mechanism + Concrete Historical/Institutional Example, (3) Strongest Counter-Argument + Rebuttal/Synthesis, (4) Epistemic Conclusion.",
+    drills: [
+      { q: "Which thesis structure earns a 6.0 AWA score on an Issue prompt about mandatory university curricula?", opts: ["Unconditional agreement with zero exceptions", "Conditional synthesis distinguishing foundational rigor in early undergraduate years from specialized autonomy in upper-level research", "Listing 5 unrelated historical facts without a central claim", "Summarizing the prompt without taking a position"], ans: 1, exp: "ETS 6.0 rubric rewards nuanced, conditional theses that explore boundary conditions and counter-perspectives." }
+    ]
+  }
+];
+
+window.renderTab2 = function (el) {
+  window._GRE_DI_IDX = window._GRE_DI_IDX || 0;
+  const m = window.GRE_DI_MODULES[window._GRE_DI_IDX];
+  const nav = window.GRE_DI_MODULES.map((item, idx) => `
+    <button type="button" onclick="window._GRE_DI_IDX=${idx}; window.renderTab2(this.closest('#tab-content') || document.querySelector('[data-tab-panel]'));"
+      class="w-full text-left p-4 rounded-2xl border transition cursor-pointer ${idx === window._GRE_DI_IDX ? 'border-indigo-500 bg-indigo-50/70 dark:bg-indigo-950/40' : 'border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900'}">
+      <div class="font-extrabold text-sm text-slate-900 dark:text-white">${item.title}</div>
+      <div class="text-xs text-slate-500 mt-1">${item.subtitle}</div>
+    </button>
+  `).join("");
+
+  const drillsHtml = m.drills.map((d, i) => `
+    <div class="p-4 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 space-y-2">
+      <div class="text-xs font-bold text-slate-900 dark:text-white">Q${i+1}. ${d.q}</div>
+      <div class="flex flex-wrap gap-2">
+        ${d.opts.map((o, oi) => `<button type="button" onclick="this.parentElement.nextElementSibling.classList.remove('hidden')" class="px-3 py-1.5 rounded-lg border border-slate-300 dark:border-slate-700 text-xs font-semibold hover:border-indigo-500 cursor-pointer">${o}</button>`).join("")}
+      </div>
+      <div class="hidden text-xs text-emerald-700 dark:text-emerald-300 pt-1"><strong>Correct Answer: ${d.opts[d.ans]}</strong> — ${d.exp}</div>
+    </div>
+  `).join("");
+
+  el.innerHTML = `
+    <div class="max-w-6xl mx-auto my-4 grid grid-cols-1 lg:grid-cols-12 gap-5">
+      <div class="lg:col-span-4 space-y-3">
+        <div class="text-xs font-extrabold uppercase tracking-wider text-indigo-600">DATA INTERPRETATION &amp; AWA LAB</div>
+        ${nav}
+      </div>
+      <div class="lg:col-span-8 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-6 space-y-4 shadow-sm">
+        <span class="text-[10px] font-extrabold uppercase tracking-wider text-indigo-600">${m.badge}</span>
+        <h2 class="text-xl font-extrabold text-slate-900 dark:text-white">${m.title}</h2>
+        <div class="p-4 rounded-xl bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 space-y-2 text-xs leading-relaxed text-slate-700 dark:text-slate-300">
+          <div class="font-extrabold uppercase text-[11px] text-indigo-600">Graduate Module Overview &amp; Q170 / AWA 5.5 Strategy</div>
+          <p>${m.overview}</p>
+          <p><strong>Execution Heuristic:</strong> ${m.bridge}</p>
+        </div>
+        <div class="space-y-3">${drillsHtml}</div>
+      </div>
+    </div>
+  `;
+};
+// ==============================================================================
+// DEFINITIVE TABS 2, 3, 4, 5 RENDERERS (STRICT 1-TO-1 TEST-PREP MAPPING)
+// ==============================================================================
+(function () {
+  const host = window.location.host.toLowerCase();
+  const exam = host.includes("gmat") ? "GMAT" : (host.includes("gre") ? "GRE" : "CAT");
+
+  // TAB 3: VERBAL STUDIO (VARC / CR & RC / TC, SE & RC)
+  window.renderVerbalStudio3 = function (el) {
+    const sets = exam === "GMAT" ? [
+      {
+        tag: "GMAT FOCUS CRITICAL REASONING • NECESSARY ASSUMPTION",
+        title: "Supply-Chain Automation & Unit Margin Paradox",
+        passage: "Over the past two years, Meridien Logistics automated 70% of its regional sorting hubs, cutting per-parcel handling labor costs by 38%. Nevertheless, Meridien's overall operating margin declined by 2.4 percentage points over the same period, even though total parcel volume and average revenue per parcel remained unchanged.",
+        q: "Which of the following, if true, most helps to explain the decline in Meridien's overall operating margin?",
+        opts: [
+          "Competitors in the regional parcel market also invested heavily in automated sorting equipment.",
+          "Depreciation and specialized maintenance contracts for the new sorting hardware exceeded the dollar savings from reduced handling labor.",
+          "Customer delivery satisfaction scores improved significantly after hub automation was completed.",
+          "Fuel prices for long-haul freight remained stable throughout the two-year period.",
+          "Meridien plans to automate its remaining 30% of sorting hubs next fiscal year."
+        ],
+        ans: 1,
+        exp: "Total cost = Labor + Equipment/Overhead. Even with revenue constant and labor down 38%, if hardware depreciation + maintenance rose by more than the labor dollar savings, operating margin falls."
+      },
+      {
+        tag: "GMAT FOCUS READING COMPREHENSION • INFERENCE & AUTHOR STRUCTURE",
+        title: "Behavioral Pricing & Reference-Point Anchoring",
+        passage: "Classical microeconomic models posit that rational consumers evaluate price changes solely by comparing marginal utility against budget constraints. Empirical pricing studies, however, reveal strong reference-dependence: consumers penalize perceived price surcharges far more sharply than they reward economically identical discounts from a higher list price, particularly when competitor pricing is transparent.",
+        q: "The passage suggests that a firm seeking to minimize consumer resistance during a cost-driven price adjustment would most likely succeed by:",
+        opts: [
+          "Introducing frequent temporary surcharges rather than altering its published list price.",
+          "Eliminating all competitor price comparisons from its marketing materials.",
+          "Establishing a higher transparent list price paired with targeted promotional discounts rather than adding surcharges to a low base price.",
+          "Assuming consumers evaluate marginal utility independently of historical prices.",
+          "Reducing product quality while keeping nominal prices fixed."
+        ],
+        ans: 2,
+        exp: "Because consumers penalize surcharges far more sharply than equivalent discounts from a higher list price, framing around a higher list price with discounts minimizes reference-point resistance."
+      }
+    ] : (exam === "GRE" ? [
+      {
+        tag: "GRE VERBAL • TEXT COMPLETION & SENTENCE EQUIVALENCE",
+        title: "Multi-Clause Contrast & Semantic Pair Mastery",
+        passage: "Although early historiographers portrayed the 14th-century maritime guilds as rigidly (i) ______ institutions resistant to navigational innovation, archival port ledgers reveal a far more (ii) ______ posture: guild captains routinely underwrote experimental astrolabe trials whenever cross-oceanic freight margins justified the risk.",
+        q: "Select the best pair of entries for Blank (i) and Blank (ii):",
+        opts: [
+          "(i) hidebound  |  (ii) pragmatic",
+          "(i) mercurial  |  (ii) dogmatic",
+          "(i) prescient  |  (ii) sclerotic",
+          "(i) malleable  |  (ii) doctrinaire",
+          "(i) iconoclastic | (ii) orthodox"
+        ],
+        ans: 0,
+        exp: "'Although' signals contrast: 'hidebound' (narrowly traditional/resistant to innovation) contrasts with 'pragmatic' (practical, underwriting trials when margins justified risk)."
+      },
+      {
+        tag: "GRE READING COMPREHENSION • SCIENTIFIC HYPOTHESIS CRITIQUE",
+        title: "Deep-Ocean Thermal Vents & Chemosynthetic Ecosystems",
+        passage: "Until the discovery of hydrothermal vent communities along the Galapagos Rift, biologists assumed that all complex trophic webs depended ultimately on solar photosynthesis. At abyssal depths devoid of sunlight, however, chemoautotrophic bacteria oxidize hydrogen sulfide dissolved in superheated vent plumes to fix inorganic carbon, sustaining dense colonies of tubeworms and bivalves.",
+        q: "Which of the following is most directly supported by the passage?",
+        opts: [
+          "Photosynthetic organisms cannot survive anywhere in the Galapagos Rift.",
+          "At least some complex biological food webs fix inorganic carbon without relying on solar energy.",
+          "Hydrogen sulfide is toxic to all multicellular marine invertebrates.",
+          "Abyssal tubeworms oxidize hydrogen sulfide directly without bacterial symbiosis.",
+          "Solar photosynthesis is less efficient than chemosynthesis in shallow waters."
+        ],
+        ans: 1,
+        exp: "Chemoautotrophic bacteria fix inorganic carbon using hydrogen sulfide in sunlight-free abyssal depths, sustaining complex colonies of tubeworms and bivalves."
+      }
+    ] : [
+      {
+        tag: "CAT VARC STUDIO • READING COMPREHENSION & TITA PARA-SUMMARY",
+        title: "Epistemic Humility, Algorithmic Forecasting & Fat-Tail Risk",
+        passage: "Modern financial and epidemiological forecasting models excel within stationary regimes where historical variance reliably bounds future outcomes. Yet in complex adaptive systems characterized by fat-tailed distributions, optimizing models solely for in-sample precision induces fragility: rare structural breaks—precisely the events carrying catastrophic consequence—lie outside the calibration window and are systematically underpriced.",
+        q: "Which of the following best captures the central thesis of the passage?",
+        opts: [
+          "Historical variance is completely useless for modeling stationary financial or epidemiological systems.",
+          "Over-optimizing predictive models on historical data creates systemic vulnerability to rare, high-impact structural breaks in fat-tailed domains.",
+          "Complex adaptive systems can be accurately predicted by expanding in-sample calibration windows.",
+          "Catastrophic events occur exclusively in epidemiological rather than financial systems."
+        ],
+        ans: 1,
+        exp: "The author contrasts stationary regimes with fat-tailed adaptive systems, arguing that optimizing for in-sample precision makes models fragile to rare, catastrophic structural breaks."
+      },
+      {
+        tag: "CAT VARC STUDIO • TITA PARA-JUMBLE (4-SENTENCE COHERENCE)",
+        title: "Arrange the 4 Sentences Into a Coherent Paragraph (TITA)",
+        passage: "1. Consequently, central banks face an asymmetric trade-off between anchoring long-term inflation expectations and avoiding premature liquidity tightening.\n2. Supply-side energy shocks initially raise headline price indices without reflecting excess aggregate demand.\n3. Raising policy rates aggressively in response to such cost-push pressures can depress capital investment while doing little to expand physical energy supply.\n4. Yet allowing elevated headline inflation to persist risks spilling over into wage-setting behavior across services.",
+        q: "Identify the logical 4-digit sequence (No Negative Marking in CAT TITA):",
+        opts: ["2 - 3 - 4 - 1", "1 - 2 - 3 - 4", "2 - 4 - 1 - 3", "3 - 2 - 4 - 1"],
+        ans: 0,
+        exp: "Sentence 2 introduces supply-side energy shocks -> Sentence 3 explains why raising rates hurts capex -> Sentence 4 ('Yet') gives the counter-risk of wage spillover -> Sentence 1 ('Consequently') concludes with the central bank trade-off: 2341."
+      }
+    ]);
+
+    el.innerHTML = `
+      <div class="max-w-6xl mx-auto my-4 space-y-4">
+        <div class="bg-slate-900 text-white rounded-2xl p-5 border border-slate-800 shadow-lg">
+          <span class="text-[10px] uppercase font-bold text-indigo-300">${exam} High-Percentile Verbal Studio</span>
+          <h2 class="text-xl font-extrabold mt-1">${exam === "CAT" ? "CAT VARC Studio: Dense RC Passages, Para-Jumbles & TITA Summaries" : (exam === "GMAT" ? "GMAT Verbal Studio: Critical Reasoning & Analytical RC" : "GRE Verbal Studio: Text Completion, Sentence Equivalence & RC")}</h2>
+          <p class="text-xs text-slate-300 mt-1">Practice passage structure mapping, assumption negation tests, and zero-penalty TITA / Multi-Blank logic.</p>
+        </div>
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-5">
+          ${sets.map((s, idx) => `
+            <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-5 space-y-3 shadow-sm">
+              <span class="text-[10px] font-extrabold uppercase px-2.5 py-0.5 rounded-full bg-indigo-500/15 text-indigo-600 dark:text-indigo-300">${s.tag}</span>
+              <h3 class="text-base font-extrabold text-slate-900 dark:text-white">${s.title}</h3>
+              <div class="p-3.5 rounded-xl bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 text-xs leading-relaxed text-slate-700 dark:text-slate-300 whitespace-pre-line">${s.passage}</div>
+              <div class="text-xs font-bold text-slate-900 dark:text-white pt-1">Q${idx+1}. ${s.q}</div>
+              <div class="space-y-2">
+                ${s.opts.map((o, oi) => `
+                  <button type="button" onclick="this.parentElement.nextElementSibling.classList.remove('hidden')"
+                    class="w-full text-left px-3.5 py-2 rounded-xl border border-slate-200 dark:border-slate-700 hover:border-indigo-500 text-xs font-medium text-slate-800 dark:text-slate-200 cursor-pointer">
+                    <strong>${String.fromCharCode(65 + oi)}.</strong> ${o}
+                  </button>
+                `).join("")}
+              </div>
+              <div class="hidden p-3 rounded-xl bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-800 text-xs text-emerald-800 dark:text-emerald-200">
+                <strong>Correct Answer: ${String.fromCharCode(65 + s.ans)}</strong> — ${s.exp}
+              </div>
+            </div>
+          `).join("")}
+        </div>
+      </div>
+    `;
+  };
+
+  // TAB 4: TIMED DIAGNOSTIC MOCK SIMULATOR (WITH CLEAN QUESTION STEMS & LIVE TAB 6 SYNC)
+  window.renderMockSimulator4 = function (el) {
+    const bank = [
+      { topic: "Algebra & Inequalities", q: "How many integer values of x satisfy |2x - 7| + |x - 1| <= 8?", opts: ["4", "5", "6", "7"], ans: 2, exp: "Testing boundary integers x = 0, 1, 2, 3, 4, 5 gives |2x-7|+|x-1| = 8, 5, 4, 3, 4, 7 (all <= 8), while x = -1 gives 11 and x = 6 gives 10 -> 6 integer solutions." },
+      { topic: "Arithmetic & Weighted Ratios", q: "A 40-liter solution contains 30% alcohol. How many liters of pure alcohol must be added to raise the concentration to 44%?", opts: ["8 L", "10 L", "12 L", "14 L"], ans: 1, exp: "Water remains constant at 70% of 40 L = 28 L. At 44% alcohol, water is 56% of new total V => 0.56V = 28 => V = 50 L => Added = 50 - 40 = 10 L." },
+      { topic: "Number Properties", q: "What is the remainder when 7^2026 is divided by 5?", opts: ["1", "2", "3", "4"], ans: 3, exp: "7 ≡ 2 (mod 5). Powers of 2 mod 5 cycle with length 4: 2, 4, 3, 1. Since 2026 = 4*506 + 2, 7^2026 ≡ 2^2 = 4 (mod 5)." },
+      { topic: "Combinatorics & Probability", q: "In how many ways can 6 distinct software modules be assigned to 3 servers such that each server receives at least 1 module?", opts: ["360", "540", "600", "720"], ans: 1, exp: "Total unrestricted assignments = 3^6 = 729. Subtract assignments missing at least 1 server: 3*(2^6) - 3*(1^6) = 192 - 3 = 189 => 729 - 189 = 540." },
+      { topic: "Data Logic & Rates", q: "Working together, Pipelines A and B fill a reservoir in 12 hours. If Pipeline A operates alone for 4 hours and Pipeline B finishes the remaining work in 18 hours, how long would Pipeline B take alone?", opts: ["21 hrs", "24 hrs", "27 hrs", "30 hrs"], ans: 0, exp: "4/A + 18/B = 1 and 1/A + 1/B = 1/12 => 4(1/12 - 1/B) + 18/B = 1 => 1/3 + 14/B = 1 => 14/B = 2/3 => B = 21 hours." }
+    ];
+
+    window._MOCK4_ANSWERS = {};
+    const scheme = exam === "CAT" ? "MCQ +3 / -1 (Negative Marking Active)" : "Adaptive Scaled +1 / 0 (Zero Negative Marking)";
+
+    el.innerHTML = `
+      <div class="max-w-5xl mx-auto my-4 space-y-4">
+        <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-5 flex flex-wrap items-center justify-between gap-3 shadow-sm">
+          <div>
+            <span class="text-[10px] font-extrabold uppercase text-indigo-600">${exam} Live Timed Section Drill</span>
+            <h2 class="text-lg font-extrabold text-slate-900 dark:text-white">Diagnostic Mock Simulator — ${exam} High-Yield Set</h2>
+            <div class="text-xs text-slate-500">Marking Scheme: <strong>${scheme}</strong> &bull; Submits directly into Tab 6 Score Forecaster</div>
+          </div>
+          <button type="button" onclick="
+            let correct = 0, wrong = 0;
+            const bankLen = 5;
+            const ansKey = [2, 1, 3, 1, 0];
+            for (let i = 0; i < bankLen; i++) {
+              if (window._MOCK4_ANSWERS[i] === undefined) continue;
+              if (window._MOCK4_ANSWERS[i] === ansKey[i]) correct++; else wrong++;
+            }
+            const isCat = window.location.host.toLowerCase().includes('cat') || (!window.location.host.includes('gmat') && !window.location.host.includes('gre'));
+            const score = isCat ? Math.max(0, correct * 3 - wrong * 1) : correct;
+            const maxScore = isCat ? bankLen * 3 : bankLen;
+            const hist = JSON.parse(localStorage.getItem('ipm_mock_history_v1') || '[]');
+            hist.unshift({ date: new Date().toLocaleDateString(), score, maxScore, correct, wrong });
+            localStorage.setItem('ipm_mock_history_v1', JSON.stringify(hist));
+            document.getElementById('mock4-result-banner').innerHTML = '<strong>Submitted!</strong> Correct: ' + correct + '/5 | Wrong: ' + wrong + ' | Net Score: ' + score + '/' + maxScore + ' — Telemetry synced to Header &amp; Tab 6 Score Forecaster.';
+            document.getElementById('mock4-result-banner').classList.remove('hidden');
+            document.querySelectorAll('.mock4-exp').forEach(e => e.classList.remove('hidden'));
+          " class="px-4 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-extrabold shadow cursor-pointer">
+            Submit &amp; Sync to Tab 6 Forecaster
+          </button>
+        </div>
+
+        <div id="mock4-result-banner" class="hidden p-4 rounded-2xl bg-emerald-50 dark:bg-emerald-950/50 border border-emerald-300 dark:border-emerald-700 text-xs text-emerald-900 dark:text-emerald-200"></div>
+
+        <div class="space-y-3">
+          ${bank.map((item, idx) => `
+            <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-5 space-y-3 shadow-sm">
+              <div class="flex justify-between items-center text-xs">
+                <span class="font-extrabold text-indigo-600">Q${idx + 1} &bull; ${item.topic}</span>
+                <span class="text-[11px] px-2 py-0.5 rounded bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 font-semibold">${exam === "CAT" ? "+3 / -1 MCQ" : "+1 / 0 Adaptive"}</span>
+              </div>
+              <div class="text-sm font-semibold text-slate-900 dark:text-white">${item.q}</div>
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-2">
+                ${item.opts.map((opt, oi) => `
+                  <label class="flex items-center gap-2.5 p-3 rounded-xl border border-slate-200 dark:border-slate-700 hover:border-indigo-500 text-xs font-semibold cursor-pointer">
+                    <input type="radio" name="mock4_q_${idx}" onchange="window._MOCK4_ANSWERS[${idx}]=${oi}">
+                    <span><strong>${String.fromCharCode(65 + oi)}.</strong> ${opt}</span>
+                  </label>
+                `).join("")}
+              </div>
+              <div class="mock4-exp hidden p-3 rounded-xl bg-indigo-50 dark:bg-indigo-950/40 border border-indigo-200 dark:border-indigo-800 text-xs text-indigo-900 dark:text-indigo-200">
+                <strong>Solution (${String.fromCharCode(65 + item.ans)}):</strong> ${item.exp}
+              </div>
+            </div>
+          `).join("")}
+        </div>
+      </div>
+    `;
+  };
+
+  // Enforce strict 1-to-1 tab assignment across all 3 portals
+  window.renderTab3 = window.renderVerbalStudio3;
+  window.renderTab4 = window.renderMockSimulator4;
+  if (typeof window.renderTrapClinic5 === "function") {
+    window.renderTab5 = window.renderTrapClinic5;
+  }
+})();
+window.GRE_TRAPS_18 = [
+  { cat: "Quantitative Comparison", title: "Trap 1: Picking A or B After Testing Only Positive Integers", bait: "Testing x = 2 and x = 3, seeing Quantity A > Quantity B, and missing that x = 0.5 reverses it.", fix: "Always run FROZEN (Fractions, Roots, One, Zero, Extremes, Negatives)—one reversal proves Choice D." },
+  { cat: "Quantitative Comparison", title: "Trap 2: Assuming Visual Scale on Geometry Diagrams", bait: "Assuming an angle looks like 90° or two segments look equal when not stated.", fix: "Redraw extreme versions of the figure while obeying only explicit text constraints." },
+  { cat: "Quantitative Comparison", title: "Trap 3: Dividing Both Sides by Variable x", bait: "Canceling x from Quantity A (x^2) and Quantity B (3x) when x could be 0 or negative.", fix: "Subtract instead of dividing: compare x^2 - 3x = x(x - 3) against 0." },
+  { cat: "Quantitative Comparison", title: "Trap 4: Overlooking Even-Exponent Dual Roots", bait: "Treating x^2 = 36 as x = 6 instead of x = ±6.", fix: "List both positive and negative roots explicitly before comparing Quantities A and B." },
+  { cat: "Problem Solving & Numeric Entry", title: "Trap 5: Numeric Entry Rounding / Fraction Format", bait: "Entering 0.33 instead of the exact fraction 1/3 when rounding is not requested.", fix: "Use exact fractions unless the prompt specifies 'round to the nearest...'." },
+  { cat: "Problem Solving & Numeric Entry", title: "Trap 6: Standard Deviation Misconception", bait: "Assuming larger numbers (e.g., {100, 101, 102}) have a larger SD than smaller spread-out numbers ({1, 10, 19}).", fix: "Standard deviation depends purely on dispersion from the mean, never on the magnitude of the mean." },
+  { cat: "Data Interpretation", title: "Trap 7: Percent vs. Percentage-Point Confusion", bait: "Reading a rise from 20% to 25% as a 5% increase rather than a 25% relative increase (5 percentage points).", fix: "Distinguish percentage-point difference (25 - 20 = 5) from relative percent change (5/20 = +25%)." },
+  { cat: "Data Interpretation", title: "Trap 8: Ratio Without Total Base", bait: "Computing total headcount from a pie chart showing only percentages without a total N.", fix: "Check chart titles and footnotes for the total sample size N before computing absolute counts." },
+  { cat: "Verbal: Text Completion", title: "Trap 9: Vocabulary-First Guessing Before Logic Mapping", bait: "Picking an impressive GRE word that violates the sentence's structural pivot ('although', 'belie', 'paradoxically').", fix: "Predict your own simple word and polarity (+/-) for every blank before reading the choices." },
+  { cat: "Verbal: Text Completion", title: "Trap 10: Independent Guessing on 3-Blank TC", bait: "Treating a 3-blank Text Completion as three unrelated 1-blank questions.", fix: "Solve the most constrained blank first; all three blanks must form a single coherent thesis." },
+  { cat: "Verbal: Sentence Equivalence", title: "Trap 11: Single-Word Synonym Trap", bait: "Picking one word that fits the sentence well without verifying it has an exact twin among the 6 choices.", fix: "Eliminate any option lacking a semantic pair; both selected words must produce equivalent sentence meanings." },
+  { cat: "Verbal: Sentence Equivalence", title: "Trap 12: False Pair Trap", bait: "Choosing two words that are synonyms of each other (e.g., 'ephemeral / transient') that contradict the sentence's meaning.", fix: "Confirm both twin words match the sentence's logic, not just each other." },
+  { cat: "Reading Comprehension", title: "Trap 13: Extreme Language in Inference Questions", bait: "Selecting choices containing 'always', 'never', 'solely', or 'proves' on GRE inference items.", fix: "Prefer cautious, defensible inferences ('suggests', 'is consistent with', 'challenges')." },
+  { cat: "Reading Comprehension", title: "Trap 14: Confusing Cited Scholars With Author's Voice", bait: "Attributing a view critiqued in Paragraph 1 to the passage author.", fix: "Track attribution markers ('Critics contend...', 'Yet recent evidence demonstrates...')." },
+  { cat: "Reading Comprehension", title: "Trap 15: Multi-Select (Check-All-That-Apply) Partial Credit Loss", bait: "Stopping after finding 1 valid option on 3-choice 'Select all that apply' RC questions.", fix: "Evaluate each of the 3 statements independently as True/False against the text." },
+  { cat: "Section-Adaptive Pacing", title: "Trap 16: Leaving Blank Answers (Zero Guessing Penalty)", bait: "Leaving 2–3 hard questions unanswered at the end of Section 1 or Section 2.", fix: "GRE has zero negative marking—use the Mark & Review screen to fill every blank before time expires." },
+  { cat: "Section-Adaptive Pacing", title: "Trap 17: Missing Stage-2 Hard Routing Threshold", bait: "Getting bogged down on Q4 in Section 1 and missing 3 easy questions at the end.", fix: "Skip time-sinks in Section 1 to hit ≥10/12 accuracy and unlock the Hard Stage-2 ceiling (Q168–170)." },
+  { cat: "Analytical Writing (AWA)", title: "Trap 18: One-Sided Issue Essay Without Counter-Arguments", bait: "Writing a 5-paragraph cheerleading essay without addressing edge cases where the claim fails.", fix: "Dedicate a full body paragraph to the strongest counter-perspective and synthesize conditions for a 5.5–6.0 AWA." }
+];
+
+window.renderTab5 = function (el) {
+  const cards = window.GRE_TRAPS_18.map((t, i) => `
+    <div class="p-4 rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900/90 space-y-2 shadow-sm">
+      <div class="flex items-center justify-between">
+        <span class="text-[10px] font-extrabold uppercase px-2 py-0.5 rounded-full bg-indigo-500/15 text-indigo-600 dark:text-indigo-300">${t.cat}</span>
+        <span class="text-[11px] font-mono text-slate-400">#${i + 1} / 18</span>
+      </div>
+      <h4 class="font-extrabold text-sm text-slate-900 dark:text-white">${t.title}</h4>
+      <div class="text-xs text-rose-600 dark:text-rose-300"><strong>ETS Trap Bait:</strong> ${t.bait}</div>
+      <div class="text-xs text-emerald-700 dark:text-emerald-300"><strong>330+ Defense:</strong> ${t.fix}</div>
+    </div>
+  `).join("");
+
+  el.innerHTML = `
+    <div class="max-w-6xl mx-auto my-4 space-y-4">
+      <div class="bg-slate-900 text-white rounded-2xl p-5 border border-slate-800 shadow-lg">
+        <span class="text-[10px] uppercase font-bold text-amber-300">GRE General 260–340 Diagnostic Clinic</span>
+        <h2 class="text-xl font-extrabold mt-1">18 High-Yield GRE Quantitative Comparison, Verbal &amp; Adaptive Traps</h2>
+        <p class="text-xs text-slate-300 mt-1">Eliminate Choice-D boundary blindspots, Text Completion polarity flips, and Stage-1 pacing bottlenecks to unlock Q168+ / V163+.</p>
+      </div>
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">${cards}</div>
+    </div>
+  `;
+};
+window.renderTrapClinic5 = window.renderTab5;
+
+window.GRE_PREP_STATE = window.GRE_PREP_STATE || {
+  quant: 166, verbal: 160, awa: 4.5,
+  syncNote: "Synced with Tab 4 Mock Ledger (Adjust sliders or click Sync Mock)"
+};
+
+window.syncGrePrepFromMock = function () {
+  let hist = [];
+  try { hist = JSON.parse(localStorage.getItem("ipm_mock_history_v1") || "[]"); } catch (e) {}
+  if (!hist.length) {
+    alert("Complete and submit a Section-Adaptive Mock in Tab 4 first to load your live GRE telemetry.");
+    return;
+  }
+  const latest = hist[0];
+  const ratio = Math.max(0, Math.min(1, Number(latest.score || 0) / Math.max(1, Number(latest.maxScore || 54))));
+  window.GRE_PREP_STATE.quant = Math.min(170, Math.max(130, Math.round(130 + ratio * 40)));
+  window.GRE_PREP_STATE.verbal = Math.min(170, Math.max(130, Math.round(130 + ratio * 38)));
+  window.GRE_PREP_STATE.syncNote = `Synced from Mock #${hist.length} (${latest.score}/${latest.maxScore}) → Est. ${window.GRE_PREP_STATE.quant + window.GRE_PREP_STATE.verbal}/340`;
+  window.renderTab6(window._LAST_TAB6_EL || document.getElementById("tab-content"));
+};
+
+window.updateGrePrepField = function (field, val) {
+  window.GRE_PREP_STATE[field] = Number(val);
+  window.renderTab6(window._LAST_TAB6_EL || document.getElementById("tab-content"));
+};
+
+window.renderTab6 = function (el) {
+  if (!el) return;
+  window._LAST_TAB6_EL = el;
+  const s = window.GRE_PREP_STATE;
+  const totalGre = Number(s.quant) + Number(s.verbal);
+
+  const bands = [
+    { label: "334+ (99th %ile) Perfection Zone", target: 334, split: "Q 169–170 • V 164+ • AWA 5.0+", routing: "Stage 1 ≥11/12 (Quant) & ≥10/12 (Verbal) → Hard Stage-2 Unlocked", focus: "Zero careless slips on Numeric Entry & 3-blank Text Completion logic pivots." },
+    { label: "330+ (97th %ile) Benchmark", target: 330, split: "Q 167–168 • V 162+ • AWA 4.5+", routing: "Hard Stage-2 Routing Active in Both Sections", focus: "Apply FROZEN boundary testing on every Quantitative Comparison item to eliminate Choice-D misses." },
+    { label: "325+ (92nd %ile) Benchmark", target: 325, split: "Q 165+ • V 160+ • AWA 4.5+", routing: "Hard Stage-2 Quant • Medium/Hard Stage-2 Verbal", focus: "Drill Tab 3 Sentence Equivalence semantic pairs and multi-paragraph RC inference." },
+    { label: "320+ (85th %ile) Foundation Band", target: 320, split: "Q 162+ • V 158+ • AWA 4.0+", routing: "Zero unanswered questions (GRE has zero negative marking)", focus: "Complete all 18 GRE Traps in Tab 5 + Tab 2 Data Interpretation drills." }
+  ];
+
+  const qRouting = s.quant >= 163 ? "Hard Stage-2 Unlocked (170 Ceiling Active)" : "Medium Stage-2 Risk (Need ≥9/12 in Stage 1)";
+  const vRouting = s.verbal >= 158 ? "Hard Stage-2 Unlocked (170 Ceiling Active)" : "Medium Stage-2 Risk (Need ≥8/12 in Stage 1)";
+
+  const cardsHtml = bands.map(b => {
+    const diff = totalGre - b.target;
+    const status = diff >= 0
+      ? `<span class="px-2.5 py-1 rounded-full bg-emerald-100 text-emerald-700 text-[11px] font-bold">Achieved (+${diff} pts)</span>`
+      : `<span class="px-2.5 py-1 rounded-full bg-amber-100 text-amber-700 text-[11px] font-bold">Need +${Math.abs(diff)} GRE Points</span>`;
+    return `
+      <div class="p-4 rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900/90 space-y-1.5 shadow-sm">
+        <div class="flex flex-wrap items-center justify-between gap-2">
+          <div class="font-extrabold text-sm text-slate-900 dark:text-white">${b.label}</div>
+          <div>${status}</div>
+        </div>
+        <div class="text-[11px] font-mono text-indigo-600 dark:text-indigo-300 font-semibold">Required Split: ${b.split}</div>
+        <div class="text-xs text-slate-600 dark:text-slate-300"><strong>Section-Adaptive Gate:</strong> ${b.routing}</div>
+        <div class="text-[11px] text-slate-500 dark:text-slate-400"><strong>Prep Prescription:</strong> ${b.focus}</div>
+      </div>
+    `;
+  }).join("");
+
+  el.innerHTML = `
+    <div class="max-w-6xl mx-auto my-4 grid grid-cols-1 lg:grid-cols-12 gap-5">
+      <div class="lg:col-span-5 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-5 space-y-4 shadow-sm">
+        <div class="flex items-start justify-between gap-2">
+          <div>
+            <span class="text-[10px] font-extrabold uppercase tracking-wider text-indigo-600">GRE General 260–340 Diagnostic Engine</span>
+            <h2 class="text-lg font-extrabold text-slate-900 dark:text-white">Section-Adaptive Score &amp; Routing Forecaster</h2>
+          </div>
+          <button type="button" onclick="window.syncGrePrepFromMock()" class="px-3 py-1.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-[11px] font-bold cursor-pointer">&#8635; Sync Mock</button>
+        </div>
+        <div class="text-[11px] text-emerald-600 font-semibold">${s.syncNote}</div>
+
+        <div class="space-y-3">
+          <div><div class="flex justify-between text-xs"><span>Quantitative Reasoning (130–170 • 27 Qs)</span><strong>${s.quant} / 170</strong></div><input type="range" min="130" max="170" value="${s.quant}" oninput="window.updateGrePrepField('quant', this.value)" class="w-full accent-indigo-600"></div>
+          <div><div class="flex justify-between text-xs"><span>Verbal Reasoning (130–170 • 27 Qs)</span><strong>${s.verbal} / 170</strong></div><input type="range" min="130" max="170" value="${s.verbal}" oninput="window.updateGrePrepField('verbal', this.value)" class="w-full accent-indigo-600"></div>
+          <div><div class="flex justify-between text-xs"><span>Analytical Writing (AWA 0.0–6.0 • 30m)</span><strong>${s.awa.toFixed(1)} / 6.0</strong></div><input type="range" min="3.0" max="6.0" step="0.5" value="${s.awa}" oninput="window.updateGrePrepField('awa', this.value)" class="w-full accent-indigo-600"></div>
+        </div>
+
+        <div class="p-3.5 rounded-xl bg-indigo-50 dark:bg-indigo-950/40 border border-indigo-200 dark:border-indigo-800 space-y-1 text-xs">
+          <div class="flex justify-between"><span class="font-bold">Projected Composite GRE:</span><strong class="text-indigo-700 dark:text-indigo-300 text-sm">${totalGre} / 340 (Q${s.quant} V${s.verbal})</strong></div>
+          <div class="text-[11px] text-slate-600 dark:text-slate-300"><strong>Quant Routing:</strong> ${qRouting}</div>
+          <div class="text-[11px] text-slate-600 dark:text-slate-300"><strong>Verbal Routing:</strong> ${vRouting}</div>
+        </div>
+      </div>
+      <div class="lg:col-span-7 space-y-2.5">${cardsHtml}</div>
+    </div>
+  `;
+};
+window.renderCollegePredictor = window.renderTab6;
+</script>
 </body>
 </html>
