@@ -1211,26 +1211,39 @@
     window.location.reload();
   };
 
-    window.selectUnifiedTab = function (tabNum) {
-    window._ACTIVE_TAB_NUM = Number(tabNum);
-    window.ACTIVE_TAB = Number(tabNum);
+      window.selectUnifiedTab = function (tabNum) {
+    const n = Number(tabNum);
+    window._ACTIVE_TAB_NUM = n;
+    window.ACTIVE_TAB = n;
+    if (window.STATE && typeof window.STATE === "object") window.STATE.tab = n;
+    if (window.APP_STATE && typeof window.APP_STATE === "object") window.APP_STATE.activeTab = n;
     renderCleanHeader();
 
-    // 1. Trigger native router if defined
-    if (typeof window.setTab === "function") { window.setTab(tabNum); return; }
-    if (typeof window.switchTab === "function") { window.switchTab(tabNum); return; }
-    if (typeof window.selectTab === "function") { window.selectTab(tabNum); return; }
+    // Locate the exact content workspace container below <header>
+    const header = document.querySelector("header");
+    let el = document.getElementById("tab-content")
+          || document.getElementById("tabContent")
+          || document.getElementById("main-content")
+          || document.getElementById("mainContent")
+          || document.getElementById("workspace")
+          || document.querySelector("main");
 
-    // 2. Locate the active workspace container (excluding <header>)
-    const el = document.getElementById("tab-content")
-            || document.getElementById("tab-content")
-            || document.getElementById("main-content")
-            || document.querySelector("main")
-            || Array.from(document.querySelectorAll("body > div")).find(d => !d.querySelector("header") && d.id !== "pg-auth-gate-overlay");
-
+    if (!el && header) {
+      let sib = header.nextElementSibling;
+      while (sib) {
+        if (sib.tagName !== "SCRIPT" && sib.id !== "pg-auth-gate-overlay" && sib.id !== "postgrad-profile-modal") {
+          el = sib;
+          break;
+        }
+        sib = sib.nextElementSibling;
+      }
+    }
     if (!el) return;
 
-    // 3. Invoke the corresponding tab renderer directly
+    // Ensure el has an ID so sub-actions inside Tabs 2-6 can re-render into it
+    if (!el.id) el.id = "tab-content";
+    window._LAST_TAB6_EL = el;
+
     const renderers = {
       1: window.renderTab1 || window.renderQuantTab,
       2: window.renderTab2 || window.renderDilrTab,
@@ -1239,7 +1252,8 @@
       5: window.renderTab5 || window.renderTrapsTab,
       6: window.renderTab6 || window.renderCollegePredictor
     };
-    const fn = renderers[Number(tabNum)];
+
+    const fn = renderers[n];
     if (typeof fn === "function") {
       el.innerHTML = "";
       fn(el);
