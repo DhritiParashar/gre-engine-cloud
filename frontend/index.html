@@ -156,7 +156,7 @@
           </p>
           <ul class="space-y-2 text-xs text-slate-200 pt-2">
             <li>&#9989; <strong>Free Demo Start:</strong> Instant access upon 2-Step Email & Phone OTP verification</li>
-            <li>&#9989; <strong>360+ Worked Examples:</strong> GRE Quant (QC &amp; PS), Higher Math & Class 10/11/12 NCERT Bridge</li>
+            <li>&#9989; <strong>360+ Worked Examples:</strong> GRE Quant (QC &amp; PS), Higher Math & Graduate MS, MEng, PhD & MBA (Stanford, MIT, CMU, ETH)</li>
             <li>&#9989; <strong>56 Interactive Trap Clinics:</strong> +4 / -1 / 0 Expected-Value Simulators</li>
             <li>&#9989; <strong>Live AI Panel Grader:</strong> Weekly + 6-12M Landmark Current Affairs</li>
           </ul>
@@ -334,7 +334,7 @@
 
         <div class="p-4 rounded-xl bg-indigo-950/50 border-2 border-amber-400 space-y-2">
           <div class="font-bold text-amber-300 uppercase">&#11088; Pro Learner (Full Season Pass)</div>
-          <div class="text-xl font-extrabold text-white">&#8377;1,999 <span class="text-xs font-normal text-slate-300">/ Full IPMAT & UG Season</span></div>
+          <div class="text-xl font-extrabold text-white">&#8377;1,999 <span class="text-xs font-normal text-slate-300">/ Full GRE General 2026 & UG Season</span></div>
           <ul class="list-disc list-inside text-slate-200 space-y-1">
             <li>All 360 Worked Quant & Higher Math Drills</li>
             <li>56 Interactive Trap Doctor Clinics + EV Sim</li>
@@ -380,7 +380,7 @@
 
   window.setPyqExamFilter = function (ex) {
     window.PYQ_EXAM_FILTER = ex;
-    if (ex !== "ALL" && ex !== "IPMAT Indore" && window.PYQ_YEAR_FILTER === "ARCHIVE_2019_2021") {
+    if (ex !== "ALL" && ex !== "GRE General 2026" && window.PYQ_YEAR_FILTER === "ARCHIVE_2019_2021") {
       window.PYQ_YEAR_FILTER = "ALL";
     }
     if (ex === "IIM Bangalore" && ["2022", "2023"].includes(window.PYQ_YEAR_FILTER)) {
@@ -429,7 +429,7 @@
       window.fetchAllPyqFromPostgres();
     }
     const pool = (window.PYQ_PG_CACHE && window.PYQ_PG_CACHE.length) ? window.PYQ_PG_CACHE : (window.IPM_PYQ_ARCHIVE || []);
-    const exams = ["ALL", "IPMAT Indore", "IPMAT Rohtak", "JIPMAT", "IIM Bangalore", "IIM Mumbai & Lucknow", "IIM Kozhikode BMS", "CUET-UG"];
+    const exams = ["ALL", "GRE General 2026", "GRE General 2026 Rohtak", "OMETs", "IIM Bangalore", "IIM Mumbai & Lucknow", "IIM Kozhikode BMS", "CUET-UG"];
     const years = ["ALL", "2026", "2025", "2024", "2023", "2022", "ARCHIVE_2019_2021"];
 
     const normEx = (s) => String(s || "").toLowerCase().replace("iimb", "iim bangalore").trim();
@@ -446,7 +446,7 @@
 
     const isIimb = window.PYQ_EXAM_FILTER === "IIM Bangalore";
     const isNewUg2025 = (window.PYQ_EXAM_FILTER === "IIM Mumbai & Lucknow" || window.PYQ_EXAM_FILTER === "IIM Kozhikode BMS");
-    const archiveAllowed = (window.PYQ_EXAM_FILTER === "ALL" || window.PYQ_EXAM_FILTER === "IPMAT Indore");
+    const archiveAllowed = (window.PYQ_EXAM_FILTER === "ALL" || window.PYQ_EXAM_FILTER === "GRE General 2026");
 
     el.innerHTML = `
       <div class="space-y-4">
@@ -459,7 +459,7 @@
                 <button type="button" onclick="window.launchPyqAsTimedMock()" class="text-[11px] px-3 py-1 rounded-full bg-indigo-600 hover:bg-indigo-500 text-white font-bold shadow transition">Practice Filtered Set in Tab 8 Mock &rarr;</button>
               </div>
               <p class="text-xs text-slate-400">
-                Complete 2022–2026 vault across IPMAT Indore (+ 2019–21 Official Archive), Rohtak, JIPMAT, IIMB (2024–26), IIMM/IIML/IIMK (2025–26) &amp; CUET-UG.
+                Complete 2022–2026 vault across GRE General 2026 (+ 2019–21 Official Archive), Rohtak, OMETs, IIMB (2024–26), IIMM/IIML/IIMK (2025–26) &amp; CUET-UG.
               </p>
             </div>
             <div class="flex flex-wrap gap-1.5">
@@ -726,11 +726,11 @@
               </div>
 
               <div class="p-4 rounded-2xl bg-slate-950 border border-slate-800 space-y-2.5">
-                <div class="text-xs font-bold text-amber-400">IPMAT INDORE &amp; RANCHI</div>
+                <div class="text-xs font-bold text-amber-400">GRE General 2026 INDORE &amp; RANCHI</div>
                 <div class="text-sm font-bold text-white">25 Questions &bull; 38 Mins</div>
-                <p class="text-xs text-slate-400">Higher Math, Short-Answer Numerics, and VARC calibrated to IPMAT Indore.</p>
-                <button type="button" onclick="window.preparePgMock('IPMAT', 25, 'IPMAT Indore & Ranchi Mock (25 Qs)')" class="w-full py-2.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 text-xs font-extrabold transition">
-                  Start IPMAT Mock &rarr;
+                <p class="text-xs text-slate-400">Higher Math, Short-Answer Numerics, and VARC calibrated to GRE General 2026.</p>
+                <button type="button" onclick="window.preparePgMock('GRE General 2026', 25, 'GRE General 2026 & Ranchi Mock (25 Qs)')" class="w-full py-2.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 text-xs font-extrabold transition">
+                  Start GRE General 2026 Mock &rarr;
                 </button>
               </div>
 

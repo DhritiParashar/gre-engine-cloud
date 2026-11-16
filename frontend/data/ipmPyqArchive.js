@@ -2,18 +2,18 @@ window.IPM_PYQ_ARCHIVE = [
   {
     id: "pyq_2026_ind_1",
     year: "2026",
-    exam: "IPMAT Indore (QA-SA)",
+    exam: "GRE General 2026 (QA-SA)",
     section: "Higher Math — Logarithms & Series",
     type: "SA_NUMERIC",
     question: "If log_2(x) + log_4(x) + log_16(x) = 21/4, what is the exact value of x?",
     answer: "8",
     shortcut: "Convert all bases to base 2: log_2(x) + (1/2)log_2(x) + (1/4)log_2(x) = (7/4)log_2(x) = 21/4 => log_2(x) = 3 => x = 2^3 = 8.",
-    trapNote: "Zero negative marking in IPMAT Indore QA-SA—always verify x > 0 and enter exact integer."
+    trapNote: "Zero negative marking in GRE General 2026 QA-SA—always verify x > 0 and enter exact integer."
   },
   {
     id: "pyq_2026_ind_2",
     year: "2026",
-    exam: "IPMAT Indore (VARC)",
+    exam: "GRE General 2026 (VARC)",
     section: "Vocabulary & Confusable Usage",
     type: "MCQ",
     question: "Select the word pair that best completes the sentence: 'Although the committee remained _______ about the timeline, the chairperson promised to _______ members as soon as regulatory clearance arrived.'",
@@ -25,7 +25,7 @@ window.IPM_PYQ_ARCHIVE = [
   {
     id: "pyq_2025_ind_1",
     year: "2025",
-    exam: "IPMAT Indore (QA-MCQ)",
+    exam: "GRE General 2026 (QA-MCQ)",
     section: "Matrices & Determinants",
     type: "MCQ",
     question: "Let A be a 3 x 3 invertible matrix such that det(A) = 3. What is the value of det(3 * adj(A))?",
@@ -37,7 +37,7 @@ window.IPM_PYQ_ARCHIVE = [
   {
     id: "pyq_2025_jip_1",
     year: "2025",
-    exam: "JIPMAT (IIM Bodh Gaya & Jammu)",
+    exam: "OMETs (IIM Bodh Gaya & Jammu)",
     section: "Quantitative Aptitude — Arithmetic",
     type: "MCQ",
     question: "A sum of money doubles itself at compound interest in 5 years. In how many years will it become 16 times itself at the same annual rate?",
@@ -49,7 +49,7 @@ window.IPM_PYQ_ARCHIVE = [
   {
     id: "pyq_2024_roh_1",
     year: "2024",
-    exam: "IPMAT Rohtak (LR)",
+    exam: "GRE General 2026 Rohtak (LR)",
     section: "Logical Reasoning — Clocks & Calendars",
     type: "MCQ",
     question: "What is the acute angle (in degrees) between the hour hand and the minute hand of a clock at 3:40 PM?",
@@ -61,7 +61,7 @@ window.IPM_PYQ_ARCHIVE = [
   {
     id: "pyq_2023_ind_1",
     year: "2023",
-    exam: "IPMAT Indore (QA-SA)",
+    exam: "GRE General 2026 (QA-SA)",
     section: "Combinatorics — Distribution",
     type: "SA_NUMERIC",
     question: "How many non-negative integer solutions exist for the equation x + y + z = 12?",
@@ -72,7 +72,7 @@ window.IPM_PYQ_ARCHIVE = [
   {
     id: "pyq_2022_jip_1",
     year: "2022",
-    exam: "JIPMAT (DILR)",
+    exam: "OMETs (DILR)",
     section: "Data Interpretation — Profit & Margin",
     type: "MCQ",
     question: "If a company's revenue increases by 20% while its total expenditure increases by 10%, and initial revenue was Rs. 100 crore against initial expenditure of Rs. 80 crore, by what percentage does its profit increase?",
@@ -98,7 +98,7 @@ window.IPM_PYQ_ARCHIVE.push(
   {
     id: "pyq_2026_roh_2",
     year: "2026",
-    exam: "IPMAT Rohtak (QA)",
+    exam: "GRE General 2026 Rohtak (QA)",
     section: "Arithmetic — Profit & Discount",
     type: "MCQ",
     question: "A merchant marks his goods 40% above cost price and allows a 15% discount for cash payment. What is his net profit percentage?",
@@ -110,7 +110,7 @@ window.IPM_PYQ_ARCHIVE.push(
   {
     id: "pyq_2025_ind_2",
     year: "2025",
-    exam: "IPMAT Indore (QA-SA)",
+    exam: "GRE General 2026 (QA-SA)",
     section: "Higher Math — Sequences & Series",
     type: "SA_NUMERIC",
     question: "If the sum of the first 15 terms of an Arithmetic Progression is 600, what is the 8th term of the progression?",
@@ -121,7 +121,7 @@ window.IPM_PYQ_ARCHIVE.push(
   {
     id: "pyq_2025_ind_3",
     year: "2025",
-    exam: "IPMAT Indore (VARC)",
+    exam: "GRE General 2026 (VARC)",
     section: "Grammar — Parallelism & Modifiers",
     type: "MCQ",
     question: "Identify the grammatically correct sentence:",
@@ -133,12 +133,12 @@ window.IPM_PYQ_ARCHIVE.push(
     ],
     answer: 1,
     shortcut: "Opening participial phrase 'Having analyzed...' must immediately precede its logical subject ('the board').",
-    trapNote: "Classic dangling modifier trap tested repeatedly in IPMAT Indore VARC."
+    trapNote: "Classic dangling modifier trap tested repeatedly in GRE General 2026 VARC."
   },
   {
     id: "pyq_2024_ind_1",
     year: "2024",
-    exam: "IPMAT Indore (QA-MCQ)",
+    exam: "GRE General 2026 (QA-MCQ)",
     section: "Algebra — Modulus & Inequalities",
     type: "MCQ",
     question: "What is the minimum value of f(x) = |x - 2| + |x - 5| + |x - 11| for all real numbers x?",
@@ -150,7 +150,7 @@ window.IPM_PYQ_ARCHIVE.push(
   {
     id: "pyq_2024_jip_2",
     year: "2024",
-    exam: "JIPMAT (IIM Bodh Gaya & Jammu)",
+    exam: "OMETs (IIM Bodh Gaya & Jammu)",
     section: "Quantitative Aptitude — Time & Work",
     type: "MCQ",
     question: "A and B together can complete a task in 12 days, B and C in 15 days, and C and A in 20 days. In how many days can A alone complete the task?",
@@ -162,7 +162,7 @@ window.IPM_PYQ_ARCHIVE.push(
   {
     id: "pyq_2023_roh_2",
     year: "2023",
-    exam: "IPMAT Rohtak (VA)",
+    exam: "GRE General 2026 Rohtak (VA)",
     section: "Vocabulary — Idioms & Usage",
     type: "MCQ",
     question: "Choose the correct meaning of the idiom 'to burn the midnight oil':",
@@ -179,7 +179,7 @@ window.IPM_PYQ_ARCHIVE.push(
   {
     id: "pyq_2023_jip_2",
     year: "2023",
-    exam: "JIPMAT (DILR)",
+    exam: "OMETs (DILR)",
     section: "Logical Reasoning — Syllogisms",
     type: "MCQ",
     question: "Statements: All laptops are devices. Some devices are tablets. Conclusions: I. Some laptops are tablets. II. All tablets being devices is a possibility.",
@@ -191,7 +191,7 @@ window.IPM_PYQ_ARCHIVE.push(
   {
     id: "pyq_2022_ind_2",
     year: "2022",
-    exam: "IPMAT Indore (QA-SA)",
+    exam: "GRE General 2026 (QA-SA)",
     section: "Number System — Remainders",
     type: "SA_NUMERIC",
     question: "What is the remainder when 5^36 is divided by 13?",

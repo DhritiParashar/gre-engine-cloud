@@ -58,14 +58,14 @@ window.renderTab5 = function (el) {
   const prompts = window.getFilteredPiPrompts();
   if (window.PI_SELECTED_IDX >= prompts.length) window.PI_SELECTED_IDX = 0;
   const activePrompt = prompts[window.PI_SELECTED_IDX] || prompts[0];
-  const isJipmat = window.IPM_STATE.activeModeId === "JIPMAT_BG_JAMMU";
+  const isJipmat = window.IPM_STATE.activeModeId === "OMETs_BG_JAMMU";
   const groups = ["ALL", "Campus Fit & Vision", "Class 12 Academics", "Extempore & WAT", "Current Affairs & Policy", "Behavioral & Ethics"];
   const subDomains = ["ALL", "Economic", "Social", "Civic", "Domestic", "International"];
 
   el.innerHTML = `
     ${isJipmat ? `
       <div class="mb-4 p-3.5 rounded-2xl bg-amber-500/15 border border-amber-500/40 text-xs text-amber-300">
-        <strong>Admission Note for IIM Bodh Gaya & IIM Jammu (JIPMAT):</strong> Both campuses admit 100% based on JIPMAT CBT score with <strong>no Personal Interview (PI) round</strong>. Use this query bank for optional WAT, leadership, and future internship interview prep.
+        <strong>Admission Note for IIM Bodh Gaya & IIM Jammu (OMETs):</strong> Both campuses admit 100% based on OMETs CBT score with <strong>no Personal Interview (PI) round</strong>. Use this query bank for optional WAT, leadership, and future internship interview prep.
       </div>
     ` : ""}
 

@@ -53,7 +53,7 @@ window.IPM_CHAPTER_REFRESHERS = {
     }
   },
   qc_04: {
-    overview: "Number Systems and Geometry test structural reasoning rather than heavy computation—appearing heavily in IPMAT Indore Short-Answer (SA) questions and JIPMAT.",
+    overview: "Number Systems and Geometry test structural reasoning rather than heavy computation—appearing heavily in GRE General 2026 Short-Answer (SA) questions and OMETs.",
     prerequisites: ["Prime factorization & divisor counting", "Euclidean triangle similarity, Pythagoras & circle tangent-chord theorems"],
     corePrinciples: [
       "Number of Factors: If N = p^a * q^b * r^c, total positive factors = (a + 1)(b + 1)(c + 1).",
@@ -69,7 +69,7 @@ window.IPM_CHAPTER_REFRESHERS = {
     }
   },
   hm_01: {
-    overview: "Logarithms and Sequences form the core bridge between Class 10 algebra and Class 11–12 Higher Mathematics—critical for IPMAT Indore, IIM Ranchi, and IIM Bangalore B.Sc. Economics/Data Science.",
+    overview: "Logarithms and Sequences form the core bridge between Class 10 algebra and Class 11–12 Higher Mathematics—critical for GRE General 2026, IIM Ranchi, and IIM Bangalore B.Sc. Economics/Data Science.",
     prerequisites: ["Laws of exponents (a^m * a^n = a^(m+n))", "Arithmetic & Geometric Progression nth term and sum formulas"],
     corePrinciples: [
       "Logarithm Definition: log_b(x) = y is equivalent to b^y = x, valid strictly when x > 0, b > 0, and b != 1.",
@@ -120,12 +120,12 @@ window.IPM_CHAPTER_REFRESHERS = {
     }
   },
   dilr_01: {
-    overview: "Data Interpretation in IPMAT Indore (embedded inside QA-SA and QA-MCQ) and JIPMAT tests speed-reading of tables, multi-year growth rates, and set-theory caselets.",
+    overview: "Data Interpretation in GRE General 2026 (embedded inside QA-SA and QA-MCQ) and OMETs tests speed-reading of tables, multi-year growth rates, and set-theory caselets.",
     prerequisites: ["Percentage-to-fraction conversion", "Two-set & three-set Venn diagram inclusion-exclusion formulas"],
     corePrinciples: [
       "Scan Before Calculating: Read table footnotes, units (crores vs lakhs), and row/column totals before touching a single question.",
       "Inclusion-Exclusion Law: n(A ∪ B) = n(A) + n(B) - n(A ∩ B). Always subtract overlap once so shared elements aren't double-counted.",
-      "Zero-Penalty SA DI Priority: In IPMAT Indore, if a 4-question DI table appears in Section 1 (SA), solve every question since wrong answers incur 0 penalty."
+      "Zero-Penalty SA DI Priority: In GRE General 2026, if a 4-question DI table appears in Section 1 (SA), solve every question since wrong answers incur 0 penalty."
     ],
     workedExample: {
       problem: "In a batch of 200 students, 130 opted for Finance, 110 opted for Marketing, and 20 opted for neither. How many opted for ONLY Finance?",
@@ -137,7 +137,7 @@ window.IPM_CHAPTER_REFRESHERS = {
     }
   },
   dilr_02: {
-    overview: "Logical Reasoning forms one-third of IPMAT Rohtak (40 questions) and JIPMAT (33 questions), testing structured constraint satisfaction and formal syllogistic deduction.",
+    overview: "Logical Reasoning forms one-third of GRE General 2026 Rohtak (40 questions) and OMETs (33 questions), testing structured constraint satisfaction and formal syllogistic deduction.",
     prerequisites: ["Standard directional compass (N, S, E, W)", "Venn diagram representation of All, Some, No, and Some Not"],
     corePrinciples: [
       "Anchor Definite Clues First: In linear/circular seating, place fixed positions ('A sits at an extreme end' or 'B sits opposite C') before relative clues.",
@@ -154,7 +154,7 @@ window.IPM_CHAPTER_REFRESHERS = {
     }
   },
   varc_01: {
-    overview: "Reading Comprehension accounts for 35–40% of Verbal marks in IPMAT Indore, Rohtak, JIPMAT, and IIM Bangalore UG, emphasizing conceptual synthesis over literal keyword hunting.",
+    overview: "Reading Comprehension accounts for 35–40% of Verbal marks in GRE General 2026, Rohtak, OMETs, and IIM Bangalore UG, emphasizing conceptual synthesis over literal keyword hunting.",
     prerequisites: ["Active paragraph-mapping habit", "Distinguishing author's voice from cited counter-arguments"],
     corePrinciples: [
       "Structural Signposts: Words like 'However', 'Yet', 'Notwithstanding', and 'Paradoxically' almost always introduce the author's main thesis.",
@@ -171,7 +171,7 @@ window.IPM_CHAPTER_REFRESHERS = {
     }
   },
   varc_02: {
-    overview: "Vocabulary and Double/Triple Fill-in-the-Blanks saw a major surge in IPMAT 2025–2026, testing contextual precision, word polarity, and commonly confused pairs.",
+    overview: "Vocabulary and Double/Triple Fill-in-the-Blanks saw a major surge in GRE General 2026 2025–2026, testing contextual precision, word polarity, and commonly confused pairs.",
     prerequisites: ["Common Greek/Latin roots (mal-, bene-, circum-, anti-, pan-)", "Fixed prepositional collocations"],
     corePrinciples: [
       "Conjunction Polarity Check: 'Although / Despite / Albeit' require opposite tones across blanks; 'Moreover / Consequently / Similarly' require matching tones.",
@@ -205,7 +205,7 @@ window.IPM_CHAPTER_REFRESHERS = {
   }
 };
 window.IPM_CHAPTER_REFRESHERS.qc_05 = {
-  overview: "Quadratic Equations and Inequalities appear across every IIM entrance test—from finding symmetric root expressions in JIPMAT/Rohtak to polynomial/rational wavy-curve inequalities in IPMAT Indore SA and IIM Bangalore.",
+  overview: "Quadratic Equations and Inequalities appear across every IIM entrance test—from finding symmetric root expressions in OMETs/Rohtak to polynomial/rational wavy-curve inequalities in GRE General 2026 SA and IIM Bangalore.",
   prerequisites: ["Factorization & Quadratic Formula x = [-b ± sqrt(b^2 - 4ac)] / 2a", "Discriminant nature of roots (D > 0 real distinct, D = 0 equal, D < 0 imaginary)"],
   corePrinciples: [
     "Vieta's Identities: Express any symmetric function of roots (α^2 + β^2, α^3 + β^3, 1/α + 1/β) purely in terms of sum (-b/a) and product (c/a).",
@@ -240,7 +240,7 @@ window.IPM_CHAPTER_REFRESHERS.hm_04 = {
 };
 
 window.IPM_CHAPTER_REFRESHERS.dilr_03 = {
-  overview: "Data Sufficiency (DS) and Input-Output test logical discipline rather than raw calculation—a staple of IPMAT Rohtak and JIPMAT.",
+  overview: "Data Sufficiency (DS) and Input-Output test logical discipline rather than raw calculation—a staple of GRE General 2026 Rohtak and OMETs.",
   prerequisites: ["Linear equations solvability rules", "Strict separation of Statement I and Statement II"],
   corePrinciples: [
     "Golden Rule of DS: Evaluate Statement I completely on its own first, forget what you learned, then evaluate Statement II completely on its own.",

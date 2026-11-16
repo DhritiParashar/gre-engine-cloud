@@ -3,7 +3,7 @@ window.IPM_HIGHER_MATH = [
     id: "hm_01",
     pillar: "higher_math_stats",
     title: "Logarithms, Indices & Sequences/Series",
-    exams: ["ALL_IIM_MASTER", "IPMAT_INDORE_RANCHI", "IIMB_UG_ECON_DS_DBE", "IIMM_IIML_TECH_MGMT"],
+    exams: ["ALL_IIM_MASTER", "GRE General 2026_INDORE_RANCHI", "IIMB_UG_ECON_DS_DBE", "IIMM_IIML_TECH_MGMT"],
     weightage: "Very High in Indore & IIMB (4-6 Qs)",
     concepts: [
       {
@@ -51,7 +51,7 @@ window.IPM_HIGHER_MATH = [
     id: "hm_02",
     pillar: "higher_math_stats",
     title: "Permutations, Combinations & Probability",
-    exams: ["ALL_IIM_MASTER", "IPMAT_INDORE_RANCHI", "IIMB_UG_ECON_DS_DBE", "IIMM_IIML_TECH_MGMT"],
+    exams: ["ALL_IIM_MASTER", "GRE General 2026_INDORE_RANCHI", "IIMB_UG_ECON_DS_DBE", "IIMM_IIML_TECH_MGMT"],
     weightage: "Very High in IIMB & Indore (4-6 Qs)",
     concepts: [
       {
@@ -90,7 +90,7 @@ window.IPM_HIGHER_MATH = [
     id: "hm_03",
     pillar: "higher_math_stats",
     title: "Matrices, Determinants, Functions & Calculus",
-    exams: ["ALL_IIM_MASTER", "IPMAT_INDORE_RANCHI", "IIMB_UG_ECON_DS_DBE", "IIMM_IIML_TECH_MGMT"],
+    exams: ["ALL_IIM_MASTER", "GRE General 2026_INDORE_RANCHI", "IIMB_UG_ECON_DS_DBE", "IIMM_IIML_TECH_MGMT"],
     weightage: "High in IIMB B.Sc., Indore & IIMM (3-5 Qs)",
     concepts: [
       {

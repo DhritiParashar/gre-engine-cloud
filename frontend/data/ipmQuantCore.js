@@ -3,7 +3,7 @@ window.IPM_QUANT_CORE = [
     id: "qc_01",
     pillar: "quant_core",
     title: "Percentages, Successive Change & Profit-Loss",
-    exams: ["ALL_IIM_MASTER", "IPMAT_INDORE_RANCHI", "IPMAT_ROHTAK", "JIPMAT_BG_JAMMU", "IIMB_UG_ECON_DS_DBE", "IIMM_IIML_TECH_MGMT"],
+    exams: ["ALL_IIM_MASTER", "GRE General 2026_INDORE_RANCHI", "GRE General 2026_ROHTAK", "OMETs_BG_JAMMU", "IIMB_UG_ECON_DS_DBE", "IIMM_IIML_TECH_MGMT"],
     weightage: "High (4-6 Qs)",
     concepts: [
       {
@@ -51,7 +51,7 @@ window.IPM_QUANT_CORE = [
     id: "qc_02",
     pillar: "quant_core",
     title: "Ratios, Mixtures & Weighted Alligations",
-    exams: ["ALL_IIM_MASTER", "IPMAT_INDORE_RANCHI", "IPMAT_ROHTAK", "JIPMAT_BG_JAMMU", "IIMB_UG_ECON_DS_DBE"],
+    exams: ["ALL_IIM_MASTER", "GRE General 2026_INDORE_RANCHI", "GRE General 2026_ROHTAK", "OMETs_BG_JAMMU", "IIMB_UG_ECON_DS_DBE"],
     weightage: "High (3-5 Qs)",
     concepts: [
       {
@@ -85,7 +85,7 @@ window.IPM_QUANT_CORE = [
     id: "qc_03",
     pillar: "quant_core",
     title: "Time-Speed-Distance, Relative Speed & Work",
-    exams: ["ALL_IIM_MASTER", "IPMAT_INDORE_RANCHI", "IPMAT_ROHTAK", "JIPMAT_BG_JAMMU", "IIMM_IIML_TECH_MGMT"],
+    exams: ["ALL_IIM_MASTER", "GRE General 2026_INDORE_RANCHI", "GRE General 2026_ROHTAK", "OMETs_BG_JAMMU", "IIMM_IIML_TECH_MGMT"],
     weightage: "High (4-5 Qs)",
     concepts: [
       {
@@ -118,7 +118,7 @@ window.IPM_QUANT_CORE = [
     id: "qc_04",
     pillar: "quant_core",
     title: "Number Systems, Remainders & Geometry",
-    exams: ["ALL_IIM_MASTER", "IPMAT_INDORE_RANCHI", "IPMAT_ROHTAK", "JIPMAT_BG_JAMMU", "IIMB_UG_ECON_DS_DBE", "IIMM_IIML_TECH_MGMT"],
+    exams: ["ALL_IIM_MASTER", "GRE General 2026_INDORE_RANCHI", "GRE General 2026_ROHTAK", "OMETs_BG_JAMMU", "IIMB_UG_ECON_DS_DBE", "IIMM_IIML_TECH_MGMT"],
     weightage: "Medium-High (3-5 Qs)",
     concepts: [
       {
