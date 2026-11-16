@@ -281,6 +281,48 @@ window.renderVerbalStudio3 = function (el) {
 };
 
 // ==============================================================================
+// REVIVED 5-BLUEPRINT TIMED MOCK ENGINE (TAB 4) — CAT, GMAT (5-OPT) & GRE (5-OPT)
+// ==============================================================================
+window.renderMockSimulator4 = async function (el) {
+  const host = window.location.host.toLowerCase();
+  const exam = host.includes("gmat") ? "GMAT" : (host.includes("gre") ? "GRE" : "CAT");
+
+  const BLUEPRINTS = exam === "GMAT" ? [
+    { id: "GMAT_FULL", tag: "FULL 205–805 ADAPTIVE MOCK", title: "1. Full GMAT Focus Official Simulation (64 Qs • 135 Mins)", desc: "Complete 3-section adaptive flow: QR (21 Qs • 45m) + VR (23 Qs • 45m) + DI (20 Qs • 45m) with 5 choices (A–E) & 3 Review Edits.", mins: 135, secFilter: "ALL", scale: "205–805 Adaptive Scale" },
+    { id: "GMAT_QR",   tag: "SECTIONAL • 45 MINS",        title: "2. Quantitative Reasoning (Zero Geometry • 21 Qs • 45 Mins)", desc: "Pure Problem Solving (Choices A–E) across Algebraic Modeling, Number Properties, Weighted Averages & Combinatorics.", mins: 45, secFilter: "QR", scale: "60–90 QR Sectional Scale" },
+    { id: "GMAT_VR",   tag: "SECTIONAL • 45 MINS",        title: "3. Verbal Reasoning CR & RC Clinic (23 Qs • 45 Mins)", desc: "5-option Critical Reasoning (Necessary Assumption, Boldface, Paradox) + Analytical Reading Comprehension.", mins: 45, secFilter: "VR", scale: "60–90 VR Sectional Scale" },
+    { id: "GMAT_DI",   tag: "SECTIONAL • 45 MINS",        title: "4. Data Insights Deep Clinic (20 Qs • 45 Mins)", desc: "Data Sufficiency (AD/BCE), Multi-Source Reasoning, Two-Part Analysis & Graphics Interpretation.", mins: 45, secFilter: "DI", scale: "60–90 DI Sectional Scale" },
+    { id: "GMAT_705",  tag: "99TH %ILE HARD POOL",        title: "5. 705+ Elite Adaptive Pacing Sprint (Hard Pool • 60 Mins)", desc: "Upper-quartile difficulty items engineered to protect Q1–Q6 adaptive trajectory at <= 2.0 mins/Q.", mins: 60, secFilter: "ALL", scale: "705–805 Elite Band" }
+  ] : (exam === "GRE" ? [
+    { id: "GRE_FULL",  tag: "FULL 260–340 ADAPTIVE MOCK", title: "1. Full GRE General Section-Adaptive Mock (54 Qs • 118 Mins)", desc: "Stage 1 + Hard Stage 2 routing across Quantitative (27 Qs • 47m) and Verbal (27 Qs • 41m) with 5-option (A–E) items.", mins: 118, secFilter: "ALL", scale: "260–340 Composite Scale" },
+    { id: "GRE_Q",     tag: "SECTIONAL • 47 MINS",        title: "2. Quantitative Reasoning QC & PS Mock (27 Qs • 47 Mins)", desc: "Quantitative Comparison (Choices A–D) + 5-Option Problem Solving (A–E) + Numeric Entry with zero negative penalty.", mins: 47, secFilter: "Quant", scale: "130–170 Quant Scale" },
+    { id: "GRE_V",     tag: "SECTIONAL • 41 MINS",        title: "3. Verbal Reasoning TC, SE & RC Mock (27 Qs • 41 Mins)", desc: "1/2/3-Blank Text Completion, Sentence Equivalence semantic pairs & dense academic Reading Comprehension.", mins: 41, secFilter: "Verbal", scale: "130–170 Verbal Scale" },
+    { id: "GRE_Q170",  tag: "170 CEILING DRILL",          title: "4. Quant 170 Perfection Hard-Stage Sprint (30 Mins)", desc: "High-discrimination inequalities, modular remainders, normal distributions & FROZEN QC boundary traps.", mins: 30, secFilter: "Quant", scale: "167–170 Quant Ceiling" },
+    { id: "GRE_V165",  tag: "165+ VERBAL DRILL",          title: "5. Verbal 165+ Contrast Pivot & Inference Sprint (30 Mins)", desc: "Multi-clause logic hinges and dense humanities/science inference passages.", mins: 30, secFilter: "Verbal", scale: "164–170 Verbal Ceiling" }
+  ] : [
+    { id: "CAT_FULL",  tag: "FULL 198-MARK CAT MOCK",     title: "1. Full-Length CAT Simulation (66 Qs • 120 Mins • 3 Sections)", desc: "Strict 40-min sectional flow: VARC (24 Qs) + DILR (20 Qs) + QA (22 Qs) with +3/-1 MCQ & +3/0 TITA.", mins: 120, secFilter: "ALL", scale: "198 Marks / 99.5%ile Scale" },
+    { id: "CAT_QA",    tag: "SECTIONAL • 40 MINS",        title: "2. Quantitative Aptitude (QA) Sectional (22 Qs • 40 Mins)", desc: "Algebra, Arithmetic, Number System, Geometry & Modern Math calibrated to IIM Slot difficulty.", mins: 40, secFilter: "QA", scale: "66 Marks QA Scale" },
+    { id: "CAT_DILR",  tag: "SECTIONAL • 40 MINS",        title: "3. DILR 4-Set Caselet Sprint (20 Qs • 40 Mins)", desc: "Multi-variable Arrangements, 3-Set Venn Maxima/Minima, Tournaments & Directed Networks.", mins: 40, secFilter: "DILR", scale: "60 Marks DILR Scale" },
+    { id: "CAT_VARC",  tag: "SECTIONAL • 40 MINS",        title: "4. VARC 4-RC + 8-VA Sectional (24 Qs • 40 Mins)", desc: "Dense RC inference passages + zero-penalty TITA Para-Jumbles, Odd-One-Out & Para-Summary.", mins: 40, secFilter: "VARC", scale: "72 Marks VARC Scale" },
+    { id: "XAT_5OPT",  tag: "5-OPTION XAT / OMET MOCK",   title: "5. XAT & Decision Making 5-Option Mock (75 Qs • 165 Mins • A–E)", desc: "Authentic 5-choice (A, B, C, D, E) VALR, Decision Making caselets & QADI with +1 / -0.25 marking.", mins: 165, secFilter: "ALL", scale: "XAT 5-Option Percentile Scale" }
+  ]);
+
+  window._SELECTED_MOCK_BP = window._SELECTED_MOCK_BP || 0;
+  const bp = BLUEPRINTS[window._SELECTED_MOCK_BP] || BLUEPRINTS[0];
+  const isFiveOpt = (exam === "GMAT" || exam === "GRE" || bp.id === "XAT_5OPT");
+
+  // Rich 5-Option (A-E) & CAT Question Bank
+  const MASTER_BANK = [
+    { sec: exam === "CAT" ? "QA" : (exam === "GMAT" ? "QR" : "Quant"), topic: "Algebra & Absolute Value", q: "How many integer values of x satisfy |2x - 7| + |x - 1| <= 8?", opts: isFiveOpt ? ["3", "4", "5", "6", "7"] : ["4", "5", "6", "7"], ans: isFiveOpt ? 3 : 2, exp: "Testing integers x = 0, 1, 2, 3, 4, 5 gives values 8, 5, 4, 3, 4, 7 (all <= 8), while x = -1 gives 11 and x = 6 gives 10 -> 6 integer solutions." },
+    { sec: exam === "CAT" ? "QA" : (exam === "GMAT" ? "QR" : "Quant"), topic: "Mixtures & Alligation", q: "A 40-liter solution contains 30% alcohol. How many liters of pure alcohol must be added to raise the concentration to 44%?", opts: isFiveOpt ? ["8 L", "10 L", "12 L", "14 L", "16 L"] : ["8 L", "10 L", "12 L", "14 L"], ans: 1, exp: "Water remains constant at 28 L (70% of 40 L). At 44% alcohol, 28 L = 56% of new total V => V = 50 L => Added = 10 L." },
+    { sec: exam === "CAT" ? "QA" : (exam === "GMAT" ? "QR" : "Quant"), topic: "Number Properties & Cyclicity", q: "What is the remainder when 7^2026 is divided by 5?", opts: isFiveOpt ? ["0", "1", "2", "3", "4"] : ["1", "2", "3", "4"], ans: isFiveOpt ? 4 : 3, exp: "7 ≡ 2 (mod 5). Powers of 2 mod 5 cycle {2, 4, 3, 1}. Since 2026 = 4*506 + 2, 7^2026 ≡ 2^2 = 4 (mod 5)." },
+    { sec: exam === "CAT" ? "QA" : (exam === "GMAT" ? "QR" : "Quant"), topic: "Combinatorics (Surjective Mapping)", q: "In how many ways can 6 distinct software modules be assigned to 3 servers such that each server receives at least 1 module?", opts: isFiveOpt ? ["240", "360", "540", "600", "720"] : ["360", "540", "600", "720"], ans: isFiveOpt ? 2 : 1, exp: "3^6 - 3*(2^6) + 3*(1^6) = 729 - 192 + 3 = 540." },
+    { sec: exam === "CAT" ? "QA" : (exam === "GMAT" ? "QR" : "Quant"), topic: "Work & Combined Rates", q: "Pipelines A and B fill a reservoir together in 12 hours. If A runs alone for 4 hours and B finishes the remaining work in 18 hours, how long would B take alone?", opts: isFiveOpt ? ["18 hrs", "21 hrs", "24 hrs", "27 hrs", "30 hrs"] : ["21 hrs", "24 hrs", "27 hrs", "30 hrs"], ans: isFiveOpt ? 1 : 0, exp: "4(1/12 - 1/B) + 18/B = 1 => 14/B = 2/3 => B = 21 hours." },
+    { sec: exam === "CAT" ? "QA" : (exam === "GMAT" ? "QR" : "Quant"), topic: "Logarithms & Base Change", q: "If log_2(x) + log_4(x) + log_16(x) = 21/4, what is the value of x?", opts: isFiveOpt ? ["2", "4", "8", "16", "32"] : ["4", "8", "16", "32"], ans: isFiveOpt ? 2 : 1, exp: "log_2(x) * (1 + 1/2 + 1/4) = (7/4)*log_2(x) = 21/4 => log_2(x) = 3 => x = 8." },
+    { sec: exam === "CAT" ? "DILR" : (exam === "GMAT" ? "DI" : "Quant"), topic: "3-Set Venn Minima", q: "In a survey of 200 analysts, 150 use Python, 140 use SQL, and 130 use R. What is the minimum number of analysts using all three tools?", opts: isFiveOpt ? ["0", "10", "20", "30", "40"] : ["10", "20", "30", "40"], ans: isFiveOpt ? 2 : 1, exp: "max(0, 150 + 140 + 130 - 2*200) = 420 - 400 = 20." },
+    { sec: exam === "CAT" ? "DILR" : (exam === "GMAT" ? "DI" : "Quant"), topic: "Data Sufficiency / Weighted Portfolio", q: "A $100M fund allocates capital across 6% Senior Debt and 11% Mezzanine Notes to earn $8.2M annual interest. How much is allocated to Mezzanine Notes?", opts: isFiveOpt ? ["$36M", "$40M", "$44M", "$50M", "$56M"] : ["$36M", "$40M", "$44M", "$50M"], ans: 2, exp: "0.06(100 - M) + 0.11M = 8.2 => 0.05M = 2.2 => M = $44M." },
+    { sec: exam === "CAT" ? "DILR" : (exam === "GMAT" ? "DI" : "Quant"), topic: "Round-Robin League Invariant", q: "In a 6-team round-robin league (2 pts for win, 1 for tie, 0 for loss), if exactly 3 matches end in a tie, what is the sum of points across all 6 teams?", opts: isFiveOpt ? ["24", "27", "30", "33", "36"] : ["27", "30", "33", "36"], ans: isFiveOpt ? 2 : 1, exp: "Total matches = 6C2 = 15. Every match distributes 2 total points => 15 * 2 = 30." },
+    { sec: exam === "CAT" ? "DILR" : (exam === "GMAT" ? "DI" : "Quant"), topic: "Operating Profit Variance", q: "Division A revenue rose 20% to $120M while operating margin compressed from 25% to 20%. What was the net change in operating profit?", opts: isFiveOpt ? ["-$3.0M", "-$1.0M", "// ==============================================================================
 // 3. FULL MULTI-SECTION TIMED MOCK ENGINE (TAB 4) — LIVE POSTGRESQL + TIMER + PALETTE
 // ==============================================================================
 window.renderMockSimulator4 = async function (el) {
@@ -483,4 +525,203 @@ window.renderMockSimulator4 = async function (el) {
   window.renderMockQuestionCard();
 };
 window.renderTab3 = window.renderVerbalStudio3;
+window.renderTab4 = window.renderMockSimulator4;.0M", "+$1.0M", "+$2.0M"] : ["-$3.0M", "-$1.0M", "+$1.0M", "+$2.0M"], ans: 1, exp: "Prior profit = 25% of $100M = $25M. Current profit = 20% of $120M = $24M -> Net change = -$1.0M." },
+    { sec: exam === "CAT" ? "VARC" : (exam === "GMAT" ? "VR" : "Verbal"), topic: "Critical Reasoning / Paradox", q: "Regional sorting automation cut per-parcel handling labor by 38% with constant volume and revenue/parcel, yet operating margin fell 2.4%. Which best explains this?", opts: isFiveOpt ? ["Competitors also automated.", "Hardware depreciation and maintenance contracts exceeded the dollar labor savings.", "Delivery speed improved.", "Fuel prices stayed constant.", "Remaining hubs will automate next year."] : ["Competitors also automated.", "Hardware depreciation and maintenance contracts exceeded the dollar labor savings.", "Delivery speed improved.", "Fuel prices stayed constant."], ans: 1, exp: "Fixed equipment depreciation + maintenance overhead rose by more than the labor dollar reduction." },
+    { sec: exam === "CAT" ? "VARC" : (exam === "GMAT" ? "VR" : "Verbal"), topic: "Structural Paragraph Coherence", q: "Arrange into a logical paragraph: (1) This asymmetry explains loss aversion in downturns. (2) Losses inflict twice the pain of equivalent gains. (3) Consequently, investors hold losers too long. (4) Classical theory assumes symmetric valuation.", opts: isFiveOpt ? ["4 - 2 - 1 - 3", "2 - 1 - 4 - 3", "1 - 2 - 3 - 4", "2 - 4 - 3 - 1", "4 - 1 - 2 - 3"] : ["4 - 2 - 1 - 3", "2 - 1 - 4 - 3", "1 - 2 - 3 - 4", "2 - 4 - 3 - 1"], ans: 0, exp: "4 (Classical premise) -> 2 (Behavioral contrast) -> 1 (Links asymmetry) -> 3 (Consequence): 4213." },
+    { sec: exam === "CAT" ? "VARC" : (exam === "GMAT" ? "VR" : "Verbal"), topic: "Text Completion / Contrast Hinge", q: "Because the physicist's model ______ long-cherished assumptions, it met with initial ______ before experimental data vindicated her.", opts: isFiveOpt ? ["corroborated | acclaim", "upended | skepticism", "ratified | indifference", "echoed | hostility", "presaged | unanimity"] : ["corroborated | acclaim", "upended | skepticism", "ratified | indifference", "echoed | hostility"], ans: 1, exp: "Upending established assumptions triggers skepticism until experimental vindication." },
+    { sec: exam === "CAT" ? "VARC" : (exam === "GMAT" ? "VR" : "Verbal"), topic: "Reading Comprehension Thesis", q: "Passage: 'Optimizing forecasting models solely for in-sample precision induces fragility in fat-tailed systems because catastrophic structural breaks lie outside historical calibration.' Main thesis?", opts: isFiveOpt ? ["Historical data is useless.", "In-sample over-optimization creates vulnerability to rare, high-impact structural breaks.", "Fat tails never occur in finance.", "Calibration windows eliminate risk.", "Stationary regimes are unpredictable."] : ["Historical data is useless.", "In-sample over-optimization creates vulnerability to rare, high-impact structural breaks.", "Fat tails never occur in finance.", "Calibration windows eliminate risk."], ans: 1, exp: "Over-optimizing on historical data creates fragility to rare out-of-sample structural breaks." },
+    { sec: exam === "CAT" ? "VARC" : (exam === "GMAT" ? "VR" : "Verbal"), topic: "Decision Making / Scope Audit", q: "Identify the statement outside the core policy arc: (1) Urban heat islands raise city night temperatures. (2) Cool roofs mitigate thermal absorption. (3) Hydrothermal vents sustain deep-ocean tubeworms. (4) High-albedo zoning curbs cooling loads.", opts: isFiveOpt ? ["Sentence 1", "Sentence 2", "Sentence 3", "Sentence 4", "All 4 belong equally"] : ["Sentence 1", "Sentence 2", "Sentence 3", "Sentence 4"], ans: 2, exp: "Sentence 3 shifts from urban heat-island mitigation to deep-ocean biology." }
+  ];
+
+  // Fetch live PostgreSQL questions to enrich the selected blueprint
+  let pgQuestions = [];
+  try {
+    const res = await fetch("/api/questions?limit=30");
+    if (res.ok) {
+      const data = await res.json();
+      const rawList = Array.isArray(data) ? data : (data.questions || data.rows || []);
+      pgQuestions = rawList.filter(q => (q.stem || q.question) && Array.isArray(q.options) && q.options.length >= 2).slice(0, 15).map(q => ({
+        sec: exam === "CAT" ? "QA" : (exam === "GMAT" ? "QR" : "Quant"),
+        topic: q.topic || q.chapter || "Quantitative Mastery",
+        q: q.stem || q.question,
+        opts: q.options,
+        ans: typeof q.correct_index === "number" ? q.correct_index : (typeof q.answer === "number" ? q.answer : 0),
+        exp: q.explanation || q.solution || "Verified PostgreSQL official pattern derivation."
+      }));
+    }
+  } catch (e) {}
+
+  let pool = bp.secFilter === "ALL"
+    ? [...MASTER_BANK, ...pgQuestions]
+    : [...MASTER_BANK, ...pgQuestions].filter(item => item.sec === bp.secFilter);
+  if (!pool.length) pool = MASTER_BANK;
+
+  window._MOCK_STATE = {
+    questions: pool,
+    curr: 0,
+    answers: {},
+    marked: {},
+    submitted: false,
+    secondsLeft: bp.mins * 60
+  };
+
+  if (window._MOCK_TIMER_ID) clearInterval(window._MOCK_TIMER_ID);
+  window._MOCK_TIMER_ID = setInterval(() => {
+    const st = window._MOCK_STATE;
+    if (!st || st.submitted) return;
+    st.secondsLeft = Math.max(0, st.secondsLeft - 1);
+    const tEl = document.getElementById("mock-live-timer");
+    if (tEl) {
+      const m = String(Math.floor(st.secondsLeft / 60)).padStart(2, "0");
+      const s = String(st.secondsLeft % 60).padStart(2, "0");
+      tEl.textContent = `${m}:${s}`;
+    }
+    if (st.secondsLeft === 0) window.submitFullMock4();
+  }, 1000);
+
+  window.renderMockQuestionCard = function () {
+    const st = window._MOCK_STATE;
+    const qObj = st.questions[st.curr];
+    const qArea = document.getElementById("mock-q-area");
+    const palArea = document.getElementById("mock-palette-area");
+    if (!qArea || !palArea) return;
+
+    palArea.innerHTML = st.questions.map((_, i) => {
+      const isCurr = i === st.curr;
+      const isAns = st.answers[i] !== undefined;
+      const isMark = st.marked[i];
+      let cls = "bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 border-slate-300 dark:border-slate-700";
+      if (isMark) cls = "bg-amber-400 text-slate-950 border-amber-500 font-extrabold";
+      else if (isAns) cls = "bg-emerald-600 text-white border-emerald-600 font-bold";
+      if (isCurr) cls += " ring-2 ring-indigo-500";
+      return `<button type="button" onclick="window._MOCK_STATE.curr=${i}; window.renderMockQuestionCard();" class="w-8 h-8 rounded-lg border text-xs cursor-pointer ${cls}">${i + 1}</button>`;
+    }).join("");
+
+    const selected = st.answers[st.curr];
+    qArea.innerHTML = `
+      <div class="space-y-4">
+        <div class="flex flex-wrap items-center justify-between gap-2 border-b border-slate-200 dark:border-slate-800 pb-3">
+          <div class="flex items-center gap-2">
+            <span class="px-2.5 py-0.5 rounded-full bg-indigo-600 text-white text-[11px] font-extrabold">Question ${st.curr + 1} of ${st.questions.length}</span>
+            <span class="px-2.5 py-0.5 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 text-[11px] font-bold">${qObj.sec} &bull; ${qObj.topic}</span>
+            <span class="px-2 py-0.5 rounded-full bg-emerald-500/15 text-emerald-700 dark:text-emerald-300 text-[10px] font-bold">${qObj.opts.length}-Option Format</span>
+          </div>
+          <button type="button" onclick="window._MOCK_STATE.marked[${st.curr}] = !window._MOCK_STATE.marked[${st.curr}]; window.renderMockQuestionCard();"
+            class="px-3 py-1 rounded-lg border border-amber-400 text-amber-700 dark:text-amber-300 text-xs font-bold cursor-pointer">
+            ${st.marked[st.curr] ? "&#9733; Marked for Review" : "&#9734; Mark for Review"}
+          </button>
+        </div>
+
+        <div class="text-sm font-semibold text-slate-900 dark:text-white leading-relaxed">${qObj.q}</div>
+
+        <div class="space-y-2">
+          ${qObj.opts.map((opt, oi) => `
+            <label onclick="window._MOCK_STATE.answers[${st.curr}]=${oi}; window.renderMockQuestionCard();"
+              class="flex items-center gap-3 p-3.5 rounded-xl border text-xs font-semibold cursor-pointer transition ${selected === oi ? 'border-indigo-600 bg-indigo-50 dark:bg-indigo-950/40 text-indigo-900 dark:text-indigo-200' : 'border-slate-200 dark:border-slate-700 hover:border-indigo-400'}">
+              <input type="radio" name="mock_active_opt" ${selected === oi ? "checked" : ""}>
+              <span><strong>${String.fromCharCode(65 + oi)}.</strong> ${opt}</span>
+            </label>
+          `).join("")}
+        </div>
+
+        ${st.submitted ? `
+          <div class="p-3.5 rounded-xl ${selected === qObj.ans ? 'bg-emerald-50 border-emerald-300 text-emerald-900' : 'bg-rose-50 border-rose-300 text-rose-900'} border text-xs">
+            <strong>${selected === qObj.ans ? "Correct!" : "Incorrect / Unattempted."} Correct Answer: ${String.fromCharCode(65 + qObj.ans)}.</strong> ${qObj.exp}
+          </div>
+        ` : ""}
+
+        <div class="flex items-center justify-between pt-3 border-t border-slate-200 dark:border-slate-800">
+          <button type="button" onclick="if(window._MOCK_STATE.curr>0){window._MOCK_STATE.curr--; window.renderMockQuestionCard();}"
+            class="px-4 py-2 rounded-xl border border-slate-300 dark:border-slate-700 text-xs font-bold cursor-pointer">&larr; Previous</button>
+          <button type="button" onclick="delete window._MOCK_STATE.answers[${st.curr}]; window.renderMockQuestionCard();"
+            class="px-3 py-2 rounded-xl text-xs text-slate-500 hover:text-rose-600 font-semibold cursor-pointer">Clear Response</button>
+          <button type="button" onclick="if(window._MOCK_STATE.curr < window._MOCK_STATE.questions.length - 1){window._MOCK_STATE.curr++; window.renderMockQuestionCard();}"
+            class="px-4 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-bold cursor-pointer">Save &amp; Next &rarr;</button>
+        </div>
+      </div>
+    `;
+  };
+
+  window.submitFullMock4 = function () {
+    const st = window._MOCK_STATE;
+    st.submitted = true;
+    if (window._MOCK_TIMER_ID) clearInterval(window._MOCK_TIMER_ID);
+
+    let correct = 0, wrong = 0, unattempted = 0;
+    st.questions.forEach((q, i) => {
+      if (st.answers[i] === undefined) unattempted++;
+      else if (st.answers[i] === q.ans) correct++;
+      else wrong++;
+    });
+
+    const isCat = exam === "CAT" && bp.id !== "XAT_5OPT";
+    const score = isCat ? Math.max(0, correct * 3 - wrong * 1) : correct;
+    const maxScore = isCat ? st.questions.length * 3 : st.questions.length;
+    const accuracy = (correct + wrong) > 0 ? Math.round((correct / (correct + wrong)) * 100) : 0;
+
+    const hist = JSON.parse(localStorage.getItem("ipm_mock_history_v1") || "[]");
+    hist.unshift({ date: new Date().toLocaleDateString(), blueprint: bp.title, score, maxScore, correct, wrong, accuracy });
+    localStorage.setItem("ipm_mock_history_v1", JSON.stringify(hist));
+
+    const banner = document.getElementById("mock-scorecard-banner");
+    if (banner) {
+      banner.classList.remove("hidden");
+      banner.innerHTML = `
+        <div class="flex flex-wrap items-center justify-between gap-3">
+          <div>
+            <div class="text-sm font-extrabold">Diagnostic Scorecard (${bp.title}): ${score} / ${maxScore} (${accuracy}% Accuracy)</div>
+            <div class="text-xs mt-0.5">Correct: <strong>${correct}</strong> &bull; Wrong: <strong>${wrong}</strong> &bull; Unattempted: <strong>${unattempted}</strong> &bull; Synced to Top Header &amp; Tab 6 Forecaster!</div>
+          </div>
+          <button type="button" onclick="window.selectUnifiedTab(6)" class="px-4 py-2 rounded-xl bg-indigo-600 text-white text-xs font-extrabold cursor-pointer">Open Tab 6 Score Forecaster &rarr;</button>
+        </div>
+      `;
+    }
+    window.renderMockQuestionCard();
+  };
+
+  const bpSelectorHtml = BLUEPRINTS.map((item, idx) => `
+    <button type="button" onclick="window._SELECTED_MOCK_BP=${idx}; window.renderMockSimulator4(document.getElementById('main-workspace'));"
+      class="text-left p-3.5 rounded-2xl border transition cursor-pointer ${idx === window._SELECTED_MOCK_BP ? 'border-indigo-500 bg-indigo-50 dark:bg-indigo-950/50 shadow-sm' : 'border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 hover:border-indigo-400'}">
+      <div class="text-[10px] font-extrabold uppercase text-indigo-600">${item.tag}</div>
+      <div class="font-extrabold text-xs text-slate-900 dark:text-white mt-0.5 leading-snug">${item.title}</div>
+      <div class="text-[11px] text-slate-500 mt-1 line-clamp-2">${item.desc}</div>
+    </button>
+  `).join("");
+
+  el.innerHTML = `
+    <div class="max-w-7xl mx-auto my-4 space-y-4">
+      <!-- 5 Mock Blueprint Selector Cards -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3">${bpSelectorHtml}</div>
+
+      <div class="bg-slate-900 text-white rounded-2xl p-4 flex flex-wrap items-center justify-between gap-3 border border-slate-800 shadow-lg">
+        <div>
+          <span class="text-[10px] font-extrabold uppercase tracking-wider text-amber-300">${bp.tag} &bull; ${bp.scale}</span>
+          <h2 class="text-base font-extrabold">${bp.title}</h2>
+        </div>
+        <div class="flex items-center gap-3">
+          <div class="px-3.5 py-2 rounded-xl bg-slate-800 border border-slate-700 text-xs font-mono">
+            Time Remaining: <strong id="mock-live-timer" class="text-amber-300 text-sm">${bp.mins}:00</strong>
+          </div>
+          <button type="button" onclick="window.submitFullMock4()" class="px-4 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-extrabold shadow cursor-pointer">Submit Exam &amp; Forecast Score</button>
+        </div>
+      </div>
+
+      <div id="mock-scorecard-banner" class="hidden p-4 rounded-2xl bg-emerald-50 dark:bg-emerald-950/50 border border-emerald-300 dark:border-emerald-700 text-emerald-900 dark:text-emerald-200"></div>
+
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-5">
+        <div id="mock-q-area" class="lg:col-span-8 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-6 shadow-sm"></div>
+        <div class="lg:col-span-4 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-5 space-y-4 shadow-sm">
+          <div class="text-xs font-extrabold uppercase tracking-wider text-indigo-600">Question Palette (${pool.length} Qs)</div>
+          <div id="mock-palette-area" class="flex flex-wrap gap-2"></div>
+          <div class="pt-3 border-t border-slate-200 dark:border-slate-800 text-[11px] text-slate-500 space-y-1">
+            <div><span class="inline-block w-3 h-3 rounded bg-emerald-600 mr-1.5 align-middle"></span>Answered</div>
+            <div><span class="inline-block w-3 h-3 rounded bg-amber-400 mr-1.5 align-middle"></span>Marked for Review</div>
+            <div><span class="inline-block w-3 h-3 rounded bg-slate-200 dark:bg-slate-800 mr-1.5 align-middle"></span>Not Answered</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  `;
+  window.renderMockQuestionCard();
+};
 window.renderTab4 = window.renderMockSimulator4;
