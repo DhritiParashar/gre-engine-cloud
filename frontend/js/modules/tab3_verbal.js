@@ -160,7 +160,7 @@ window.renderVerbalStudio3 = function (el) {
 };
 
 // ==============================================================================
-# 3. FULL MULTI-SECTION TIMED MOCK ENGINE (TAB 4) — LIVE POSTGRESQL + TIMER + PALETTE
+// 3. FULL MULTI-SECTION TIMED MOCK ENGINE (TAB 4) — LIVE POSTGRESQL + TIMER + PALETTE
 # ==============================================================================
 window.renderMockSimulator4 = async function (el) {
   const host = window.location.host.toLowerCase();
