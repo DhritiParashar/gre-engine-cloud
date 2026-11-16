@@ -347,10 +347,10 @@
       if (res.ok) {
         const data = await res.json();
         const rows = Array.isArray(data) ? data : (data.questions || []);
-        window._GRE_LIVE_POOL = rows.map((q, idx) => {
+        const _seenPoolStems = new Set(); window._GRE_LIVE_POOL = rows.map((q, idx) => {
           let opts = q.options_json || q.options || [];
           if (typeof opts === "string") { try { opts = JSON.parse(opts); } catch (_) { opts = []; } }
-          if (!Array.isArray(opts) || opts.length < 4) return null;
+          const _stem = String(q.prompt || q.question || "").trim(); const _sKey = _stem.slice(0, 75); if (!_stem || _seenPoolStems.has(_sKey) || !Array.isArray(opts) || opts.length < 4) return null; _seenPoolStems.add(_sKey);
           const s = String(q.section || "").toUpperCase();
           return {
             id: q.id || `GRE-PG-${idx + 1}`,
@@ -582,7 +582,7 @@
       <!doctype html>
       <html>
       <head>
-        <title>GOALisB GRE Diagnostic Marksheet - ${rec.serialId}</title>
+        <title>GOALisB_GRE_Diagnostic_Marksheet_${new Date().toISOString().slice(0,16).replace("T","_").replace(":","")}_${rec.serialId}</title>
         <style>
           body { font-family: Arial, sans-serif; padding: 28px; color: #0f172a; }
           .hdr { border-bottom: 3px solid #4338ca; padding-bottom: 12px; margin-bottom: 18px; display:flex; justify-content:space-between; }
