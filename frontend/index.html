@@ -1173,7 +1173,35 @@
     sub: "Quant (27 Qs • 47m) &bull; Verbal (27 Qs • 41m) &bull; AWA (30m) &bull; 260–340 Scale",
     marking: "MCQ +1/0 | Numeric Entry +1/0 (Zero Guessing Penalty)",
     pattern: "54 Qs + AWA | 118 Mins | Section-Adaptive Routing",
-    modes: [{"label":"GRE General Standard (54 Qs + AWA)","sub":"(260–340 Scale)","id":"STANDARD"},{"label":"Quant 170 Perfection Sprint","sub":"(130–170 Q)","id":"Q170"},{"label":"Verbal 165+ \u0026 AWA 5.5 Studio","sub":"(TC / SE / RC)","id":"V165"}],
+    modes: [
+  {
+    "id": "STANDARD",
+    "label": "GRE General Standard (54 Qs + AWA)",
+    "sub": "(260–340 Scale)",
+    "sections": "Quant (27 Qs • 47m) &bull; Verbal (27 Qs • 41m) &bull; AWA (30m) &bull; 260–340 Scale",
+    "pattern": "54 Qs + AWA | 118 Mins | Section-Adaptive Routing",
+    "marking": "MCQ +1/0 | Numeric Entry +1/0 (Zero Guessing Penalty)",
+    "targetTab": 1
+  },
+  {
+    "id": "Q170",
+    "label": "Quant 170 Perfection Sprint",
+    "sub": "(130–170 Q)",
+    "sections": "Stage 1 (12 Qs • 21m) + Hard Stage 2 (15 Qs • 26m) • QC, PS & Numeric Entry",
+    "pattern": "Need ≥10/12 in Stage 1 to Unlock Hard Stage-2 (170 Ceiling)",
+    "marking": "Zero Guessing Penalty | On-Screen Basic Calculator Enabled",
+    "targetTab": 4
+  },
+  {
+    "id": "V165",
+    "label": "Verbal 165+ & AWA 5.5 Studio",
+    "sub": "(TC / SE / RC)",
+    "sections": "Text Completion (12 Qs) &bull; Sentence Equivalence (6 Qs) &bull; Reading Comp (9 Qs) + 30m Issue Essay",
+    "pattern": "Stage 1 (12 Qs • 18m) + Hard Stage 2 (15 Qs • 23m)",
+    "marking": "No Partial Credit on Multi-Blank TC / Sentence Equivalence Pairs",
+    "targetTab": 3
+  }
+],
     tabs: ["1. Quantitative Reasoning (QC \u0026 PS)","2. Data Interpretation \u0026 AWA Lab","3. Verbal Studio (TC, SE \u0026 RC)","4. Section-Adaptive Mock","5. Trap Doctor \u0026 AI Doubts","6. GRE Score Forecaster"],
     defaultTel: "Target: 332/340 &bull; Readiness: 326/340"
   };
@@ -1199,7 +1227,18 @@
     window.location.reload();
   };
 
-            window.selectUnifiedTab = function (tabNum) {
+              window.selectExamMode = function (idx) {
+    window._ACTIVE_MODE_IDX = Number(idx);
+    const m = CFG.modes[window._ACTIVE_MODE_IDX] || CFG.modes[0];
+    CFG.sub = m.sections;
+    CFG.pattern = m.pattern;
+    CFG.marking = m.marking;
+    renderCleanHeader();
+    if (m.targetTab && typeof window.selectUnifiedTab === "function") {
+      window.selectUnifiedTab(m.targetTab);
+    }
+  };
+  window.selectUnifiedTab = function (tabNum) {
     const n = Number(tabNum);
     window._ACTIVE_TAB_NUM = n;
     window.ACTIVE_TAB = n;
@@ -1267,7 +1306,7 @@
     const isDark = document.documentElement.classList.contains("dark");
     const modePills = CFG.modes.map((m, idx) => {
       const active = idx === window._ACTIVE_MODE_IDX;
-      return `<button type="button" onclick="window._ACTIVE_MODE_IDX=${idx}; renderCleanHeader();"
+      return `<button type="button" onclick="window.selectExamMode(${idx});"
         class="px-3.5 py-1.5 rounded-full text-xs font-bold transition cursor-pointer ${active ? 'bg-indigo-600 text-white shadow-sm' : 'bg-white dark:bg-slate-900 text-slate-700 dark:text-slate-200 border border-slate-300 dark:border-slate-700 hover:border-indigo-500'}">
         ${m.label} <span class="opacity-75 font-normal text-[11px]">${m.sub}</span>
       </button>`;
