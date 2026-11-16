@@ -286,7 +286,7 @@
             </button>
           </div>
           <div id="fp-step2" class="hidden space-y-3">
-            <div id="fp-otp-banner" class="p-3 rounded-xl bg-amber-500/15 border border-amber-500/40 text-xs text-amber-200"></div>
+            <div id="fp-otp-banner" class="p-3 rounded-xl bg-amber-500/15 border border-amber-500/40 text-xs text-slate-900 dark:text-amber-100"></div>
             <input id="fp-otp" type="text" maxlength="6" placeholder="Enter 6-Digit Reset OTP" class="w-full rounded-xl bg-slate-950 border border-amber-500/50 p-2.5 text-sm font-mono text-center text-white">
             <input id="fp-new-pass" type="password" placeholder="Enter New Password" class="w-full rounded-xl bg-slate-950 border border-slate-700 p-2.5 text-xs text-white">
             <button onclick="window.handleForgotStep2()" class="w-full py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-xs font-extrabold text-white">
@@ -311,7 +311,7 @@
         <button onclick="window.closePaymentModal()" class="text-slate-400 hover:text-white text-lg font-bold">&times;</button>
       </div>
 
-            <p id="pay-gate-reason" class="text-xs text-amber-200 bg-amber-500/10 border border-amber-500/30 rounded-xl p-2.5"></p>
+            <p id="pay-gate-reason" class="text-xs text-slate-900 dark:text-amber-100 bg-amber-500/10 border border-amber-500/30 rounded-xl p-2.5"></p>
 
       <!-- TIME-BOUND BETA APPROVAL VOUCHER REDEMPTION BAR -->
       <div class="p-3.5 rounded-xl bg-indigo-950/60 border border-indigo-500/40 flex flex-wrap items-center justify-between gap-2">
@@ -972,7 +972,7 @@
       ]);
 
       const dedup = (arr) => {
-        const seen = new Set();
+        const seen = new Set(); const seenStems = new Set();
         return arr.filter(q => {
           if (!q || !q.id || seen.has(q.id)) return false;
           seen.add(q.id);
@@ -1090,11 +1090,11 @@
                   </div>
                   <p class="text-xs md:text-sm text-slate-100 leading-relaxed whitespace-pre-line">${q.prompt}</p>
                   <button type="button" onclick="window.toggleStudioWorked('${q.id}')"
-                    class="px-3 py-1 rounded-lg bg-amber-500/20 hover:bg-amber-500/30 border border-amber-500/40 text-amber-200 text-xs font-bold">
+                    class="px-3 py-1 rounded-lg bg-amber-500/20 hover:bg-amber-500/30 border border-amber-500/40 text-slate-900 dark:text-amber-100 text-xs font-bold">
                     ${window.PG_STUDIO.revealedWorked[q.id] ? "Hide Step-by-Step Walkthrough" : "Show Worked Solution"}
                   </button>
                   ${window.PG_STUDIO.revealedWorked[q.id] ? `
-                    <div class="p-3 rounded-xl bg-slate-900 border border-amber-500/30 text-xs text-amber-100 space-y-1">
+                    <div class="p-3 rounded-xl bg-slate-900 border border-amber-500/30 text-xs text-slate-900 dark:text-amber-100 space-y-1">
                       <div><strong>Answer:</strong> ${Array.isArray(q.options) && q.options.length ? `${String.fromCharCode(65 + Number(q.answer))} (${q.options[Number(q.answer)]})` : q.answer}</div>
                       <div><strong>Walkthrough:</strong> ${q.explanation}</div>
                     </div>
@@ -1436,10 +1436,10 @@
 <script src="js/modules/tab8_mock.js?v=3"></script>
 <script src="js/modules/tab9_pyq.js?v=3"></script>
 <script src="js/modules/tab9_pyq_vault.js?v=3"></script>
-<script src="js/modules/tab2_dilr.js?v=20261117pgsync"></script>
-<script src="js/modules/tab3_verbal.js?v=20261117pgsync"></script>
-<script src="js/modules/tab5_traps.js?v=20261117pgsync"></script>
-<script src="js/modules/tab6_college_predictor.js?v=20261117pgsync"></script>
-  <script src="/js/modules/gre_master_enrichment.js?v=20261117pgsync"></script>
+<script src="js/modules/tab2_dilr.js?v=20261117pyqfix"></script>
+<script src="js/modules/tab3_verbal.js?v=20261117pyqfix"></script>
+<script src="js/modules/tab5_traps.js?v=20261117pyqfix"></script>
+<script src="js/modules/tab6_college_predictor.js?v=20261117pyqfix"></script>
+  <script src="/js/modules/gre_master_enrichment.js?v=20261117pyqfix"></script>
 </body>
 </html>
