@@ -170,35 +170,40 @@ window.renderTrapClinic5 = function (el) {
     }
   };
 
-  window.solveTrapDoubt5 = async function () {
+    window.solveTrapDoubt5 = async function () {
     const topic = (document.getElementById("trap-doubt-topic")?.value || `${exam} Trap Analysis`).trim();
     const prompt = (document.getElementById("trap-doubt-prompt")?.value || "").trim();
     const out = document.getElementById("trap-doubt-output");
-    if (!prompt || !out) return;
+    if (!out) return;
+
+    const words = prompt.split(/\s+/).filter(w => /[a-zA-Z0-9]{2,}/.test(w));
+    const hasVowels = /[aeiouAEIOU]/.test(prompt);
+    if (prompt.length < 10 || words.length < 2 || !hasVowels) {
+      out.classList.remove("hidden");
+      out.innerHTML = `<div class="text-xs font-bold text-rose-600">Please enter a valid ${exam} question, mathematical expression, or click <strong>"⚡ Ask AI Doubt Doctor About This Trap"</strong> on any trap card above.</div>`;
+      return;
+    }
+
     out.classList.remove("hidden");
-    out.innerHTML = `<div class="text-xs font-bold text-indigo-500 animate-pulse">Generating Socratic ${exam} breakdown &amp; 30-second shortcut...</div>`;
+    out.innerHTML = `<div class="text-xs font-bold text-indigo-500 animate-pulse">Connecting to ${exam} Socratic AI Tutor (/api/doubt)...</div>`;
 
     try {
-      const res = await fetch("/api/evaluate/doubt", {
+      const res = await fetch("/api/doubt", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ track: exam, topic: topic, question: prompt, student_attempt: "" })
       });
       if (res.ok) {
         const data = await res.json();
-        const ans = data.explanation || data.feedback || data.response || JSON.stringify(data);
-        out.innerHTML = `<div class="text-xs leading-relaxed whitespace-pre-wrap text-slate-800 dark:text-slate-200">${ans}</div>`;
-        return;
+        const ans = data.solution || data.explanation || data.feedback || "";
+        if (ans) {
+          out.innerHTML = `<div class="text-xs leading-relaxed whitespace-pre-wrap text-slate-800 dark:text-slate-200">${ans}</div>`;
+          return;
+        }
       }
     } catch (e) {}
 
-    out.innerHTML = `
-      <div class="text-xs space-y-2 text-slate-800 dark:text-slate-200">
-        <div class="font-extrabold text-indigo-600">Socratic Diagnostic Breakdown (${topic}):</div>
-        <p><strong>1. Why the Distractor Exists:</strong> Exam setters construct distractors directly from the intermediate step where students drop a domain condition (such as <code>x = 0</code>, negative bases, or causal reversal).</p>
-        <p><strong>2. 10-Second Verification Rule:</strong> Always test boundary cases (<code>0, 1, -1, 1/2</code> in Quant; extreme quantifiers and post-pivot contrast clauses in Verbal/DILR) before confirming your option.</p>
-      </div>
-    `;
+    out.innerHTML = `<div class="text-xs text-rose-600 font-bold">Unable to reach /api/doubt right now. Check Render service status and retry.</div>`;
   };
 
   const secButtons = ["ALL", ...SECS].map(s => {
