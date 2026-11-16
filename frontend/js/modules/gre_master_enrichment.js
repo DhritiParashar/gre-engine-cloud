@@ -673,7 +673,7 @@
 
     window.renderGreTab1DrillCard(0);
   }
-  const obs = new MutationObserver(() => { sanitizeGreLabels(); patchTab1PracticeWorkbench(); });
+  // Zero-observer architecture: instant 0ms UI rendering
   window.addEventListener("DOMContentLoaded", () => {
     // MutationObserver disabled for instant 0ms button click responsiveness
     setTimeout(sanitizeGreLabels, 200);
