@@ -194,7 +194,7 @@ window.renderTab2 = function (el) {
   const m = MODULES[window._DILR_ACTIVE_IDX];
 
   const leftNav = MODULES.map((item, idx) => `
-    <button type="button" onclick="window._DILR_ACTIVE_IDX=${idx}; window.renderTab2(document.getElementById('main-workspace'));"
+    <button type="button" onclick="window._DILR_ACTIVE_IDX=${idx}; window.renderTab2(document.getElementById('main-workspace')); document.getElementById('main-workspace')?.scrollIntoView({behavior:'smooth', block:'start'});"
       class="w-full text-left p-4 rounded-2xl border transition cursor-pointer ${idx === window._DILR_ACTIVE_IDX ? 'border-indigo-500 bg-indigo-50/80 dark:bg-indigo-950/40 shadow-sm' : 'border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 hover:border-indigo-400'}">
       <div class="font-extrabold text-sm text-slate-900 dark:text-white leading-snug">${item.title}</div>
       <div class="text-xs text-slate-500 mt-1">${item.sidebarSub}</div>
@@ -288,11 +288,11 @@ window.renderTab2 = function (el) {
         <h2 class="text-xl font-extrabold text-slate-900 dark:text-white">${m.title}</h2>
 
         <div class="flex flex-wrap items-center gap-2 pt-0.5">
-          <button type="button" onclick="window._DILR_SUBTAB='THEORY'; window.renderTab2(document.getElementById('main-workspace'));"
+          <button type="button" onclick="window._DILR_SUBTAB='THEORY'; window.renderTab2(document.getElementById('main-workspace')); document.getElementById('main-workspace')?.scrollIntoView({behavior:'smooth', block:'start'});"
             class="px-4 py-2 rounded-full text-xs font-bold cursor-pointer ${window._DILR_SUBTAB === 'THEORY' ? 'bg-indigo-600 text-white shadow-sm' : 'bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-200'}">
             Chapter Refresher &amp; Theory
           </button>
-          <button type="button" onclick="window._DILR_SUBTAB='DRILLS'; window.renderTab2(document.getElementById('main-workspace'));"
+          <button type="button" onclick="window._DILR_SUBTAB='DRILLS'; window.renderTab2(document.getElementById('main-workspace')); document.getElementById('main-workspace')?.scrollIntoView({behavior:'smooth', block:'start'});"
             class="px-4 py-2 rounded-full text-xs font-bold cursor-pointer ${window._DILR_SUBTAB === 'DRILLS' ? 'bg-indigo-600 text-white shadow-sm' : 'bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-200'}">
             Shortcuts &amp; ${m.drills.length} Practice Drills
           </button>
