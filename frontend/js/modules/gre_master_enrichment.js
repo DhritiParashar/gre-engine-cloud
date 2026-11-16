@@ -439,7 +439,7 @@
         <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-6 shadow-sm space-y-3">
           <div class="flex flex-wrap items-center justify-between gap-2">
             <div>
-              <h3 class="text-sm font-extrabold text-slate-900 dark:text-white">GRE General Full-Length Mock Ledger (${fullLogs.length} Full 54-Q Mocks Logged)</h3>
+              <h3 id="gre-full-ledger-count" class="text-sm font-extrabold text-slate-900 dark:text-white">GRE General Full-Length Mock Ledger (${fullLogs.length} Full 54-Q Mocks Logged)</h3>
               <p class="text-[11px] text-slate-500">Only Full-Length 54-Question GRE Section-Adaptive Mocks are logged here to calibrate Tab 6&#39;s 260–340 Forecaster.</p>
             </div>
             <button type="button" onclick="if(confirm('Clear GRE Mock Log?')){localStorage.removeItem('ipm_mock_history_v1'); window.renderGreMockSimulator4();}"
@@ -453,19 +453,19 @@
                   <th class="py-2 px-3">Date &amp; Time</th>
                   <th class="py-2 px-3">Blueprint</th>
                   <th class="py-2 px-3">Score (260–340)</th>
-                  <th class="py-2 px-3">Accuracy</th>
+                  <th class="py-2 px-3">Accuracy</th><th class="py-2 px-3">Marksheet PDF</th>
                 </tr>
               </thead>
-              <tbody>
+              <tbody id="gre-full-ledger-body">
                 ${fullLogs.length ? fullLogs.map(h => `
                   <tr class="border-t border-slate-200 dark:border-slate-800 text-xs">
                     <td class="py-2.5 px-3 font-mono font-extrabold text-indigo-600">${h.serialId}</td>
                     <td class="py-2.5 px-3 text-slate-500">${h.date || ""} ${h.time || ""}</td>
                     <td class="py-2.5 px-3 font-bold">${h.blueprint}</td>
                     <td class="py-2.5 px-3 font-extrabold text-emerald-600">${h.score} / ${h.maxScore} (${h.scaled340 || 322}/340)</td>
-                    <td class="py-2.5 px-3 font-bold">${h.accuracy}%</td>
+                    <td class="py-2.5 px-3 font-bold">${h.accuracy}%</td><td class="py-2.5 px-3"><button type="button" onclick="window.downloadGreMarksheetPdf('${h.serialId}')" class="px-2.5 py-1 rounded-lg bg-indigo-600 text-white text-[11px] font-extrabold cursor-pointer">&#128196; Download PDF</button></td>
                   </tr>
-                `).join("") : `<tr><td colspan="5" class="py-5 text-center text-xs text-slate-400">No Full-Length 54-Question GRE Mocks logged yet. Complete Blueprint 1 above to generate your GRE-2026-XXXX Serial ID.</td></tr>`}
+                `).join("") : `<tr><td colspan="6" class="py-5 text-center text-xs text-slate-400">No Full-Length 54-Question GRE Mocks logged yet. Complete Blueprint 1 above to generate your GRE-2026-XXXX Serial ID.</td></tr>`}
               </tbody>
             </table>
           </div>
@@ -558,49 +558,155 @@
     `;
   };
 
+    window.downloadGreMarksheetPdf = function (recordId) {
+    const hist = JSON.parse(localStorage.getItem("ipm_mock_history_v1") || "[]");
+    const rec = (window._LAST_GRE_SCORECARD && (!recordId || window._LAST_GRE_SCORECARD.serialId === recordId))
+      ? window._LAST_GRE_SCORECARD
+      : hist.find(h => h.serialId === recordId) || hist[0];
+    if (!rec) return alert("Complete a GRE Mock first to generate your Diagnostic Marksheet PDF.");
+
+    const win = window.open("", "_blank", "width=920,height=780");
+    if (!win) return alert("Please allow pop-ups to open and save your GRE Diagnostic Marksheet PDF.");
+
+    const rowsHtml = (rec.review || []).slice(0, 54).map((r, i) => `
+      <tr>
+        <td style="padding:6px;border:1px solid #cbd5e1;font-weight:700;">Q${i + 1} (${r.sec})</td>
+        <td style="padding:6px;border:1px solid #cbd5e1;">${String(r.q || "").slice(0, 95)}...</td>
+        <td style="padding:6px;border:1px solid #cbd5e1;">${r.picked || "Unanswered"}</td>
+        <td style="padding:6px;border:1px solid #cbd5e1;font-weight:700;color:#047857;">${r.correctOpt || ""}</td>
+        <td style="padding:6px;border:1px solid #cbd5e1;font-weight:700;color:${r.isRight ? "#047857" : "#be123c"};">${r.isRight ? "Correct (+1)" : "Missed (0)"}</td>
+      </tr>
+    `).join("");
+
+    win.document.write(`
+      <!doctype html>
+      <html>
+      <head>
+        <title>GOALisB GRE Diagnostic Marksheet - ${rec.serialId}</title>
+        <style>
+          body { font-family: Arial, sans-serif; padding: 28px; color: #0f172a; }
+          .hdr { border-bottom: 3px solid #4338ca; padding-bottom: 12px; margin-bottom: 18px; display:flex; justify-content:space-between; }
+          .grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 20px; }
+          .card { border: 1px solid #cbd5e1; border-radius: 10px; padding: 12px; background: #f8fafc; }
+          .lbl { font-size: 10px; font-weight: 800; color: #64748b; text-transform: uppercase; }
+          .val { font-size: 20px; font-weight: 800; color: #312e81; margin-top: 4px; }
+          table { width: 100%; border-collapse: collapse; font-size: 11px; }
+          th { background: #312e81; color: #fff; padding: 8px; text-align: left; }
+        </style>
+      </head>
+      <body>
+        <div class="hdr">
+          <div>
+            <div style="font-size:11px;font-weight:800;color:#4338ca;">GOALisB GRE GENERAL (260–340 SCALE) • OFFICIAL DIAGNOSTIC REPORT</div>
+            <h1 style="margin:4px 0 0 0;font-size:20px;">${rec.blueprint}</h1>
+          </div>
+          <div style="text-align:right;font-size:12px;">
+            <div><strong>Serial ID:</strong> ${rec.serialId}</div>
+            <div><strong>Date:</strong> ${rec.date || ""} ${rec.time || ""}</div>
+          </div>
+        </div>
+        <div class="grid">
+          <div class="card"><div class="lbl">Total GRE Score</div><div class="val">${rec.scaled340 || 260} / 340</div></div>
+          <div class="card"><div class="lbl">Quant (130–170)</div><div class="val">${rec.quant170 || 130} / 170</div></div>
+          <div class="card"><div class="lbl">Verbal (130–170)</div><div class="val">${rec.verbal170 || 130} / 170</div></div>
+          <div class="card"><div class="lbl">Raw &amp; Accuracy</div><div class="val">${rec.score}/${rec.maxScore} (${rec.accuracy}%)</div></div>
+        </div>
+        ${rowsHtml ? `<h3>Question-by-Question Audit</h3><table><thead><tr><th>#</th><th>Prompt</th><th>Your Choice</th><th>Correct</th><th>Status</th></tr></thead><tbody id="gre-full-ledger-body">${rowsHtml}</tbody></table>` : ""}
+        <script>window.onload = function(){ window.print(); };</script>
+      </body>
+      </html>
+    `);
+    win.document.close();
+  };
+
   window.submitGreProctoredMock = function () {
     const st = window._GRE_ACTIVE_MOCK;
     if (!st) return;
     if (window._GRE_MOCK_TIMER) clearInterval(window._GRE_MOCK_TIMER);
-    let correct = 0, wrong = 0;
-    st.questions.forEach((q, i) => {
-      if (st.answers[i] !== undefined) {
-        if (Number(st.answers[i]) === Number(q.ans)) correct++;
-        else wrong++;
-      }
+
+    let correct = 0, wrong = 0, qRight = 0, qTotal = 0, vRight = 0, vTotal = 0;
+    const review = st.questions.map((q, i) => {
+      const hasAns = st.answers[i] !== undefined;
+      const isRight = hasAns && Number(st.answers[i]) === Number(q.ans);
+      if (hasAns) { if (isRight) correct++; else wrong++; }
+      if (q.sec === "VERBAL") { vTotal++; if (isRight) vRight++; }
+      else { qTotal++; if (isRight) qRight++; }
+      return {
+        sec: q.sec,
+        q: q.q,
+        picked: hasAns ? q.opts[Number(st.answers[i])] : "Unanswered",
+        correctOpt: q.opts[Number(q.ans)] || "",
+        exp: q.exp,
+        isRight
+      };
     });
+
     const accuracy = (correct + wrong) > 0 ? Math.round((correct / (correct + wrong)) * 100) : 0;
-    const scaled340 = Math.min(340, Math.max(260, Math.round(260 + (correct / st.questions.length) * 80)));
+    const quant170 = qTotal > 0 ? Math.min(170, Math.max(130, Math.round(130 + (qRight / qTotal) * 40))) : 150;
+    const verbal170 = vTotal > 0 ? Math.min(170, Math.max(130, Math.round(130 + (vRight / vTotal) * 40))) : 150;
+    const scaled340 = st.bp.id === "GRE_FULL"
+      ? (quant170 + verbal170)
+      : Math.min(340, Math.max(260, Math.round(260 + (correct / st.questions.length) * 80)));
     const isFull = st.bp.id === "GRE_FULL" || st.questions.length >= 54;
+
+    const now = new Date();
+    const record = {
+      serialId: st.serialId,
+      date: now.toLocaleDateString("en-IN"),
+      time: now.toLocaleTimeString("en-IN", { hour: "2-digit", minute: "2-digit" }),
+      blueprint: st.bp.title,
+      score: correct,
+      maxScore: st.questions.length,
+      quant170,
+      verbal170,
+      scaled340,
+      accuracy,
+      review
+    };
+    window._LAST_GRE_SCORECARD = record;
 
     if (isFull) {
       const hist = JSON.parse(localStorage.getItem("ipm_mock_history_v1") || "[]");
-      const now = new Date();
-      hist.unshift({
-        serialId: st.serialId,
-        date: now.toLocaleDateString("en-IN"),
-        time: now.toLocaleTimeString("en-IN", { hour: "2-digit", minute: "2-digit" }),
-        blueprint: st.bp.title,
-        score: correct,
-        maxScore: st.questions.length,
-        scaled340,
-        accuracy
-      });
+      hist.unshift(record);
       localStorage.setItem("ipm_mock_history_v1", JSON.stringify(hist.slice(0, 25)));
+      // Immediately refresh the bottom ledger table so the new Serial ID & PDF button appear at once
+      const tbody = document.getElementById("gre-full-ledger-body");
+      const cntLbl = document.getElementById("gre-full-ledger-count");
+      if (cntLbl) cntLbl.textContent = `GRE General Full-Length Mock Ledger (${hist.length} Full 54-Q Mocks Logged)`;
+      if (tbody) {
+        tbody.innerHTML = hist.map(h => `
+          <tr class="border-t border-slate-200 dark:border-slate-800 text-xs">
+            <td class="py-2.5 px-3 font-mono font-extrabold text-indigo-600">${h.serialId}</td>
+            <td class="py-2.5 px-3 text-slate-500">${h.date || ""} ${h.time || ""}</td>
+            <td class="py-2.5 px-3 font-bold">${h.blueprint}</td>
+            <td class="py-2.5 px-3 font-extrabold text-emerald-600">${h.score} / ${h.maxScore} (${h.scaled340 || 322}/340)</td>
+            <td class="py-2.5 px-3 font-bold">${h.accuracy}%</td><td class="py-2.5 px-3"><button type="button" onclick="window.downloadGreMarksheetPdf('${h.serialId}')" class="px-2.5 py-1 rounded-lg bg-indigo-600 text-white text-[11px] font-extrabold cursor-pointer">&#128196; Download PDF</button></td>
+            <td class="py-2.5 px-3"><button type="button" onclick="window.downloadGreMarksheetPdf('${h.serialId}')" class="px-2.5 py-1 rounded-lg bg-indigo-600 text-white text-[11px] font-extrabold cursor-pointer">&#128196; Download PDF</button></td>
+          </tr>
+        `).join("");
+      }
     }
 
     const stage = document.getElementById("gre-mock-stage");
     if (stage) {
       stage.innerHTML = `
         <div class="p-6 rounded-2xl bg-emerald-50 border border-emerald-200 space-y-4">
-          <div class="text-xs font-extrabold uppercase text-emerald-700">${isFull ? "FULL-LENGTH GRE SECTION-ADAPTIVE SCORECARD (LOGGED TO LEDGER)" : "SECTIONAL / HARD-STAGE SPRINT SCORECARD"}</div>
+          <div class="flex flex-wrap items-center justify-between gap-2">
+            <div class="text-xs font-extrabold uppercase text-emerald-700">${isFull ? "FULL-LENGTH GRE SECTION-ADAPTIVE SCORECARD (LOGGED TO LEDGER)" : "SECTIONAL / HARD-STAGE SPRINT SCORECARD"}</div>
+            <button type="button" onclick="window.downloadGreMarksheetPdf('${record.serialId}')"
+              class="px-4 py-2 rounded-xl bg-slate-900 hover:bg-slate-800 text-white text-xs font-extrabold shadow cursor-pointer">&#128196; Download Diagnostic Marksheet (PDF)</button>
+          </div>
           <h3 class="text-2xl font-extrabold text-slate-900">${st.bp.title} &bull; ${st.serialId}</h3>
-          <div class="grid grid-cols-3 gap-3 text-xs">
-            <div class="p-3 rounded-xl bg-white border"><div class="text-slate-400 font-bold">ESTIMATED 260–340</div><div class="text-lg font-extrabold text-indigo-600">${scaled340} / 340</div></div>
+          <div class="grid grid-cols-2 lg:grid-cols-4 gap-3 text-xs">
+            <div class="p-3 rounded-xl bg-white border"><div class="text-slate-400 font-bold">TOTAL GRE (260–340)</div><div class="text-lg font-extrabold text-indigo-600">${scaled340} / 340</div></div>
+            <div class="p-3 rounded-xl bg-white border"><div class="text-slate-400 font-bold">QUANT / VERBAL (130–170)</div><div class="text-lg font-extrabold text-slate-900">Q${quant170} &bull; V${verbal170}</div></div>
             <div class="p-3 rounded-xl bg-white border"><div class="text-slate-400 font-bold">RAW CORRECT</div><div class="text-lg font-extrabold text-emerald-600">${correct} / ${st.questions.length}</div></div>
             <div class="p-3 rounded-xl bg-white border"><div class="text-slate-400 font-bold">ACCURACY</div><div class="text-lg font-extrabold">${accuracy}%</div></div>
           </div>
-          <button type="button" onclick="window.renderGreMockSimulator4();" class="px-4 py-2.5 rounded-xl bg-indigo-600 text-white text-xs font-extrabold cursor-pointer">Return to GRE Blueprint Lobby</button>
+          <div class="flex flex-wrap gap-2.5">
+            <button type="button" onclick="window.downloadGreMarksheetPdf('${record.serialId}')" class="px-4 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-extrabold cursor-pointer">&#128196; Print / Save Official GRE Marksheet PDF</button>
+            <button type="button" onclick="window.renderGreMockSimulator4();" class="px-4 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-extrabold cursor-pointer">Return to GRE Blueprint Lobby</button>
+          </div>
         </div>
       `;
     }
