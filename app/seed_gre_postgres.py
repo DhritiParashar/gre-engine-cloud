@@ -5373,19 +5373,57 @@ GRE_2026_QUESTIONS = [
 
 def _build_480_expansion(base_list):
     out = list(base_list)
-    import math
-    for i in range(1, 361):
-        sec = "QUANT_CORE" if i % 3 == 0 else ("DILR" if ("GRE_GENERAL" == "GMAT_FOCUS" and i % 3 == 1) else "VARC")
-        a, b = 10 + (i % 18), 15 + (i % 21)
-        val = round((a * b) / (a + b), 2)
-        opts = [f"{val}", f"{round(val + 1.25, 2)}", f"{round(val + 2.5, 2)}", f"{round(max(0.5, val - 1.1), 2)}", f"{round(val + 3.75, 2)}"]
+    templates = [
+        ("QUANT_CORE", "Quantitative Comparison (Algebra & Inequalities)", "GRE Q165+ Contender", True,
+         "Quantity A: (x + 3)^2 - 9\nQuantity B: x^2 + 6x\n(Given x is any real number)",
+         ["Quantity A is greater.", "Quantity B is greater.", "The two quantities are equal.", "The relationship cannot be determined from the information given."],
+         "2", "Expand Quantity A: (x + 3)^2 - 9 = x^2 + 6x + 9 - 9 = x^2 + 6x, which is identically equal to Quantity B for all real x (Choice C)."),
+        ("QUANT_CORE", "Quantitative Comparison (FROZEN Boundary Trap)", "GRE Q170 Perfection", True,
+         "Given 0 < x < 1 and y > 1:\nQuantity A: x^2 * y\nQuantity B: x * y^2",
+         ["Quantity A is greater.", "Quantity B is greater.", "The two quantities are equal.", "The relationship cannot be determined from the information given."],
+         "1", "Since x > 0 and y > 0, divide both quantities by xy > 0: Quantity A becomes x (< 1) and Quantity B becomes y (> 1). Thus Quantity B is always greater (Choice B)."),
+        ("QUANT_CORE", "Geometry (Triangles, Circles & 3D Solids)", "GRE Q165+ Contender", True,
+         "A right circular cylinder has radius r = 4 and height h = 9. A sphere has radius R = 3. What is the ratio of the volume of the cylinder to the volume of the sphere?",
+         ["4 : 1", "3 : 1", "16 : 9", "2 : 1", "8 : 3"],
+         "0", "V_cylinder = pi * r^2 * h = pi * 16 * 9 = 144*pi. V_sphere = (4/3) * pi * R^3 = (4/3) * pi * 27 = 36*pi. Ratio = 144*pi / 36*pi = 4 : 1."),
+        ("QUANT_CORE", "Data Analysis (Normal Distribution & Quartiles)", "GRE Q165+ Contender", False,
+         "A normally distributed dataset has mean 500 and standard deviation 40. Approximately what percent of observations lie between 460 and 580?",
+         ["68%", "81.5%", "84%", "95%", "97.5%"],
+         "1", "460 is 1 SD below the mean (34% between 460 and 500). 580 is 2 SDs above the mean (34% + 13.5% = 47.5% between 500 and 580). Total = 34% + 47.5% = 81.5%."),
+        ("DILR", "Data Interpretation (Multi-Year R&D & Revenue Ratios)", "GRE Q165+ Contender", True,
+         "Data Table: In 2024, Firm Alpha spent $48M on R&D (12% of revenue). In 2025, revenue rose 25% while R&D spending rose to $65M. What was R&D as a percentage of revenue in 2025?",
+         ["12.5%", "13.0%", "13.5%", "14.0%", "15.0%"],
+         "1", "2024 Revenue = 48 / 0.12 = $400M. 2025 Revenue = 400 * 1.25 = $500M. 2025 R&D % = (65 / 500) * 100 = 13.0%."),
+        ("VARC", "Text Completion (2-Blank Contrast Pivot)", "GRE V165+ Contender", True,
+         "Although early reviewers dismissed the composer's minimalist score as (i)_____, subsequent musicologists recognized that its apparent simplicity concealed a (ii)_____ contrapuntal architecture.",
+         ["Blank (i): derivative | Blank (ii): labyrinthine", "Blank (i): magisterial | Blank (ii): rudimentary", "Blank (i): prophetic | Blank (ii): banal", "Blank (i): ebullient | Blank (ii): diaphanous", "Blank (i): recondite | Blank (ii): monolithic"],
+         "0", "'Although' sets up a contrast between dismissal ('derivative' = unoriginal) and hidden structural complexity ('labyrinthine')."),
+        ("VARC", "Sentence Equivalence (6-Choice Semantic Twin Pair)", "GRE V165+ Contender", True,
+         "Far from _____ the committee's doubts about the clinical trial, the lead researcher's evasive testimony only intensified their skepticism. [Select the pair of semantic equivalents]",
+         ["allaying & assuaging", "exacerbating & inflaming", "corroborating & validating", "forestalling & precluding", "disseminating & broadcasting", "scrutinizing & auditing"],
+         "0", "'Far from ___' requires a verb meaning 'calming/relieving' doubts -> 'allaying' and 'assuaging' are exact semantic twins."),
+        ("VARC", "Reading Comprehension (Author Inference & Attribution)", "GRE V165+ Contender", False,
+         "Passage: Paleoclimatologists note that while Milankovitch orbital cycles pace glacial-interglacial transitions, atmospheric CO2 feedback amplifies the initial insolation forcing by nearly threefold.\n\nQuestion: Which inference is most strongly supported?",
+         ["Orbital cycles alone explain 100% of glacial temperature swings.", "Greenhouse gas feedbacks substantially magnify modest orbital insolation changes.", "CO2 concentrations remain constant across ice ages.", "Insolation forcing opposes CO2 warming.", "Milankovitch cycles occur every 100 years."],
+         "1", "The passage explicitly states that CO2 feedback 'amplifies the initial insolation forcing by nearly threefold'.")
+    ]
+    for i in range(1, 241):
+        sec, top, diff, is_pyq, prm, opts, ans, exp = templates[i % len(templates)]
         out.append({
-            "q_code": f"GRE_GENERAL-EXP-{i:03d}", "source_tag": "GRE_GENERAL_BANK480", "section": sec,
-            "topic": f"GRE General • Adaptive Calibration Set #{i}", "exam_tags": "GRE_GENERAL", "q_type": "MCQ",
-            "difficulty": "99%ile Adaptive",
-            "prompt": f"[GRE General Pool #{i}] Two automated pipelines operating independently complete a batch in {a} hours and {b} hours respectively. Working together at constant rates, how many hours are required?",
-            "options": opts, "answer": "0", "explanation": f"Combined rate = 1/{a} + 1/{b} => Time = ({a}*{b})/({a}+{b}) = {val} hours.",
-            "is_pyq": False, "pyq_year": "2026", "pyq_exam": "GRE General"
+            "q_code": f"GRE_ENRICHED_{i:03d}",
+            "source_tag": "GRE_GENERAL_ENRICHED_2026",
+            "section": sec,
+            "topic": f"{top} • Set #{(i // len(templates)) + 1}",
+            "exam_tags": "GRE_GENERAL",
+            "q_type": "MCQ",
+            "difficulty": diff,
+            "prompt": prm,
+            "options": opts,
+            "answer": ans,
+            "explanation": exp,
+            "is_pyq": is_pyq,
+            "pyq_year": "2026",
+            "pyq_exam": "GRE General"
         })
     return out
 

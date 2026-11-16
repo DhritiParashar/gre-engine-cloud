@@ -1260,7 +1260,7 @@
   window.selectUnifiedTab = function (tabNum) {
     const n = Number(tabNum);
     window._ACTIVE_TAB_NUM = n;
-    window.ACTIVE_TAB = n;
+    window.ACTIVE_TAB = n; window.IPM_STATE = window.IPM_STATE || {}; window.IPM_STATE.activeTab = (n === 4 ? "tab8" : (n === 5 ? "tab4" : "tab" + n)); window.scrollTo(0, 0); const oldPgMount = document.getElementById("pgStudioLiveMount"); if (oldPgMount && n >= 3) oldPgMount.remove();
     renderCleanHeader();
 
     const header = document.querySelector("header");
@@ -1429,5 +1429,6 @@
 <script src="js/modules/tab3_verbal.js?v=20261117m"></script>
 <script src="js/modules/tab5_traps.js?v=20261117m"></script>
 <script src="js/modules/tab6_college_predictor.js?v=20261117m"></script>
+  <script src="/js/modules/gre_master_enrichment.js?v=20261117gre1"></script>
 </body>
 </html>
