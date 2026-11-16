@@ -916,9 +916,9 @@
 
   const TAB_SECTION_MAP = {
     tab1: {
-      label: "Quant & Higher Math",
+      label: "GRE Quantitative Reasoning (QC & PS)",
       sections: ["QUANT_SA", "QUANT_MCQ", "HIGHER_MATH", "QUANT_CORE"],
-      topics: ["ALL", "Percentages", "Ratios", "Logarithms", "Functions", "Sequences", "Probability", "Geometry", "Number", "Algebra", "Calculus", "Matrices"]
+      topics: ["ALL", "Quantitative Comparison", "Algebra", "Number Properties", "Geometry", "Data Analysis", "Percentages", "Ratios", "Probability"]
     },
     tab2: {
       label: "DI & Logical Reasoning",
@@ -980,8 +980,19 @@
         });
       };
 
-      window.PG_STUDIO.workedExamples = dedup(workedRes.flatMap(d => d.questions || [])).slice(0, 6);
-      window.PG_STUDIO.practiceSet = dedup(pracRes.flatMap(d => d.questions || [])).slice(0, 8);
+            let wk = dedup(workedRes.flatMap(d => d.questions || []));
+      let pr = dedup(pracRes.flatMap(d => d.questions || []));
+      if (!wk.length || !pr.length) {
+        const fbRes = await Promise.all(cfg.sections.map(sec =>
+          fetch(`/api/questions?section=${encodeURIComponent(sec)}&topic=ALL&limit=12&t=${Date.now()}`).then(r => r.json())
+        ));
+        const fbAll = dedup(fbRes.flatMap(d => d.questions || []));
+        if (!wk.length) wk = fbAll.filter(q => q.is_pyq).slice(0, 6);
+        if (!wk.length) wk = fbAll.slice(0, 4);
+        if (!pr.length) pr = fbAll.slice(4, 12).length ? fbAll.slice(4, 12) : fbAll.slice(0, 6);
+      }
+      window.PG_STUDIO.workedExamples = wk.slice(0, 6);
+      window.PG_STUDIO.practiceSet = pr.slice(0, 8);
     } catch (e) {
       console.error("PG Studio load error:", e);
     } finally {
@@ -1425,10 +1436,10 @@
 <script src="js/modules/tab8_mock.js?v=3"></script>
 <script src="js/modules/tab9_pyq.js?v=3"></script>
 <script src="js/modules/tab9_pyq_vault.js?v=3"></script>
-<script src="js/modules/tab2_dilr.js?v=20261117freeze0"></script>
-<script src="js/modules/tab3_verbal.js?v=20261117freeze0"></script>
-<script src="js/modules/tab5_traps.js?v=20261117freeze0"></script>
-<script src="js/modules/tab6_college_predictor.js?v=20261117freeze0"></script>
-  <script src="/js/modules/gre_master_enrichment.js?v=20261117freeze0"></script>
+<script src="js/modules/tab2_dilr.js?v=20261117pgsync"></script>
+<script src="js/modules/tab3_verbal.js?v=20261117pgsync"></script>
+<script src="js/modules/tab5_traps.js?v=20261117pgsync"></script>
+<script src="js/modules/tab6_college_predictor.js?v=20261117pgsync"></script>
+  <script src="/js/modules/gre_master_enrichment.js?v=20261117pgsync"></script>
 </body>
 </html>
