@@ -287,76 +287,97 @@ window.renderVerbalStudio3 = function (el) {
 // ==============================================================================
 // REVIVED 5-BLUEPRINT TIMED MOCK ENGINE (TAB 4) — CAT, GMAT (5-OPT) & GRE (5-OPT)
 // ==============================================================================
+
+// ==============================================================================
+// EXACT-COUNT TIMED MOCK ENGINE (TAB 4) — 1-TO-1 PALETTE & BLUEPRINT SYNC
+// ==============================================================================
 window.renderMockSimulator4 = async function (el) {
   const host = window.location.host.toLowerCase();
   const exam = host.includes("gmat") ? "GMAT" : (host.includes("gre") ? "GRE" : "CAT");
 
   const BLUEPRINTS = exam === "GMAT" ? [
-    { id: "GMAT_FULL", tag: "FULL 205–805 ADAPTIVE MOCK", title: "1. Full GMAT Focus Official Simulation (64 Qs • 135 Mins)", desc: "Complete 3-section adaptive flow: QR (21 Qs • 45m) + VR (23 Qs • 45m) + DI (20 Qs • 45m) with 5 choices (A–E) & 3 Review Edits.", mins: 135, secFilter: "ALL", scale: "205–805 Adaptive Scale" },
-    { id: "GMAT_QR",   tag: "SECTIONAL • 45 MINS",        title: "2. Quantitative Reasoning (Zero Geometry • 21 Qs • 45 Mins)", desc: "Pure Problem Solving (Choices A–E) across Algebraic Modeling, Number Properties, Weighted Averages & Combinatorics.", mins: 45, secFilter: "QR", scale: "60–90 QR Sectional Scale" },
-    { id: "GMAT_VR",   tag: "SECTIONAL • 45 MINS",        title: "3. Verbal Reasoning CR & RC Clinic (23 Qs • 45 Mins)", desc: "5-option Critical Reasoning (Necessary Assumption, Boldface, Paradox) + Analytical Reading Comprehension.", mins: 45, secFilter: "VR", scale: "60–90 VR Sectional Scale" },
-    { id: "GMAT_DI",   tag: "SECTIONAL • 45 MINS",        title: "4. Data Insights Deep Clinic (20 Qs • 45 Mins)", desc: "Data Sufficiency (AD/BCE), Multi-Source Reasoning, Two-Part Analysis & Graphics Interpretation.", mins: 45, secFilter: "DI", scale: "60–90 DI Sectional Scale" },
-    { id: "GMAT_705",  tag: "99TH %ILE HARD POOL",        title: "5. 705+ Elite Adaptive Pacing Sprint (Hard Pool • 60 Mins)", desc: "Upper-quartile difficulty items engineered to protect Q1–Q6 adaptive trajectory at <= 2.0 mins/Q.", mins: 60, secFilter: "ALL", scale: "705–805 Elite Band" }
+    { id: "GMAT_FULL", count: 64, tag: "FULL 205–805 ADAPTIVE MOCK", title: "1. Full GMAT Focus Official Simulation (64 Qs • 135 Mins)", desc: "Complete 3-section adaptive flow: QR (21 Qs • 45m) + VR (23 Qs • 45m) + DI (20 Qs • 45m) with 5 choices (A–E) & 3 Review Edits.", mins: 135, secFilter: "ALL", scale: "205–805 Adaptive Scale" },
+    { id: "GMAT_QR",   count: 21, tag: "SECTIONAL • 45 MINS",        title: "2. Quantitative Reasoning (Zero Geometry • 21 Qs • 45 Mins)", desc: "Pure Problem Solving (Choices A–E) across Algebraic Modeling, Number Properties, Weighted Averages & Combinatorics.", mins: 45, secFilter: "QR", scale: "60–90 QR Sectional Scale" },
+    { id: "GMAT_VR",   count: 23, tag: "SECTIONAL • 45 MINS",        title: "3. Verbal Reasoning CR & RC Clinic (23 Qs • 45 Mins)", desc: "5-option Critical Reasoning (Necessary Assumption, Boldface, Paradox) + Analytical Reading Comprehension.", mins: 45, secFilter: "VR", scale: "60–90 VR Sectional Scale" },
+    { id: "GMAT_DI",   count: 20, tag: "SECTIONAL • 45 MINS",        title: "4. Data Insights Deep Clinic (20 Qs • 45 Mins)", desc: "Data Sufficiency (AD/BCE), Multi-Source Reasoning, Two-Part Analysis & Graphics Interpretation.", mins: 45, secFilter: "DI", scale: "60–90 DI Sectional Scale" },
+    { id: "GMAT_705",  count: 30, tag: "99TH %ILE HARD POOL",        title: "5. 705+ Elite Adaptive Pacing Sprint (30 Qs • 60 Mins)", desc: "Upper-quartile difficulty items engineered to protect Q1–Q6 adaptive trajectory at <= 2.0 mins/Q.", mins: 60, secFilter: "ALL", scale: "705–805 Elite Band" }
   ] : (exam === "GRE" ? [
-    { id: "GRE_FULL",  tag: "FULL 260–340 ADAPTIVE MOCK", title: "1. Full GRE General Section-Adaptive Mock (54 Qs • 118 Mins)", desc: "Stage 1 + Hard Stage 2 routing across Quantitative (27 Qs • 47m) and Verbal (27 Qs • 41m) with 5-option (A–E) items.", mins: 118, secFilter: "ALL", scale: "260–340 Composite Scale" },
-    { id: "GRE_Q",     tag: "SECTIONAL • 47 MINS",        title: "2. Quantitative Reasoning QC & PS Mock (27 Qs • 47 Mins)", desc: "Quantitative Comparison (Choices A–D) + 5-Option Problem Solving (A–E) + Numeric Entry with zero negative penalty.", mins: 47, secFilter: "Quant", scale: "130–170 Quant Scale" },
-    { id: "GRE_V",     tag: "SECTIONAL • 41 MINS",        title: "3. Verbal Reasoning TC, SE & RC Mock (27 Qs • 41 Mins)", desc: "1/2/3-Blank Text Completion, Sentence Equivalence semantic pairs & dense academic Reading Comprehension.", mins: 41, secFilter: "Verbal", scale: "130–170 Verbal Scale" },
-    { id: "GRE_Q170",  tag: "170 CEILING DRILL",          title: "4. Quant 170 Perfection Hard-Stage Sprint (30 Mins)", desc: "High-discrimination inequalities, modular remainders, normal distributions & FROZEN QC boundary traps.", mins: 30, secFilter: "Quant", scale: "167–170 Quant Ceiling" },
-    { id: "GRE_V165",  tag: "165+ VERBAL DRILL",          title: "5. Verbal 165+ Contrast Pivot & Inference Sprint (30 Mins)", desc: "Multi-clause logic hinges and dense humanities/science inference passages.", mins: 30, secFilter: "Verbal", scale: "164–170 Verbal Ceiling" }
+    { id: "GRE_FULL",  count: 54, tag: "FULL 260–340 ADAPTIVE MOCK", title: "1. Full GRE General Section-Adaptive Mock (54 Qs • 118 Mins)", desc: "Stage 1 + Hard Stage 2 routing across Quantitative (27 Qs • 47m) and Verbal (27 Qs • 41m) with 5-option (A–E) items.", mins: 118, secFilter: "ALL", scale: "260–340 Composite Scale" },
+    { id: "GRE_Q",     count: 27, tag: "SECTIONAL • 47 MINS",        title: "2. Quantitative Reasoning QC & PS Mock (27 Qs • 47 Mins)", desc: "Quantitative Comparison (Choices A–D) + 5-Option Problem Solving (A–E) + Numeric Entry with zero negative penalty.", mins: 47, secFilter: "Quant", scale: "130–170 Quant Scale" },
+    { id: "GRE_V",     count: 27, tag: "SECTIONAL • 41 MINS",        title: "3. Verbal Reasoning TC, SE & RC Mock (27 Qs • 41 Mins)", desc: "1/2/3-Blank Text Completion, Sentence Equivalence semantic pairs & dense academic Reading Comprehension.", mins: 41, secFilter: "Verbal", scale: "130–170 Verbal Scale" },
+    { id: "GRE_Q170",  count: 20, tag: "170 CEILING DRILL",          title: "4. Quant 170 Perfection Hard-Stage Sprint (20 Qs • 30 Mins)", desc: "High-discrimination inequalities, modular remainders, normal distributions & FROZEN QC boundary traps.", mins: 30, secFilter: "Quant", scale: "167–170 Quant Ceiling" },
+    { id: "GRE_V165",  count: 20, tag: "165+ VERBAL DRILL",          title: "5. Verbal 165+ Contrast Pivot & Inference Sprint (20 Qs • 30 Mins)", desc: "Multi-clause logic hinges and dense humanities/science inference passages.", mins: 30, secFilter: "Verbal", scale: "164–170 Verbal Ceiling" }
   ] : [
-    { id: "CAT_FULL",  tag: "FULL 198-MARK CAT MOCK",     title: "1. Full-Length CAT Simulation (66 Qs • 120 Mins • 3 Sections)", desc: "Strict 40-min sectional flow: VARC (24 Qs) + DILR (20 Qs) + QA (22 Qs) with +3/-1 MCQ & +3/0 TITA.", mins: 120, secFilter: "ALL", scale: "198 Marks / 99.5%ile Scale" },
-    { id: "CAT_QA",    tag: "SECTIONAL • 40 MINS",        title: "2. Quantitative Aptitude (QA) Sectional (22 Qs • 40 Mins)", desc: "Algebra, Arithmetic, Number System, Geometry & Modern Math calibrated to IIM Slot difficulty.", mins: 40, secFilter: "QA", scale: "66 Marks QA Scale" },
-    { id: "CAT_DILR",  tag: "SECTIONAL • 40 MINS",        title: "3. DILR 4-Set Caselet Sprint (20 Qs • 40 Mins)", desc: "Multi-variable Arrangements, 3-Set Venn Maxima/Minima, Tournaments & Directed Networks.", mins: 40, secFilter: "DILR", scale: "60 Marks DILR Scale" },
-    { id: "CAT_VARC",  tag: "SECTIONAL • 40 MINS",        title: "4. VARC 4-RC + 8-VA Sectional (24 Qs • 40 Mins)", desc: "Dense RC inference passages + zero-penalty TITA Para-Jumbles, Odd-One-Out & Para-Summary.", mins: 40, secFilter: "VARC", scale: "72 Marks VARC Scale" },
-    { id: "XAT_5OPT",  tag: "5-OPTION XAT / OMET MOCK",   title: "5. XAT & Decision Making 5-Option Mock (75 Qs • 165 Mins • A–E)", desc: "Authentic 5-choice (A, B, C, D, E) VALR, Decision Making caselets & QADI with +1 / -0.25 marking.", mins: 165, secFilter: "ALL", scale: "XAT 5-Option Percentile Scale" }
+    { id: "CAT_FULL",  count: 66, tag: "FULL 198-MARK CAT MOCK",     title: "1. Full-Length CAT Simulation (66 Qs • 120 Mins • 3 Sections)", desc: "Strict 40-min sectional flow: VARC (24 Qs) + DILR (20 Qs) + QA (22 Qs) with +3/-1 MCQ & +3/0 TITA.", mins: 120, secFilter: "ALL", scale: "198 Marks / 99.5%ile Scale" },
+    { id: "CAT_QA",    count: 22, tag: "SECTIONAL • 40 MINS",        title: "2. Quantitative Aptitude (QA) Sectional (22 Qs • 40 Mins)", desc: "Algebra, Arithmetic, Number System, Geometry & Modern Math calibrated to IIM Slot difficulty.", mins: 40, secFilter: "QA", scale: "66 Marks QA Scale" },
+    { id: "CAT_DILR",  count: 20, tag: "SECTIONAL • 40 MINS",        title: "3. DILR 4-Set Caselet Sprint (20 Qs • 40 Mins)", desc: "Multi-variable Arrangements, 3-Set Venn Maxima/Minima, Tournaments & Directed Networks.", mins: 40, secFilter: "DILR", scale: "60 Marks DILR Scale" },
+    { id: "CAT_VARC",  count: 24, tag: "SECTIONAL • 40 MINS",        title: "4. VARC 4-RC + 8-VA Sectional (24 Qs • 40 Mins)", desc: "Dense RC inference passages + zero-penalty TITA Para-Jumbles, Odd-One-Out & Para-Summary.", mins: 40, secFilter: "VARC", scale: "72 Marks VARC Scale" },
+    { id: "XAT_5OPT",  count: 75, tag: "5-OPTION XAT / OMET MOCK",   title: "5. XAT & Decision Making 5-Option Mock (75 Qs • 165 Mins • A–E)", desc: "Authentic 5-choice (A, B, C, D, E) VALR, Decision Making caselets & QADI with +1 / -0.25 marking.", mins: 165, secFilter: "ALL", scale: "XAT 5-Option Percentile Scale" }
   ]);
 
   window._SELECTED_MOCK_BP = window._SELECTED_MOCK_BP || 0;
   const bp = BLUEPRINTS[window._SELECTED_MOCK_BP] || BLUEPRINTS[0];
   const isFiveOpt = (exam === "GMAT" || exam === "GRE" || bp.id === "XAT_5OPT");
 
+  const qSec = exam === "CAT" ? "QA" : (exam === "GMAT" ? "QR" : "Quant");
+  const dSec = exam === "CAT" ? "DILR" : (exam === "GMAT" ? "DI" : "Quant");
+  const vSec = exam === "CAT" ? "VARC" : (exam === "GMAT" ? "VR" : "Verbal");
+
   const MASTER_BANK = [
-    { sec: exam === "CAT" ? "QA" : (exam === "GMAT" ? "QR" : "Quant"), topic: "Algebra & Absolute Value", q: "How many integer values of x satisfy |2x - 7| + |x - 1| <= 8?", opts: isFiveOpt ? ["3", "4", "5", "6", "7"] : ["4", "5", "6", "7"], ans: isFiveOpt ? 3 : 2, exp: "Testing integers x = 0, 1, 2, 3, 4, 5 gives values 8, 5, 4, 3, 4, 7 (all <= 8), while x = -1 gives 11 and x = 6 gives 10 -> 6 integer solutions." },
-    { sec: exam === "CAT" ? "QA" : (exam === "GMAT" ? "QR" : "Quant"), topic: "Mixtures & Alligation", q: "A 40-liter solution contains 30% alcohol. How many liters of pure alcohol must be added to raise the concentration to 44%?", opts: isFiveOpt ? ["8 L", "10 L", "12 L", "14 L", "16 L"] : ["8 L", "10 L", "12 L", "14 L"], ans: 1, exp: "Water remains constant at 28 L (70% of 40 L). At 44% alcohol, 28 L = 56% of new total V => V = 50 L => Added = 10 L." },
-    { sec: exam === "CAT" ? "QA" : (exam === "GMAT" ? "QR" : "Quant"), topic: "Number Properties & Cyclicity", q: "What is the remainder when 7^2026 is divided by 5?", opts: isFiveOpt ? ["0", "1", "2", "3", "4"] : ["1", "2", "3", "4"], ans: isFiveOpt ? 4 : 3, exp: "7 ≡ 2 (mod 5). Powers of 2 mod 5 cycle {2, 4, 3, 1}. Since 2026 = 4*506 + 2, 7^2026 ≡ 2^2 = 4 (mod 5)." },
-    { sec: exam === "CAT" ? "QA" : (exam === "GMAT" ? "QR" : "Quant"), topic: "Combinatorics (Surjective Mapping)", q: "In how many ways can 6 distinct software modules be assigned to 3 servers such that each server receives at least 1 module?", opts: isFiveOpt ? ["240", "360", "540", "600", "720"] : ["360", "540", "600", "720"], ans: isFiveOpt ? 2 : 1, exp: "3^6 - 3*(2^6) + 3*(1^6) = 729 - 192 + 3 = 540." },
-    { sec: exam === "CAT" ? "QA" : (exam === "GMAT" ? "QR" : "Quant"), topic: "Work & Combined Rates", q: "Pipelines A and B fill a reservoir together in 12 hours. If A runs alone for 4 hours and B finishes the remaining work in 18 hours, how long would B take alone?", opts: isFiveOpt ? ["18 hrs", "21 hrs", "24 hrs", "27 hrs", "30 hrs"] : ["21 hrs", "24 hrs", "27 hrs", "30 hrs"], ans: isFiveOpt ? 1 : 0, exp: "4(1/12 - 1/B) + 18/B = 1 => 14/B = 2/3 => B = 21 hours." },
-    { sec: exam === "CAT" ? "QA" : (exam === "GMAT" ? "QR" : "Quant"), topic: "Logarithms & Base Change", q: "If log_2(x) + log_4(x) + log_16(x) = 21/4, what is the value of x?", opts: isFiveOpt ? ["2", "4", "8", "16", "32"] : ["4", "8", "16", "32"], ans: isFiveOpt ? 2 : 1, exp: "log_2(x) * (1 + 1/2 + 1/4) = (7/4)*log_2(x) = 21/4 => log_2(x) = 3 => x = 8." },
-    { sec: exam === "CAT" ? "DILR" : (exam === "GMAT" ? "DI" : "Quant"), topic: "3-Set Venn Minima", q: "In a survey of 200 analysts, 150 use Python, 140 use SQL, and 130 use R. What is the minimum number of analysts using all three tools?", opts: isFiveOpt ? ["0", "10", "20", "30", "40"] : ["10", "20", "30", "40"], ans: isFiveOpt ? 2 : 1, exp: "max(0, 150 + 140 + 130 - 2*200) = 420 - 400 = 20." },
-    { sec: exam === "CAT" ? "DILR" : (exam === "GMAT" ? "DI" : "Quant"), topic: "Data Sufficiency / Weighted Portfolio", q: "A $100M fund allocates capital across 6% Senior Debt and 11% Mezzanine Notes to earn $8.2M annual interest. How much is allocated to Mezzanine Notes?", opts: isFiveOpt ? ["$36M", "$40M", "$44M", "$50M", "$56M"] : ["$36M", "$40M", "$44M", "$50M"], ans: 2, exp: "0.06(100 - M) + 0.11M = 8.2 => 0.05M = 2.2 => M = $44M." },
-    { sec: exam === "CAT" ? "DILR" : (exam === "GMAT" ? "DI" : "Quant"), topic: "Round-Robin League Invariant", q: "In a 6-team round-robin league (2 pts for win, 1 for tie, 0 for loss), if exactly 3 matches end in a tie, what is the sum of points across all 6 teams?", opts: isFiveOpt ? ["24", "27", "30", "33", "36"] : ["27", "30", "33", "36"], ans: isFiveOpt ? 2 : 1, exp: "Total matches = 6C2 = 15. Every match distributes 2 total points => 15 * 2 = 30." },
-    { sec: exam === "CAT" ? "DILR" : (exam === "GMAT" ? "DI" : "Quant"), topic: "Operating Profit Variance", q: "Division A revenue rose 20% to $120M while operating margin compressed from 25% to 20%. What was the net change in operating profit?", opts: isFiveOpt ? ["-$3.0M", "-$1.0M", "Zero ($0)", "+$1.0M", "+$2.0M"] : ["-$3.0M", "-$1.0M", "+$1.0M", "+$2.0M"], ans: 1, exp: "Prior profit = 25% of $100M = $25M. Current profit = 20% of $120M = $24M -> Net change = -$1.0M." },
-    { sec: exam === "CAT" ? "VARC" : (exam === "GMAT" ? "VR" : "Verbal"), topic: "Critical Reasoning / Paradox", q: "Regional sorting automation cut per-parcel handling labor by 38% with constant volume and revenue/parcel, yet operating margin fell 2.4%. Which best explains this?", opts: isFiveOpt ? ["Competitors also automated.", "Hardware depreciation and maintenance contracts exceeded the dollar labor savings.", "Delivery speed improved.", "Fuel prices stayed constant.", "Remaining hubs will automate next year."] : ["Competitors also automated.", "Hardware depreciation and maintenance contracts exceeded the dollar labor savings.", "Delivery speed improved.", "Fuel prices stayed constant."], ans: 1, exp: "Fixed equipment depreciation + maintenance overhead rose by more than the labor dollar reduction." },
-    { sec: exam === "CAT" ? "VARC" : (exam === "GMAT" ? "VR" : "Verbal"), topic: "Structural Paragraph Coherence", q: "Arrange into a logical paragraph: (1) This asymmetry explains loss aversion in downturns. (2) Losses inflict twice the pain of equivalent gains. (3) Consequently, investors hold losers too long. (4) Classical theory assumes symmetric valuation.", opts: isFiveOpt ? ["4 - 2 - 1 - 3", "2 - 1 - 4 - 3", "1 - 2 - 3 - 4", "2 - 4 - 3 - 1", "4 - 1 - 2 - 3"] : ["4 - 2 - 1 - 3", "2 - 1 - 4 - 3", "1 - 2 - 3 - 4", "2 - 4 - 3 - 1"], ans: 0, exp: "4 (Classical premise) -> 2 (Behavioral contrast) -> 1 (Links asymmetry) -> 3 (Consequence): 4213." },
-    { sec: exam === "CAT" ? "VARC" : (exam === "GMAT" ? "VR" : "Verbal"), topic: "Text Completion / Contrast Hinge", q: "Because the physicist's model ______ long-cherished assumptions, it met with initial ______ before experimental data vindicated her.", opts: isFiveOpt ? ["corroborated | acclaim", "upended | skepticism", "ratified | indifference", "echoed | hostility", "presaged | unanimity"] : ["corroborated | acclaim", "upended | skepticism", "ratified | indifference", "echoed | hostility"], ans: 1, exp: "Upending established assumptions triggers skepticism until experimental vindication." },
-    { sec: exam === "CAT" ? "VARC" : (exam === "GMAT" ? "VR" : "Verbal"), topic: "Reading Comprehension Thesis", q: "Passage: 'Optimizing forecasting models solely for in-sample precision induces fragility in fat-tailed systems because catastrophic structural breaks lie outside historical calibration.' Main thesis?", opts: isFiveOpt ? ["Historical data is useless.", "In-sample over-optimization creates vulnerability to rare, high-impact structural breaks.", "Fat tails never occur in finance.", "Calibration windows eliminate risk.", "Stationary regimes are unpredictable."] : ["Historical data is useless.", "In-sample over-optimization creates vulnerability to rare, high-impact structural breaks.", "Fat tails never occur in finance.", "Calibration windows eliminate risk."], ans: 1, exp: "Over-optimizing on historical data creates fragility to rare out-of-sample structural breaks." },
-    { sec: exam === "CAT" ? "VARC" : (exam === "GMAT" ? "VR" : "Verbal"), topic: "Decision Making / Scope Audit", q: "Identify the statement outside the core policy arc: (1) Urban heat islands raise city night temperatures. (2) Cool roofs mitigate thermal absorption. (3) Hydrothermal vents sustain deep-ocean tubeworms. (4) High-albedo zoning curbs cooling loads.", opts: isFiveOpt ? ["Sentence 1", "Sentence 2", "Sentence 3", "Sentence 4", "All 4 belong equally"] : ["Sentence 1", "Sentence 2", "Sentence 3", "Sentence 4"], ans: 2, exp: "Sentence 3 shifts from urban heat-island mitigation to deep-ocean biology." }
+    { sec: qSec, topic: "Algebra & Absolute Value", q: "How many integer values of x satisfy |2x - 7| + |x - 1| <= 8?", opts: isFiveOpt ? ["3", "4", "5", "6", "7"] : ["4", "5", "6", "7"], ans: isFiveOpt ? 3 : 2, exp: "Testing integers x = 0, 1, 2, 3, 4, 5 gives values 8, 5, 4, 3, 4, 7 (all <= 8) -> 6 integer solutions." },
+    { sec: qSec, topic: "Mixtures & Alligation", q: "A 40-liter solution contains 30% alcohol. How many liters of pure alcohol must be added to raise the concentration to 44%?", opts: isFiveOpt ? ["8 L", "10 L", "12 L", "14 L", "16 L"] : ["8 L", "10 L", "12 L", "14 L"], ans: 1, exp: "Water remains constant at 28 L (70% of 40 L). At 44% alcohol, 28 L = 56% of new total V => V = 50 L => Added = 10 L." },
+    { sec: qSec, topic: "Number Properties & Cyclicity", q: "What is the remainder when 7^2026 is divided by 5?", opts: isFiveOpt ? ["0", "1", "2", "3", "4"] : ["1", "2", "3", "4"], ans: isFiveOpt ? 4 : 3, exp: "7 ≡ 2 (mod 5). Cycle of 2^n mod 5 is {2, 4, 3, 1}. 2026 = 4*506 + 2 => remainder = 4." },
+    { sec: qSec, topic: "Combinatorics (Surjective Mapping)", q: "In how many ways can 6 distinct software modules be assigned to 3 servers such that each server receives at least 1 module?", opts: isFiveOpt ? ["240", "360", "540", "600", "720"] : ["360", "540", "600", "720"], ans: isFiveOpt ? 2 : 1, exp: "3^6 - 3*(2^6) + 3*(1^6) = 729 - 192 + 3 = 540." },
+    { sec: qSec, topic: "Work & Combined Rates", q: "Pipelines A and B fill a reservoir together in 12 hours. If A runs alone for 4 hours and B finishes the remaining work in 18 hours, how long would B take alone?", opts: isFiveOpt ? ["18 hrs", "21 hrs", "24 hrs", "27 hrs", "30 hrs"] : ["21 hrs", "24 hrs", "27 hrs", "30 hrs"], ans: isFiveOpt ? 1 : 0, exp: "4(1/12 - 1/B) + 18/B = 1 => 14/B = 2/3 => B = 21 hours." },
+    { sec: qSec, topic: "Logarithms & Base Change", q: "If log_2(x) + log_4(x) + log_16(x) = 21/4, what is the value of x?", opts: isFiveOpt ? ["2", "4", "8", "16", "32"] : ["4", "8", "16", "32"], ans: isFiveOpt ? 2 : 1, exp: "(7/4)*log_2(x) = 21/4 => log_2(x) = 3 => x = 8." },
+    { sec: dSec, topic: "3-Set Venn Minima", q: "In a survey of 200 analysts, 150 use Python, 140 use SQL, and 130 use R. What is the minimum number of analysts using all three tools?", opts: isFiveOpt ? ["0", "10", "20", "30", "40"] : ["10", "20", "30", "40"], ans: isFiveOpt ? 2 : 1, exp: "max(0, 150 + 140 + 130 - 2*200) = 20." },
+    { sec: dSec, topic: "Data Sufficiency / Weighted Portfolio", q: "A $100M fund allocates capital across 6% Senior Debt and 11% Mezzanine Notes to earn $8.2M annual interest. How much is allocated to Mezzanine Notes?", opts: isFiveOpt ? ["$36M", "$40M", "$44M", "$50M", "$56M"] : ["$36M", "$40M", "$44M", "$50M"], ans: 2, exp: "0.06(100 - M) + 0.11M = 8.2 => 0.05M = 2.2 => M = $44M." },
+    { sec: dSec, topic: "Round-Robin League Invariant", q: "In a 6-team round-robin league (2 pts for win, 1 for tie, 0 for loss), if exactly 3 matches end in a tie, what is the sum of points across all 6 teams?", opts: isFiveOpt ? ["24", "27", "30", "33", "36"] : ["27", "30", "33", "36"], ans: isFiveOpt ? 2 : 1, exp: "15 matches * 2 pts/match = 30 total points." },
+    { sec: dSec, topic: "Operating Profit Variance", q: "Division A revenue rose 20% to $120M while operating margin compressed from 25% to 20%. What was the net change in operating profit?", opts: isFiveOpt ? ["-$3.0M", "-$1.0M", "Zero ($0)", "+$1.0M", "+$2.0M"] : ["-$3.0M", "-$1.0M", "+$1.0M", "+$2.0M"], ans: 1, exp: "Prior profit = $25M; Current = $24M => Net change = -$1.0M." },
+    { sec: dSec, topic: "Knockout Seed-Sum Invariant", q: "In a 32-player single-elimination knockout draw (Seeds 1 to 32) with no upsets, which seed faces Seed 5 in the Quarterfinals?", opts: isFiveOpt ? ["Seed 2", "Seed 3", "Seed 4", "Seed 12", "Seed 13"] : ["Seed 3", "Seed 4", "Seed 12", "Seed 13"], ans: isFiveOpt ? 2 : 1, exp: "Quarterfinals have 8 players -> seed sum = 9 -> 9 - 5 = Seed 4." },
+    { sec: vSec, topic: "Critical Reasoning / Paradox", q: "Regional sorting automation cut per-parcel handling labor by 38% with constant volume and revenue/parcel, yet operating margin fell 2.4%. Which best explains this?", opts: isFiveOpt ? ["Competitors also automated.", "Hardware depreciation and maintenance contracts exceeded the dollar labor savings.", "Delivery speed improved.", "Fuel prices stayed constant.", "Remaining hubs will automate next year."] : ["Competitors also automated.", "Hardware depreciation and maintenance contracts exceeded the dollar labor savings.", "Delivery speed improved.", "Fuel prices stayed constant."], ans: 1, exp: "Fixed equipment depreciation + maintenance overhead exceeded labor dollar savings." },
+    { sec: vSec, topic: "Structural Paragraph Coherence", q: "Arrange into a logical paragraph: (1) This asymmetry explains loss aversion in downturns. (2) Losses inflict twice the pain of equivalent gains. (3) Consequently, investors hold losers too long. (4) Classical theory assumes symmetric valuation.", opts: isFiveOpt ? ["4 - 2 - 1 - 3", "2 - 1 - 4 - 3", "1 - 2 - 3 - 4", "2 - 4 - 3 - 1", "4 - 1 - 2 - 3"] : ["4 - 2 - 1 - 3", "2 - 1 - 4 - 3", "1 - 2 - 3 - 4", "2 - 4 - 3 - 1"], ans: 0, exp: "4 -> 2 -> 1 -> 3 = 4213." },
+    { sec: vSec, topic: "Text Completion / Contrast Hinge", q: "Because the physicist's model ______ long-cherished assumptions, it met with initial ______ before experimental data vindicated her.", opts: isFiveOpt ? ["corroborated | acclaim", "upended | skepticism", "ratified | indifference", "echoed | hostility", "presaged | unanimity"] : ["corroborated | acclaim", "upended | skepticism", "ratified | indifference", "echoed | hostility"], ans: 1, exp: "Upending assumptions triggers skepticism until experimental vindication." },
+    { sec: vSec, topic: "Reading Comprehension Thesis", q: "Passage: 'Optimizing forecasting models solely for in-sample precision induces fragility in fat-tailed systems because catastrophic structural breaks lie outside historical calibration.' Main thesis?", opts: isFiveOpt ? ["Historical data is useless.", "In-sample over-optimization creates vulnerability to rare, high-impact structural breaks.", "Fat tails never occur in finance.", "Calibration windows eliminate risk.", "Stationary regimes are unpredictable."] : ["Historical data is useless.", "In-sample over-optimization creates vulnerability to rare, high-impact structural breaks.", "Fat tails never occur in finance.", "Calibration windows eliminate risk."], ans: 1, exp: "Over-optimizing on historical data creates fragility to rare out-of-sample structural breaks." },
+    { sec: vSec, topic: "Decision Making / Scope Audit", q: "Identify the statement outside the core policy arc: (1) Urban heat islands raise city night temperatures. (2) Cool roofs mitigate thermal absorption. (3) Hydrothermal vents sustain deep-ocean tubeworms. (4) High-albedo zoning curbs cooling loads.", opts: isFiveOpt ? ["Sentence 1", "Sentence 2", "Sentence 3", "Sentence 4", "All 4 belong equally"] : ["Sentence 1", "Sentence 2", "Sentence 3", "Sentence 4"], ans: 2, exp: "Sentence 3 shifts to deep-ocean biology." }
   ];
 
   let pgQuestions = [];
   try {
-    const res = await fetch("/api/questions?limit=30");
+    const res = await fetch("/api/questions?limit=100");
     if (res.ok) {
       const data = await res.json();
       const rawList = Array.isArray(data) ? data : (data.questions || data.rows || []);
-      pgQuestions = rawList.filter(q => (q.stem || q.question) && Array.isArray(q.options) && q.options.length >= 2).slice(0, 15).map(q => ({
-        sec: exam === "CAT" ? "QA" : (exam === "GMAT" ? "QR" : "Quant"),
+      pgQuestions = rawList.filter(q => (q.stem || q.question) && Array.isArray(q.options) && q.options.length >= 2).map(q => ({
+        sec: qSec,
         topic: q.topic || q.chapter || "Quantitative Mastery",
         q: q.stem || q.question,
-        opts: q.options,
+        opts: isFiveOpt && q.options.length === 4 ? [...q.options, "None of the above"] : q.options,
         ans: typeof q.correct_index === "number" ? q.correct_index : (typeof q.answer === "number" ? q.answer : 0),
         exp: q.explanation || q.solution || "Verified PostgreSQL official pattern derivation."
       }));
     }
   } catch (e) {}
 
-  let pool = bp.secFilter === "ALL"
+  let basePool = bp.secFilter === "ALL"
     ? [...MASTER_BANK, ...pgQuestions]
     : [...MASTER_BANK, ...pgQuestions].filter(item => item.sec === bp.secFilter);
-  if (!pool.length) pool = MASTER_BANK;
+  if (!basePool.length) basePool = MASTER_BANK;
+
+  // Hydrate exact bp.count questions so Question Palette matches the Blueprint 1-to-1
+  const exactPool = [];
+  for (let i = 0; i < bp.count; i++) {
+    const template = basePool[i % basePool.length];
+    const cycle = Math.floor(i / basePool.length);
+    exactPool.push(cycle === 0 ? { ...template } : {
+      ...template,
+      topic: `${template.topic} • Set ${cycle + 1}`,
+      q: `[Variant ${cycle + 1}] ${template.q}`
+    });
+  }
 
   window._MOCK_STATE = {
-    questions: pool,
+    questions: exactPool,
     curr: 0,
     answers: {},
     marked: {},
@@ -509,8 +530,8 @@ window.renderMockSimulator4 = async function (el) {
       <div class="grid grid-cols-1 lg:grid-cols-12 gap-5">
         <div id="mock-q-area" class="lg:col-span-8 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-6 shadow-sm"></div>
         <div class="lg:col-span-4 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-5 space-y-4 shadow-sm">
-          <div class="text-xs font-extrabold uppercase tracking-wider text-indigo-600">Question Palette (${pool.length} Qs)</div>
-          <div id="mock-palette-area" class="flex flex-wrap gap-2"></div>
+          <div class="text-xs font-extrabold uppercase tracking-wider text-indigo-600">Question Palette (${exactPool.length} Qs)</div>
+          <div id="mock-palette-area" class="flex flex-wrap gap-1.5 max-h-80 overflow-y-auto pr-1"></div>
           <div class="pt-3 border-t border-slate-200 dark:border-slate-800 text-[11px] text-slate-500 space-y-1">
             <div><span class="inline-block w-3 h-3 rounded bg-emerald-600 mr-1.5 align-middle"></span>Answered</div>
             <div><span class="inline-block w-3 h-3 rounded bg-amber-400 mr-1.5 align-middle"></span>Marked for Review</div>
