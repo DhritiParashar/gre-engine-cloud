@@ -196,7 +196,7 @@ window.renderExamSwitcher = function () {
   if (banner) {
     banner.innerHTML = `
       <div class="flex flex-wrap items-center justify-between gap-2 text-xs text-slate-300">
-        <div><strong class="text-indigo-300">Target Campuses:</strong> ${mode.campuses.join(" &bull; ")}</div>
+        <div><strong class="text-indigo-300">Exam Sections:</strong> ${mode.campuses.join(" &bull; ")}</div>
         <div><strong class="text-emerald-300">Pattern:</strong> ${mode.totalQuestions} Qs | ${mode.durationMinutes} Mins | ${mode.sectionalTimeLock ? "Strict Sectional Timer" : "Flexible Pool"}</div>
         <div><strong class="text-amber-300">Marking:</strong> MCQ +${mode.marking.mcqCorrect}/${mode.marking.mcqWrong}${mode.marking.saWrong === 0 ? ` | SA +${mode.marking.saCorrect}/0 (Zero Penalty)` : " | 100% MCQ"}</div>
       </div>
