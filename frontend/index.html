@@ -1211,21 +1211,40 @@
     window.location.reload();
   };
 
-  window.selectUnifiedTab = function (tabNum) {
-    window._ACTIVE_TAB_NUM = tabNum;
+    window.selectUnifiedTab = function (tabNum) {
+    window._ACTIVE_TAB_NUM = Number(tabNum);
+    window.ACTIVE_TAB = Number(tabNum);
     renderCleanHeader();
-    if (typeof window.switchTab === "function") {
-      window.switchTab(tabNum);
-      return;
-    }
-    if (typeof window.setActiveTab === "function") {
-      window.setActiveTab(tabNum);
-      return;
-    }
-    const el = document.getElementById("tab-content") || document.querySelector("main");
-    if (el) {
-      const fn = window["renderTab" + tabNum];
-      if (typeof fn === "function") fn(el);
+
+    // 1. Trigger native router if defined
+    if (typeof window.setTab === "function") { window.setTab(tabNum); return; }
+    if (typeof window.switchTab === "function") { window.switchTab(tabNum); return; }
+    if (typeof window.selectTab === "function") { window.selectTab(tabNum); return; }
+
+    // 2. Locate the active workspace container (excluding <header>)
+    const el = document.getElementById("tab-content")
+            || document.getElementById("tab-content")
+            || document.getElementById("main-content")
+            || document.querySelector("main")
+            || Array.from(document.querySelectorAll("body > div")).find(d => !d.querySelector("header") && d.id !== "pg-auth-gate-overlay");
+
+    if (!el) return;
+
+    // 3. Invoke the corresponding tab renderer directly
+    const renderers = {
+      1: window.renderTab1 || window.renderQuantTab,
+      2: window.renderTab2 || window.renderDilrTab,
+      3: window.renderTab3 || window.renderVerbalTab,
+      4: window.renderTab4 || window.renderMockTab,
+      5: window.renderTab5 || window.renderTrapsTab,
+      6: window.renderTab6 || window.renderCollegePredictor
+    };
+    const fn = renderers[Number(tabNum)];
+    if (typeof fn === "function") {
+      el.innerHTML = "";
+      fn(el);
+    } else if (typeof window.renderActiveTab === "function") {
+      window.renderActiveTab();
     }
   };
 
@@ -1345,5 +1364,6 @@
   setInterval(renderCleanHeader, 800);
 })();
 </script>
+<script src="js/modules/=20261116"></script>
 </body>
 </html>
