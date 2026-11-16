@@ -1199,24 +1199,18 @@
     window.location.reload();
   };
 
-        window.selectUnifiedTab = function (tabNum) {
+          window.selectUnifiedTab = function (tabNum) {
     const n = Number(tabNum);
     window._ACTIVE_TAB_NUM = n;
     window.ACTIVE_TAB = n;
-    if (window.STATE && typeof window.STATE === "object") window.STATE.tab = n;
     renderCleanHeader();
 
-    // Find the outer 2-column workspace container (never an inner card)
     const header = document.querySelector("header");
-    let el = document.querySelector("main")
-          || document.getElementById("main-workspace")
-          || document.getElementById("app-workspace")
-          || document.getElementById("tab-content");
-
+    let el = document.getElementById("main-workspace") || document.querySelector("main") || document.getElementById("tab-content");
     if (!el && header) {
       let sib = header.nextElementSibling;
       while (sib) {
-        if (sib.tagName !== "SCRIPT" && !sib.id.includes("modal") && !sib.id.includes("gate") && sib.offsetHeight > 100) {
+        if (sib.tagName !== "SCRIPT" && !sib.id.includes("modal") && !sib.id.includes("gate") && sib.offsetHeight > 80) {
           el = sib;
           break;
         }
@@ -1227,24 +1221,19 @@
     el.id = "main-workspace";
     window._LAST_TAB6_EL = el;
 
-    // Call native app.js tab switcher if available, then enforce module render
-    if (typeof window.switchTab === "function") {
-      try { window.switchTab(n); } catch (e) {}
-    }
-
-    const renderers = {
-      1: window.renderTab1 || window.renderQuantTab,
-      2: window.renderTab2 || window.renderDilrTab,
-      3: window.renderTab3 || window.renderVerbalTab,
-      4: window.renderTab4 || window.renderMockTab,
-      5: window.renderTab5 || window.renderTrapsTab,
-      6: window.renderTab6 || window.renderCollegePredictor
-    };
-
-    const fn = renderers[n];
-    if (typeof fn === "function") {
-      el.innerHTML = "";
-      fn(el);
+    if (n === 1) {
+      if (typeof window.renderQuantTab === "function") { el.innerHTML = ""; window.renderQuantTab(el); return; }
+      if (typeof window.renderTab1 === "function") { el.innerHTML = ""; window.renderTab1(el); return; }
+    } else if (n === 2) {
+      el.innerHTML = ""; window.renderTab2(el);
+    } else if (n === 3) {
+      el.innerHTML = ""; window.renderVerbalStudio3(el);
+    } else if (n === 4) {
+      el.innerHTML = ""; window.renderMockSimulator4(el);
+    } else if (n === 5) {
+      el.innerHTML = ""; window.renderTrapClinic5(el);
+    } else if (n === 6) {
+      el.innerHTML = ""; window.renderTab6(el);
     }
   };
 
