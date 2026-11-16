@@ -342,28 +342,50 @@ window.renderMockSimulator4 = async function (el) {
     { sec: vSec, topic: "Decision Making / Scope Audit", q: "Identify the statement outside the core policy arc: (1) Urban heat islands raise city night temperatures. (2) Cool roofs mitigate thermal absorption. (3) Hydrothermal vents sustain deep-ocean tubeworms. (4) High-albedo zoning curbs cooling loads.", opts: isFiveOpt ? ["Sentence 1", "Sentence 2", "Sentence 3", "Sentence 4", "All 4 belong equally"] : ["Sentence 1", "Sentence 2", "Sentence 3", "Sentence 4"], ans: 2, exp: "Sentence 3 shifts to deep-ocean biology." }
   ];
 
-  let pgQuestions = [];
+    let pgQuestions = [];
   try {
-    const res = await fetch("/api/questions?limit=100");
+    const res = await fetch("/api/questions?limit=150");
     if (res.ok) {
       const data = await res.json();
       const rawList = Array.isArray(data) ? data : (data.questions || data.rows || []);
-      pgQuestions = rawList.filter(q => (q.stem || q.question) && Array.isArray(q.options) && q.options.length >= 2).map(q => ({
-        sec: qSec,
-        topic: q.topic || q.chapter || "Quantitative Mastery",
-        q: q.stem || q.question,
-        opts: isFiveOpt && q.options.length === 4 ? [...q.options, "None of the above"] : q.options,
-        ans: typeof q.correct_index === "number" ? q.correct_index : (typeof q.answer === "number" ? q.answer : 0),
-        exp: q.explanation || q.solution || "Verified PostgreSQL official pattern derivation."
-      }));
+      pgQuestions = rawList.map(q => {
+        let opts = q.options_json || q.options || [];
+        if (typeof opts === "string") {
+          try { opts = JSON.parse(opts); } catch (_) { opts = []; }
+        }
+        const promptText = q.prompt || q.stem || q.question || "";
+        const rawSec = String(q.section || "").toUpperCase();
+        let mappedSec = qSec;
+        if (rawSec.includes("DILR") || rawSec.includes("DI_") || rawSec === "DI" || rawSec.includes("DATA")) mappedSec = dSec;
+        else if (rawSec.includes("VARC") || rawSec.includes("VERBAL") || rawSec === "VR") mappedSec = vSec;
+
+        const isTita = !Array.isArray(opts) || opts.length === 0 || String(q.q_type || "").includes("SA");
+        const ansVal = String(q.answer ?? q.correct_index ?? "0").trim();
+
+        return {
+          sec: mappedSec,
+          topic: q.topic || q.chapter_name || "Official Bank",
+          q: promptText,
+          isTita: isTita,
+          opts: isTita ? [] : opts,
+          ans: isTita ? ansVal : (!isNaN(parseInt(ansVal, 10)) ? parseInt(ansVal, 10) : 0),
+          exp: q.explanation || "Verified PostgreSQL official solution."
+        };
+      }).filter(item => item.q && (item.isTita || item.opts.length >= 2));
+
+      // Fisher-Yates shuffle so every mock launch serves a non-repeating sequence
+      for (let i = pgQuestions.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [pgQuestions[i], pgQuestions[j]] = [pgQuestions[j], pgQuestions[i]];
+      }
     }
   } catch (e) {}
 
+  // Prioritize live PostgreSQL questions first, using MASTER_BANK only if pool < bp.count
   let basePool = bp.secFilter === "ALL"
-    ? [...MASTER_BANK, ...pgQuestions]
-    : [...MASTER_BANK, ...pgQuestions].filter(item => item.sec === bp.secFilter);
+    ? [...pgQuestions, ...MASTER_BANK]
+    : [...pgQuestions, ...MASTER_BANK].filter(item => item.sec === bp.secFilter);
   if (!basePool.length) basePool = MASTER_BANK;
-
   // Hydrate exact bp.count questions so Question Palette matches the Blueprint 1-to-1
   const exactPool = [];
   for (let i = 0; i < bp.count; i++) {
@@ -424,7 +446,7 @@ window.renderMockSimulator4 = async function (el) {
           <div class="flex items-center gap-2">
             <span class="px-2.5 py-0.5 rounded-full bg-indigo-600 text-white text-[11px] font-extrabold">Question ${st.curr + 1} of ${st.questions.length}</span>
             <span class="px-2.5 py-0.5 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 text-[11px] font-bold">${qObj.sec} &bull; ${qObj.topic}</span>
-            <span class="px-2 py-0.5 rounded-full bg-emerald-500/15 text-emerald-700 dark:text-emerald-300 text-[10px] font-bold">${qObj.opts.length}-Option Format</span>
+            <span class="px-2 py-0.5 rounded-full bg-emerald-500/15 text-emerald-700 dark:text-emerald-300 text-[10px] font-bold">${qObj.isTita ? "TITA (Type-In Answer)" : qObj.opts.length + "-Option Format"}</span>
           </div>
           <button type="button" onclick="window._MOCK_STATE.marked[${st.curr}] = !window._MOCK_STATE.marked[${st.curr}]; window.renderMockQuestionCard();"
             class="px-3 py-1 rounded-lg border border-amber-400 text-amber-700 dark:text-amber-300 text-xs font-bold cursor-pointer">
@@ -435,7 +457,7 @@ window.renderMockSimulator4 = async function (el) {
         <div class="text-sm font-semibold text-slate-900 dark:text-white leading-relaxed">${qObj.q}</div>
 
         <div class="space-y-2">
-          ${qObj.opts.map((opt, oi) => `
+          ${qObj.isTita ? `<div class="p-4 rounded-xl border border-indigo-300 dark:border-indigo-700 bg-indigo-50/40 dark:bg-indigo-950/30 space-y-2"><label class="text-xs font-extrabold text-indigo-700 dark:text-indigo-300 block">Enter Exact Numeric / Sequence TITA Answer (Zero Negative Penalty):</label><input type="text" value="${selected !== undefined ? selected : ''}" oninput="window._MOCK_STATE.answers[${st.curr}]=this.value.trim();" placeholder="Type answer here..." class="w-full sm:w-64 px-3.5 py-2 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 text-sm font-mono font-bold"></div>` : qObj.opts.map((opt, oi) => `
             <label onclick="window._MOCK_STATE.answers[${st.curr}]=${oi}; window.renderMockQuestionCard();"
               class="flex items-center gap-3 p-3.5 rounded-xl border text-xs font-semibold cursor-pointer transition ${selected === oi ? 'border-indigo-600 bg-indigo-50 dark:bg-indigo-950/40 text-indigo-900 dark:text-indigo-200' : 'border-slate-200 dark:border-slate-700 hover:border-indigo-400'}">
               <input type="radio" name="mock_active_opt" ${selected === oi ? "checked" : ""}>
@@ -446,7 +468,7 @@ window.renderMockSimulator4 = async function (el) {
 
         ${st.submitted ? `
           <div class="p-3.5 rounded-xl ${selected === qObj.ans ? 'bg-emerald-50 border-emerald-300 text-emerald-900' : 'bg-rose-50 border-rose-300 text-rose-900'} border text-xs">
-            <strong>${selected === qObj.ans ? "Correct!" : "Incorrect / Unattempted."} Correct Answer: ${String.fromCharCode(65 + qObj.ans)}.</strong> ${qObj.exp}
+            <strong>${(qObj.isTita ? String(selected || "").trim().toLowerCase() === String(qObj.ans).trim().toLowerCase() : selected === qObj.ans) ? "Correct!" : "Incorrect / Unattempted."} Correct Answer: ${qObj.isTita ? qObj.ans : String.fromCharCode(65 + qObj.ans)}.</strong> ${qObj.exp}
           </div>
         ` : ""}
 
@@ -470,7 +492,7 @@ window.renderMockSimulator4 = async function (el) {
     let correct = 0, wrong = 0, unattempted = 0;
     st.questions.forEach((q, i) => {
       if (st.answers[i] === undefined) unattempted++;
-      else if (st.answers[i] === q.ans) correct++;
+      else if (q.isTita ? String(st.answers[i]).trim().toLowerCase() === String(q.ans).trim().toLowerCase() : st.answers[i] === q.ans) correct++;
       else wrong++;
     });
 
