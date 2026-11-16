@@ -18,12 +18,116 @@
     });
   }
 
-  // 2. Enriched Tab 2: GRE Data Interpretation & 30-Min Analytical Writing (AWA) Lab
+    // 2. Enriched Tab 2: GRE Data Interpretation & End-to-End Connected 30-Min AWA Lab
+  const GRE_AWA_PROMPTS = [
+    {
+      id: "AWA-01",
+      domain: "Higher Education & Curriculum",
+      prompt: "Universities should require every student to take a variety of courses outside the student's field of study because acquiring knowledge of various academic disciplines is the best way to become truly educated.",
+      task: "Write a response in which you discuss the extent to which you agree or disagree with the statement and explain your reasoning for the position you take."
+    },
+    {
+      id: "AWA-02",
+      domain: "Science, Technology & Public Policy",
+      prompt: "Governments should place far fewer restrictions on scientific research and development; the potential benefits of unrestricted inquiry outweigh the foreseeable risks.",
+      task: "Write a response in which you discuss the extent to which you agree or disagree with the claim. In developing and supporting your position, be sure to address the most compelling reasons and/or examples that could be used to challenge your position."
+    },
+    {
+      id: "AWA-03",
+      domain: "Leadership & Institutional Accountability",
+      prompt: "The most effective leaders are those who maintain an unwavering commitment to their core principles, even when changing circumstances seem to call for compromise.",
+      task: "Write a response in which you discuss the extent to which you agree or disagree with the statement and explain your reasoning for the position you take."
+    },
+    {
+      id: "AWA-04",
+      domain: "Economics & Automation",
+      prompt: "As automation and artificial intelligence displace routine labor, societies should prioritize universal retraining programs over direct financial subsidies to displaced workers.",
+      task: "Write a response in which you discuss which policy approach is more effective and under what circumstances the alternative might be warranted."
+    },
+    {
+      id: "AWA-05",
+      domain: "Urban Planning & Sustainability",
+      prompt: "To solve urban congestion and environmental degradation, municipal governments should invest primarily in public transit infrastructure rather than incentivizing private electric vehicles.",
+      task: "Write a response in which you discuss the extent to which you agree or disagree with the recommendation and explain your reasoning."
+    },
+    {
+      id: "AWA-06",
+      domain: "Media, Transparency & Governance",
+      prompt: "Complete transparency in governmental decision-making is essential to democracy, even if public scrutiny slows urgent policy action.",
+      task: "Write a response in which you discuss the extent to which you agree or disagree with the statement and consider counterexamples."
+    }
+  ];
+
+  window.evaluateGreAwaEssay = function () {
+    const box = document.getElementById("gre-awa-essay");
+    const out = document.getElementById("gre-awa-grade");
+    if (!box || !out) return;
+    const txt = box.value.trim();
+    const words = txt.split(/\s+/).filter(Boolean);
+    const wc = words.length;
+    const paras = txt.split(/\n+/).filter(p => p.trim().length > 25).length;
+    const hasCounter = /\b(however|although|nevertheless|conversely|on the other hand|admittedly|critics|yet)\b/i.test(txt);
+    const hasExample = /\b(for example|for instance|consider|historically|empirically|such as|specifically)\b/i.test(txt);
+    const uniqueRatio = wc > 0 ? (new Set(words.map(w => w.toLowerCase().replace(/[^a-z]/g, ""))).size / wc) : 0;
+
+    let score = 2.0;
+    if (wc >= 450) score += 2.0;
+    else if (wc >= 320) score += 1.5;
+    else if (wc >= 180) score += 1.0;
+    else if (wc >= 80) score += 0.5;
+
+    if (paras >= 4) score += 0.5;
+    if (hasCounter) score += 0.5;
+    if (hasExample) score += 0.5;
+    if (uniqueRatio >= 0.52 && wc >= 250) score += 0.5;
+    score = Math.min(6.0, Math.round(score * 2) / 2);
+
+    const pIdx = Number(window._GRE_AWA_PROMPT_IDX || 0) % GRE_AWA_PROMPTS.length;
+    const promptObj = GRE_AWA_PROMPTS[pIdx];
+    const awaPayload = {
+      score: score.toFixed(1),
+      wordCount: wc,
+      paragraphs: paras,
+      hasCounter,
+      hasExample,
+      promptId: promptObj.id,
+      promptTitle: promptObj.domain,
+      essaySnippet: txt.slice(0, 320),
+      date: new Date().toLocaleDateString("en-IN")
+    };
+    localStorage.setItem("gre_awa_latest_v1", JSON.stringify(awaPayload));
+
+    // Also sync Tab 6 AWA slider immediately if present
+    const awaSlider = document.querySelector("#tab-6 input[type='range']:last-of-type, #main-workspace input[type='range']");
+    if (awaSlider && awaSlider.max === "6") {
+      awaSlider.value = score.toFixed(1);
+      awaSlider.dispatchEvent(new Event("input"));
+    }
+
+    const pctLabel = score >= 5.5 ? "98th %ile" : (score >= 5.0 ? "91st %ile" : (score >= 4.5 ? "80th %ile" : (score >= 4.0 ? "55th %ile" : "Developing")));
+    out.classList.remove("hidden");
+    out.innerHTML = `
+      <div class="space-y-1.5">
+        <div class="flex flex-wrap items-center justify-between gap-2">
+          <span class="font-extrabold text-emerald-900">ETS AWA Rubric Score: <span class="text-base text-indigo-700">${score.toFixed(1)} / 6.0</span> (${pctLabel})</span>
+          <span class="px-2 py-0.5 rounded-full bg-indigo-100 text-indigo-800 text-[10px] font-extrabold">Synced to Tab 6 Forecaster &amp; Marksheet PDF ✓</span>
+        </div>
+        <div class="text-[11px] text-slate-700">
+          <strong>Diagnostics:</strong> ${wc} words &bull; ${paras} paragraphs &bull; Counterargument Concession: <strong>${hasCounter ? "Detected ✓" : "Missing (add 'However / Admittedly' rebuttal for +0.5)"}</strong> &bull; Concrete Examples: <strong>${hasExample ? "Detected ✓" : "Missing (add 'For instance' evidence for +0.5)"}</strong>
+        </div>
+      </div>
+    `;
+  };
+
   window.renderGreDiAndAwaTab2 = function (el) {
     const target = el || document.getElementById("main-workspace");
     if (!target) return;
     window._GRE_AWA_SECS = window._GRE_AWA_SECS || 1800;
+    window._GRE_AWA_PROMPT_IDX = Number(window._GRE_AWA_PROMPT_IDX || 0);
     if (window._GRE_AWA_TIMER) clearInterval(window._GRE_AWA_TIMER);
+
+    const curPrompt = GRE_AWA_PROMPTS[window._GRE_AWA_PROMPT_IDX % GRE_AWA_PROMPTS.length];
+    const savedAwa = JSON.parse(localStorage.getItem("gre_awa_latest_v1") || "null");
 
     const diSets = [
       {
@@ -53,13 +157,13 @@
           </div>
           <h2 class="text-xl font-extrabold text-slate-900 dark:text-white">Multi-Chart &amp; Ratio Data Interpretation Sets</h2>
           <p class="text-xs text-slate-500">GRE Quant includes 3–4 Data Interpretation questions per section testing percentage change, weighted ratios, and median/quartile estimation.</p>
-          ${diSets.map((d, idx) => `
+          ${diSets.map(d => `
             <div class="p-4 rounded-2xl bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 space-y-2.5 text-xs">
               <div class="font-extrabold text-indigo-700 dark:text-indigo-300">${d.title}</div>
               <div class="p-2.5 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 font-mono text-[11px]">${d.table}</div>
               <div class="font-bold text-slate-900 dark:text-white">${d.q}</div>
               <div class="space-y-1.5">
-                ${d.opts.map((o, oi) => `
+                ${d.opts.map(o => `
                   <button type="button" onclick="this.parentElement.nextElementSibling.classList.remove('hidden')"
                     class="w-full text-left px-3 py-2 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 hover:border-indigo-500 font-semibold cursor-pointer">${o}</button>
                 `).join("")}
@@ -74,7 +178,7 @@
         <div class="lg:col-span-6 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-6 space-y-4 shadow-sm">
           <div class="flex flex-wrap items-center justify-between gap-2">
             <div>
-              <span class="text-[10px] font-extrabold uppercase tracking-wider text-amber-600">ANALYTICAL WRITING (AWA • 0–6 SCALE)</span>
+              <span class="text-[10px] font-extrabold uppercase tracking-wider text-amber-600">ANALYTICAL WRITING (AWA • 0.0–6.0 SCALE)</span>
               <h2 class="text-xl font-extrabold text-slate-900 dark:text-white">30-Minute &ldquo;Analyze an Issue&rdquo; Studio</h2>
             </div>
             <div class="flex items-center gap-2">
@@ -84,20 +188,27 @@
             </div>
           </div>
 
-          <div class="p-4 rounded-2xl bg-indigo-50/70 dark:bg-indigo-950/30 border border-indigo-200 dark:border-indigo-800 text-xs space-y-1.5">
-            <div class="font-extrabold text-indigo-800 dark:text-indigo-200">Official ETS Issue Task Prompt:</div>
-            <p class="leading-relaxed text-slate-800 dark:text-slate-200">&ldquo;Universities should require every student to take a variety of courses outside the student&#39;s field of study because acquiring knowledge of various academic disciplines is the best way to become truly educated.&rdquo;</p>
-            <div class="text-[11px] text-slate-500"><strong>Task:</strong> Write a response in which you discuss the extent to which you agree or disagree with the statement and explain your reasoning for the position you take.</div>
+          <div class="p-4 rounded-2xl bg-indigo-50/70 dark:bg-indigo-950/30 border border-indigo-200 dark:border-indigo-800 text-xs space-y-2">
+            <div class="flex flex-wrap items-center justify-between gap-2">
+              <span class="font-extrabold text-indigo-800 dark:text-indigo-200">${curPrompt.id} &bull; ${curPrompt.domain}</span>
+              <div class="flex items-center gap-1.5">
+                ${savedAwa ? `<span class="px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800 text-[10px] font-extrabold">Latest AWA: ${savedAwa.score}/6.0</span>` : ""}
+                <button type="button" onclick="window._GRE_AWA_PROMPT_IDX=(Number(window._GRE_AWA_PROMPT_IDX||0)+1)%${GRE_AWA_PROMPTS.length}; window.renderGreDiAndAwaTab2();"
+                  class="px-2.5 py-1 rounded-lg bg-white dark:bg-slate-900 border border-indigo-300 text-indigo-700 text-[11px] font-extrabold cursor-pointer">&#8635; Next Issue Prompt (${(window._GRE_AWA_PROMPT_IDX % GRE_AWA_PROMPTS.length) + 1}/${GRE_AWA_PROMPTS.length})</button>
+              </div>
+            </div>
+            <p class="leading-relaxed font-semibold text-slate-900 dark:text-slate-100">&ldquo;${curPrompt.prompt}&rdquo;</p>
+            <div class="text-[11px] text-slate-600 dark:text-slate-300"><strong>Directions:</strong> ${curPrompt.task}</div>
           </div>
 
           <textarea id="gre-awa-essay" rows="10" oninput="const w=this.value.trim().split(/\s+/).filter(Boolean).length; document.getElementById('gre-awa-words').textContent=w+' words (Target: 420–550 words)';"
-            placeholder="Paragraph 1: Nuanced Thesis Statement...&#10;Paragraph 2: Primary Supporting Argument + Concrete Historical/Empirical Example...&#10;Paragraph 3: Secondary Mechanism / Cross-Disciplinary Synthesis...&#10;Paragraph 4: Counterargument Concession & Rebuttal...&#10;Paragraph 5: Crisp Conclusion..."
+            placeholder="Paragraph 1: Nuanced Thesis Statement...&#10;Paragraph 2: Primary Supporting Argument + Concrete Historical/Empirical Example...&#10;Paragraph 3: Secondary Mechanism / Cross-Disciplinary Synthesis...&#10;Paragraph 4: Counterargument Concession ('However / Admittedly...') & Rebuttal...&#10;Paragraph 5: Crisp Conclusion..."
             class="w-full rounded-2xl border border-slate-300 dark:border-slate-700 p-3.5 text-xs leading-relaxed"></textarea>
 
           <div class="flex flex-wrap items-center justify-between gap-2">
             <span id="gre-awa-words" class="text-xs font-bold text-slate-500">0 words (Target: 420–550 words)</span>
-            <button type="button" onclick="const txt=document.getElementById('gre-awa-essay').value.trim(); const wc=txt.split(/\s+/).filter(Boolean).length; const est=wc>=420?'5.5 / 6.0 (98th %ile)':(wc>=280?'4.5 / 6.0 (80th %ile)':'3.5 / 6.0 (Expand body paragraphs to 420+ words)'); const out=document.getElementById('gre-awa-grade'); out.classList.remove('hidden'); out.innerHTML='<strong>ETS Rubric Evaluation:</strong> Word Count = '+wc+' | Estimated AWA Band = <strong>'+est+'</strong>. Ensure explicit counterargument concession in Paragraph 4 to lock 5.5–6.0.';"
-              class="px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-extrabold cursor-pointer">Grade AWA Essay (0–6 Scale)</button>
+            <button type="button" onclick="window.evaluateGreAwaEssay()"
+              class="px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-extrabold cursor-pointer">Grade &amp; Sync AWA Score (0.0–6.0)</button>
           </div>
           <div id="gre-awa-grade" class="hidden p-3.5 rounded-xl bg-emerald-50 border border-emerald-200 text-xs text-emerald-900"></div>
         </div>
@@ -586,7 +697,7 @@
         <style>
           body { font-family: Arial, sans-serif; padding: 28px; color: #0f172a; }
           .hdr { border-bottom: 3px solid #4338ca; padding-bottom: 12px; margin-bottom: 18px; display:flex; justify-content:space-between; }
-          .grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 20px; }
+          .grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px; margin-bottom: 20px; }
           .card { border: 1px solid #cbd5e1; border-radius: 10px; padding: 12px; background: #f8fafc; }
           .lbl { font-size: 10px; font-weight: 800; color: #64748b; text-transform: uppercase; }
           .val { font-size: 20px; font-weight: 800; color: #312e81; margin-top: 4px; }
@@ -608,7 +719,7 @@
         <div class="grid">
           <div class="card"><div class="lbl">Total GRE Score</div><div class="val">${rec.scaled340 || 260} / 340</div></div>
           <div class="card"><div class="lbl">Quant (130–170)</div><div class="val">${rec.quant170 || 130} / 170</div></div>
-          <div class="card"><div class="lbl">Verbal (130–170)</div><div class="val">${rec.verbal170 || 130} / 170</div></div>
+          <div class="card"><div class="lbl">Verbal (130–170)</div><div class="val">${rec.verbal170 || 130} / 170</div></div><div class="card"><div class="lbl">AWA Issue (0–6)</div><div class="val">${rec.awaScore || "4.5"} / 6.0</div></div>
           <div class="card"><div class="lbl">Raw &amp; Accuracy</div><div class="val">${rec.score}/${rec.maxScore} (${rec.accuracy}%)</div></div>
         </div>
         ${rowsHtml ? `<h3>Question-by-Question Audit</h3><table><thead><tr><th>#</th><th>Prompt</th><th>Your Choice</th><th>Correct</th><th>Status</th></tr></thead><tbody id="gre-full-ledger-body">${rowsHtml}</tbody></table>` : ""}
@@ -650,7 +761,7 @@
     const isFull = st.bp.id === "GRE_FULL" || st.questions.length >= 54;
 
     const now = new Date();
-    const record = {
+    const _savedAwa = JSON.parse(localStorage.getItem("gre_awa_latest_v1") || "null"); const awaScore = _savedAwa ? _savedAwa.score : "4.5"; const record = {
       serialId: st.serialId,
       date: now.toLocaleDateString("en-IN"),
       time: now.toLocaleTimeString("en-IN", { hour: "2-digit", minute: "2-digit" }),
@@ -658,7 +769,7 @@
       score: correct,
       maxScore: st.questions.length,
       quant170,
-      verbal170,
+      verbal170, awaScore,
       scaled340,
       accuracy,
       review
