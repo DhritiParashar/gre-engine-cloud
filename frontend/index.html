@@ -32,7 +32,7 @@
         <button data-tab-btn="tab3" onclick="window.switchTab('tab3')">3. Verbal Studio (TC, SE &amp; RC)</button>
         <button data-tab-btn="tab8" onclick="window.switchTab('tab8')">4. Section-Adaptive Mock</button>
         <button data-tab-btn="tab4" onclick="window.switchTab('tab4')">5. Trap Doctor &amp; AI Doubts</button>
-        <button data-tab-btn="tab6" onclick="window.switchTab('tab6')">6. Grad / MS Admit Predictor</button>
+        <button data-tab-btn="tab6" onclick="window.switchTab('tab6')">6. GRE 260–340 Score Forecaster</button>
       </nav>
     </div>
   </header>
@@ -1172,16 +1172,13 @@
 </script>
 <!-- END LIVE POSTGRES PRACTICE & WORKED EXAMPLES (TABS 1-3) -->
   
+
+<script src="js/modules/tab6_college_predictor.js?v=20261115"></script>
 <script id="pg-boot-auth-gate">
 (function () {
-  const host = window.location.host.toLowerCase();
-  const exam = host.includes("gmat") ? "GMAT" : (host.includes("gre") ? "GRE" : "CAT");
-  const defaultCgpa = exam === "GRE" ? "9.25" : (exam === "GMAT" ? "9.10" : "8.70");
-  const defaultWx   = exam === "GMAT" ? "48" : "24";
-
   function getUser() {
     try {
-      const raw = localStorage.getItem("goalisb_postgrad_profile_v1") || localStorage.getItem("ipm_user");
+      const raw = localStorage.getItem("goalisb_exam_prep_profile_v1") || localStorage.getItem("ipm_user");
       if (!raw) return null;
       const u = JSON.parse(raw);
       return (u && u.name) ? u : null;
@@ -1189,9 +1186,9 @@
   }
 
   window.handlePostgradLogout = function () {
+    localStorage.removeItem("goalisb_exam_prep_profile_v1");
     localStorage.removeItem("goalisb_postgrad_profile_v1");
     localStorage.removeItem("ipm_user");
-    localStorage.removeItem("goalisb_user");
     localStorage.removeItem("ipm_token");
     window.IPM_USER = null;
     window.location.reload();
@@ -1206,25 +1203,22 @@
       gate.style.cssText = "position:fixed;inset:0;z-index:99999;display:flex;align-items:center;justify-content:center;background:rgba(2,6,23,0.92);backdrop-filter:blur(8px);padding:16px;overflow-y:auto;";
       document.body.appendChild(gate);
     }
-
-    const examTitle = exam === "GRE" ? "GRE General (260–340 + AWA)" : (exam === "GMAT" ? "GMAT Focus (205–805)" : "CAT 2026 & OMETs (IIM/FMS/XLRI)");
-    const secLabel  = exam === "CAT" ? "Class 12 Board % (IIM AR Weight)" : "Work Experience (Months)";
-    const secVal    = exam === "CAT" ? "90" : defaultWx;
+    const existing = getUser() || { name: "Dina Shah", targetScore: "332+ GRE (Q168+)", examMonth: "Nov / Dec 2026" };
 
     gate.innerHTML = `
-      <div style="max-width:860px;width:100%;background:#0f172a;color:#f8fafc;border:1px solid #334155;border-radius:24px;overflow:hidden;display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));box-shadow:0 25px 50px -12px rgba(0,0,0,0.75);font-family:system-ui,-apple-system,sans-serif;">
+      <div style="max-width:840px;width:100%;background:#0f172a;color:#f8fafc;border:1px solid #334155;border-radius:24px;overflow:hidden;display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));box-shadow:0 25px 50px -12px rgba(0,0,0,0.75);font-family:system-ui,-apple-system,sans-serif;">
         <div style="background:linear-gradient(135deg,#0f172a,#1e1b4b);padding:28px;display:flex;flex-direction:column;justify-content:space-between;">
           <div>
-            <span style="font-size:10px;font-weight:800;letter-spacing:1px;text-transform:uppercase;padding:4px 10px;border-radius:999px;background:rgba(99,102,241,0.2);color:#a5b4fc;border:1px solid rgba(129,140,248,0.3);">${examTitle}</span>
-            <h2 style="font-size:22px;font-weight:800;margin:14px 0 8px;line-height:1.25;">GOALisB ${exam} Postgraduate Master Engine</h2>
-            <p style="font-size:12px;color:#cbd5e1;line-height:1.5;">Calibrated for MBA, PGP, MiM, MS &amp; PhD Admissions with 260+ PostgreSQL Questions &amp; Diagnostic Scorecards.</p>
+            <span style="font-size:10px;font-weight:800;letter-spacing:1px;text-transform:uppercase;padding:4px 10px;border-radius:999px;background:rgba(99,102,241,0.2);color:#a5b4fc;border:1px solid rgba(129,140,248,0.3);">GRE General Test (54 Qs + AWA • 118 Mins • Section-Adaptive)</span>
+            <h2 style="font-size:22px;font-weight:800;margin:14px 0 8px;line-height:1.25;">GOALisB Test Mastery &amp; Score Engine</h2>
+            <p style="font-size:12px;color:#cbd5e1;line-height:1.5;">Dedicated adaptive preparation, 260+ PostgreSQL questions, and real-time score &amp; pacing diagnostics.</p>
             <ul style="list-style:none;padding:0;margin:18px 0 0;font-size:12px;color:#e2e8f0;line-height:1.9;">
-              <li>&#9745; <strong>260+ Postgraduate Questions:</strong> Official PYQs &amp; Chapter Drills</li>
-              <li>&#9745; <strong>18 Interactive Trap Clinics:</strong> Adaptive &amp; Negative-Marking Defense</li>
-              <li>&#9745; <strong>Admissions &amp; ROI Predictor:</strong> Live Mock-to-Official Score Sync</li>
+              <li>&#9745; <strong>260+ Calibrated Test Items:</strong> Official Pattern &amp; Chapter Drills</li>
+              <li>&#9745; <strong>18 Interactive Trap Clinics:</strong> Negative-Marking &amp; Adaptive Defense</li>
+              <li>&#9745; <strong>Live Score &amp; Pacing Forecaster:</strong> Tracks Mock-to-Target Trajectory</li>
             </ul>
           </div>
-          <div style="font-size:11px;color:#94a3b8;padding-top:16px;border-top:1px solid #1e293b;">Neon PostgreSQL Encrypted Postgraduate Portal</div>
+          <div style="font-size:11px;color:#94a3b8;padding-top:16px;border-top:1px solid #1e293b;">Neon PostgreSQL Encrypted Test-Prep Portal</div>
         </div>
 
         <div style="padding:28px;background:#ffffff;color:#0f172a;">
@@ -1235,27 +1229,27 @@
 
           ${activeMode === "LOGIN" ? `
             <div style="display:flex;flex-direction:column;gap:12px;">
-              <h3 style="font-size:17px;font-weight:800;margin:0;">Welcome Back, Aspirant</h3>
+              <h3 style="font-size:17px;font-weight:800;margin:0;">Resume Test Preparation</h3>
               <label style="font-size:11px;font-weight:700;color:#475569;">Registered Email or Mobile
                 <input id="pg-login-email" type="text" value="dina.shah@goalisb.com" style="margin-top:4px;width:100%;padding:10px 12px;border-radius:10px;border:1px solid #cbd5e1;font-size:12px;font-weight:600;box-sizing:border-box;">
               </label>
               <label style="font-size:11px;font-weight:700;color:#475569;">Password
                 <input id="pg-login-pass" type="password" value="demo1234" style="margin-top:4px;width:100%;padding:10px 12px;border-radius:10px;border:1px solid #cbd5e1;font-size:12px;box-sizing:border-box;">
               </label>
-              <button type="button" onclick="window.completePostgradAuth()" style="margin-top:6px;width:100%;padding:12px;border-radius:12px;border:none;background:#4f46e5;color:#ffffff;font-size:13px;font-weight:800;cursor:pointer;">Enter Postgraduate Master Engine &rarr;</button>
+              <button type="button" onclick="window.completePostgradAuth()" style="margin-top:6px;width:100%;padding:12px;border-radius:12px;border:none;background:#4f46e5;color:#ffffff;font-size:13px;font-weight:800;cursor:pointer;">Launch Test Prep Engine &rarr;</button>
             </div>
           ` : `
             <div style="display:flex;flex-direction:column;gap:11px;">
-              <h3 style="font-size:17px;font-weight:800;margin:0;">Create Postgraduate Account (Free Demo)</h3>
+              <h3 style="font-size:17px;font-weight:800;margin:0;">Create Test-Prep Account (Free Demo)</h3>
               <label style="font-size:11px;font-weight:700;color:#475569;">Candidate Full Name
-                <input id="pg-reg-name" type="text" value="Dina Shah" style="margin-top:4px;width:100%;padding:9px 12px;border-radius:10px;border:1px solid #cbd5e1;font-size:12px;font-weight:600;box-sizing:border-box;">
+                <input id="pg-reg-name" type="text" value="${existing.name}" style="margin-top:4px;width:100%;padding:9px 12px;border-radius:10px;border:1px solid #cbd5e1;font-size:12px;font-weight:600;box-sizing:border-box;">
               </label>
               <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
-                <label style="font-size:11px;font-weight:700;color:#4338ca;">Undergrad CGPA (10-Pt)
-                  <input id="pg-reg-cgpa" type="number" step="0.05" min="4" max="10" value="${defaultCgpa}" style="margin-top:4px;width:100%;padding:9px 12px;border-radius:10px;border:1px solid #cbd5e1;font-size:12px;font-weight:700;box-sizing:border-box;">
+                <label style="font-size:11px;font-weight:700;color:#4338ca;">Target Score / Percentile
+                  <input id="pg-reg-target" type="text" value="${existing.targetScore}" style="margin-top:4px;width:100%;padding:9px 12px;border-radius:10px;border:1px solid #cbd5e1;font-size:12px;font-weight:700;box-sizing:border-box;">
                 </label>
-                <label style="font-size:11px;font-weight:700;color:#4338ca;">${secLabel}
-                  <input id="pg-reg-sec" type="number" min="0" max="120" value="${secVal}" style="margin-top:4px;width:100%;padding:9px 12px;border-radius:10px;border:1px solid #cbd5e1;font-size:12px;font-weight:700;box-sizing:border-box;">
+                <label style="font-size:11px;font-weight:700;color:#4338ca;">Target Exam Window
+                  <input id="pg-reg-window" type="text" value="${existing.examMonth}" style="margin-top:4px;width:100%;padding:9px 12px;border-radius:10px;border:1px solid #cbd5e1;font-size:12px;font-weight:700;box-sizing:border-box;">
                 </label>
               </div>
               <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
@@ -1263,10 +1257,10 @@
                   <input id="pg-reg-phone" type="text" placeholder="+91 9876543210" style="margin-top:4px;width:100%;padding:9px 12px;border-radius:10px;border:1px solid #cbd5e1;font-size:12px;box-sizing:border-box;">
                 </label>
                 <label style="font-size:11px;font-weight:700;color:#475569;">Email Address
-                  <input id="pg-reg-email" type="email" placeholder="aspirant@example.com" style="margin-top:4px;width:100%;padding:9px 12px;border-radius:10px;border:1px solid #cbd5e1;font-size:12px;box-sizing:border-box;">
+                  <input id="pg-reg-email" type="email" placeholder="candidate@example.com" style="margin-top:4px;width:100%;padding:9px 12px;border-radius:10px;border:1px solid #cbd5e1;font-size:12px;box-sizing:border-box;">
                 </label>
               </div>
-              <button type="button" onclick="window.completePostgradAuth()" style="margin-top:6px;width:100%;padding:12px;border-radius:12px;border:none;background:#4f46e5;color:#ffffff;font-size:13px;font-weight:800;cursor:pointer;">Activate Free Demo &amp; Sync Profile &rarr;</button>
+              <button type="button" onclick="window.completePostgradAuth()" style="margin-top:6px;width:100%;padding:12px;border-radius:12px;border:none;background:#4f46e5;color:#ffffff;font-size:13px;font-weight:800;cursor:pointer;">Start Free Demo &amp; Diagnostic Tracking &rarr;</button>
             </div>
           `}
         </div>
@@ -1277,35 +1271,28 @@
   window.completePostgradAuth = function () {
     const existing = getUser() || {};
     const name = (document.getElementById("pg-reg-name")?.value || existing.name || "Dina Shah").trim();
-    const cgpa = Number(document.getElementById("pg-reg-cgpa")?.value || existing.ugCgpa10 || defaultCgpa);
-    const sec  = Number(document.getElementById("pg-reg-sec")?.value || (exam === "CAT" ? 90 : defaultWx));
+    const targetScore = (document.getElementById("pg-reg-target")?.value || existing.targetScore || "332+ GRE (Q168+)").trim();
+    const examMonth = (document.getElementById("pg-reg-window")?.value || existing.examMonth || "Nov / Dec 2026").trim();
 
-    const profile = {
-      name,
-      tier: "FREE_DEMO",
-      ugCgpa10: cgpa,
-      ugGpa4: Number(((cgpa / 10) * 4.0).toFixed(2)),
-      ugPct: Number(Math.min(100, (cgpa - 0.5) * 10).toFixed(1)),
-      classXII: exam === "CAT" ? sec : 90,
-      workExMonths: exam === "CAT" ? 24 : sec
-    };
-
-    localStorage.setItem("goalisb_postgrad_profile_v1", JSON.stringify(profile));
+    const profile = { name, tier: "FREE_DEMO", targetScore, examMonth };
+    localStorage.setItem("goalisb_exam_prep_profile_v1", JSON.stringify(profile));
     localStorage.setItem("ipm_user", JSON.stringify(profile));
     window.IPM_USER = profile;
 
     const gate = document.getElementById("pg-auth-gate-overlay");
     if (gate) gate.remove();
-    syncHeaderControls();
+    syncSingleCleanHeader();
   };
 
-  function syncHeaderControls() {
+  function syncSingleCleanHeader() {
     const user = getUser();
     let hist = [];
     try { hist = JSON.parse(localStorage.getItem("ipm_mock_history_v1") || "[]"); } catch (e) {}
     const latest = hist[0];
 
-    // 1. Update Login/Register button into Logout/Exit when signed in, or wire click handler
+    const dup = document.getElementById("pg-header-profile-pill");
+    if (dup) dup.remove();
+
     document.querySelectorAll("button").forEach(btn => {
       const txt = (btn.textContent || "").trim();
       if (/Free Demo Login|2-Step Register/i.test(txt)) {
@@ -1321,47 +1308,40 @@
       }
     });
 
-    // 2. Populate the top-bar candidate profile pill with CGPA, Work-Ex & Mock-to-Official Score
-    if (user) {
-      let summary = "";
-      if (exam === "GMAT") {
-        const est = latest && latest.maxScore ? Math.min(805, Math.max(205, Math.round((205 + (latest.score / latest.maxScore) * 600) / 10) * 10 + 5)) : null;
-        summary = `CGPA: ${Number(user.ugCgpa10).toFixed(1)}/10 (${Number(user.ugGpa4).toFixed(2)} GPA) | WX: ${(user.workExMonths/12).toFixed(1)}y &bull; ${est ? `Mock &rarr; ${est}/805` : "Target: 715+ Focus"}`;
-      } else if (exam === "GRE") {
-        const est = latest && latest.maxScore ? Math.min(340, Math.max(260, Math.round(260 + (latest.score / latest.maxScore) * 80))) : null;
-        summary = `CGPA: ${Number(user.ugCgpa10).toFixed(1)}/10 (${Number(user.ugGpa4).toFixed(2)} GPA) | WX: ${user.workExMonths}m &bull; ${est ? `Mock &rarr; ${est}/340` : "Target: 328+ GRE"}`;
+    const name = user ? user.name : "Dina Shah";
+    let telemetry = "Target: 332/340 GRE &bull; Readiness: 326 (Q166 / V160 / AWA 4.5)";
+    if (latest && latest.maxScore) {
+      const host = window.location.host.toLowerCase();
+      if (host.includes("gmat")) {
+        const est = Math.min(805, Math.max(205, Math.round((205 + (latest.score / latest.maxScore) * 600) / 10) * 10 + 5));
+        telemetry = `Mocks: ${hist.length} &bull; Latest Scaled: ${est}/805 Focus`;
+      } else if (host.includes("gre")) {
+        const est = Math.min(340, Math.max(260, Math.round(260 + (latest.score / latest.maxScore) * 80)));
+        telemetry = `Mocks: ${hist.length} &bull; Latest Scaled: ${est}/340 GRE`;
       } else {
-        const scaled198 = latest && latest.maxScore ? Math.round((latest.score / latest.maxScore) * 198) : null;
-        summary = `XII: ${user.classXII}% | CGPA: ${Number(user.ugCgpa10).toFixed(1)}/10 (${user.ugPct}%) | WX: ${user.workExMonths}m &bull; ${scaled198 !== null ? `Mock &rarr; ${scaled198}/198` : "Target: 99.2+%ile"}`;
+        const scaled198 = Math.round((latest.score / latest.maxScore) * 198);
+        telemetry = `Mocks: ${hist.length} &bull; Latest Scaled: ${scaled198}/198`;
       }
-
-      let pill = document.getElementById("pg-header-profile-pill");
-      if (!pill) {
-        const proBtn = Array.from(document.querySelectorAll("button")).find(b => /Go Pro Learner|FREE DEMO/i.test(b.textContent || ""));
-        if (proBtn && proBtn.parentElement) {
-          pill = document.createElement("div");
-          pill.id = "pg-header-profile-pill";
-          pill.style.cssText = "display:inline-flex;align-items:center;gap:6px;padding:5px 12px;border-radius:999px;background:#f8fafc;border:1px solid #cbd5e1;font-size:11px;color:#0f172a;cursor:pointer;";
-          proBtn.parentElement.insertBefore(pill, proBtn);
-        }
-      }
-      if (pill) {
-        pill.title = "Click to edit Postgraduate Profile (CGPA, Work-Ex)";
-        pill.onclick = function () { window.openPostgradAuthGate("REGISTER"); };
-        pill.innerHTML = `<strong>&#128100; ${user.name}</strong> <span style="color:#94a3b8;">|</span> <span style="color:#4338ca;font-weight:700;">${summary}</span>`;
-      }
+    } else if (user && user.targetScore) {
+      telemetry = `Target: ${user.targetScore} (${user.examMonth || "2026"}) &bull; Mocks: 0`;
     }
+
+    document.querySelectorAll("header span, header div, nav span, nav div").forEach(el => {
+      if (el.children.length <= 3 && /CGPA:|XII:|WX:|Class\s*(X|XII)|Test Readiness|Target:/i.test(el.textContent || "") && (el.textContent || "").includes(name)) {
+        el.style.cursor = "pointer";
+        el.title = "Click to update Target Score & Exam Window";
+        el.onclick = function () { window.openPostgradAuthGate("REGISTER"); };
+        el.innerHTML = `<span class="font-bold text-slate-900 dark:text-white">&#128100; ${name}</span> <span class="mx-1.5 text-slate-400">|</span> <span class="text-indigo-600 dark:text-indigo-300 font-semibold">${telemetry}</span>`;
+      }
+    });
   }
 
   window.addEventListener("DOMContentLoaded", function () {
-    syncHeaderControls();
-    if (!getUser()) {
-      window.openPostgradAuthGate("REGISTER");
-    }
+    syncSingleCleanHeader();
+    if (!getUser()) window.openPostgradAuthGate("REGISTER");
   });
-  setInterval(syncHeaderControls, 400);
+  setInterval(syncSingleCleanHeader, 450);
 })();
 </script>
-<script src="js/modules/tab6_college_predictor.js?v=20261115"></script>
 </body>
 </html>
