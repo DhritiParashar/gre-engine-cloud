@@ -291,6 +291,10 @@ window.renderVerbalStudio3 = function (el) {
 // ==============================================================================
 // EXACT-COUNT TIMED MOCK ENGINE (TAB 4) — 1-TO-1 PALETTE & BLUEPRINT SYNC
 // ==============================================================================
+
+// ==============================================================================
+// PROCTORED 5-BLUEPRINT MOCK ENGINE + OFFICIAL DIAGNOSTIC MARKSHEET PDF (TAB 4)
+// ==============================================================================
 window.renderMockSimulator4 = async function (el) {
   const host = window.location.host.toLowerCase();
   const exam = host.includes("gmat") ? "GMAT" : (host.includes("gre") ? "GRE" : "CAT");
@@ -324,25 +328,18 @@ window.renderMockSimulator4 = async function (el) {
   const vSec = exam === "CAT" ? "VARC" : (exam === "GMAT" ? "VR" : "Verbal");
 
   const MASTER_BANK = [
-    { sec: qSec, topic: "Algebra & Absolute Value", q: "How many integer values of x satisfy |2x - 7| + |x - 1| <= 8?", opts: isFiveOpt ? ["3", "4", "5", "6", "7"] : ["4", "5", "6", "7"], ans: isFiveOpt ? 3 : 2, exp: "Testing integers x = 0, 1, 2, 3, 4, 5 gives values 8, 5, 4, 3, 4, 7 (all <= 8) -> 6 integer solutions." },
-    { sec: qSec, topic: "Mixtures & Alligation", q: "A 40-liter solution contains 30% alcohol. How many liters of pure alcohol must be added to raise the concentration to 44%?", opts: isFiveOpt ? ["8 L", "10 L", "12 L", "14 L", "16 L"] : ["8 L", "10 L", "12 L", "14 L"], ans: 1, exp: "Water remains constant at 28 L (70% of 40 L). At 44% alcohol, 28 L = 56% of new total V => V = 50 L => Added = 10 L." },
-    { sec: qSec, topic: "Number Properties & Cyclicity", q: "What is the remainder when 7^2026 is divided by 5?", opts: isFiveOpt ? ["0", "1", "2", "3", "4"] : ["1", "2", "3", "4"], ans: isFiveOpt ? 4 : 3, exp: "7 ≡ 2 (mod 5). Cycle of 2^n mod 5 is {2, 4, 3, 1}. 2026 = 4*506 + 2 => remainder = 4." },
-    { sec: qSec, topic: "Combinatorics (Surjective Mapping)", q: "In how many ways can 6 distinct software modules be assigned to 3 servers such that each server receives at least 1 module?", opts: isFiveOpt ? ["240", "360", "540", "600", "720"] : ["360", "540", "600", "720"], ans: isFiveOpt ? 2 : 1, exp: "3^6 - 3*(2^6) + 3*(1^6) = 729 - 192 + 3 = 540." },
-    { sec: qSec, topic: "Work & Combined Rates", q: "Pipelines A and B fill a reservoir together in 12 hours. If A runs alone for 4 hours and B finishes the remaining work in 18 hours, how long would B take alone?", opts: isFiveOpt ? ["18 hrs", "21 hrs", "24 hrs", "27 hrs", "30 hrs"] : ["21 hrs", "24 hrs", "27 hrs", "30 hrs"], ans: isFiveOpt ? 1 : 0, exp: "4(1/12 - 1/B) + 18/B = 1 => 14/B = 2/3 => B = 21 hours." },
-    { sec: qSec, topic: "Logarithms & Base Change", q: "If log_2(x) + log_4(x) + log_16(x) = 21/4, what is the value of x?", opts: isFiveOpt ? ["2", "4", "8", "16", "32"] : ["4", "8", "16", "32"], ans: isFiveOpt ? 2 : 1, exp: "(7/4)*log_2(x) = 21/4 => log_2(x) = 3 => x = 8." },
-    { sec: dSec, topic: "3-Set Venn Minima", q: "In a survey of 200 analysts, 150 use Python, 140 use SQL, and 130 use R. What is the minimum number of analysts using all three tools?", opts: isFiveOpt ? ["0", "10", "20", "30", "40"] : ["10", "20", "30", "40"], ans: isFiveOpt ? 2 : 1, exp: "max(0, 150 + 140 + 130 - 2*200) = 20." },
-    { sec: dSec, topic: "Data Sufficiency / Weighted Portfolio", q: "A $100M fund allocates capital across 6% Senior Debt and 11% Mezzanine Notes to earn $8.2M annual interest. How much is allocated to Mezzanine Notes?", opts: isFiveOpt ? ["$36M", "$40M", "$44M", "$50M", "$56M"] : ["$36M", "$40M", "$44M", "$50M"], ans: 2, exp: "0.06(100 - M) + 0.11M = 8.2 => 0.05M = 2.2 => M = $44M." },
-    { sec: dSec, topic: "Round-Robin League Invariant", q: "In a 6-team round-robin league (2 pts for win, 1 for tie, 0 for loss), if exactly 3 matches end in a tie, what is the sum of points across all 6 teams?", opts: isFiveOpt ? ["24", "27", "30", "33", "36"] : ["27", "30", "33", "36"], ans: isFiveOpt ? 2 : 1, exp: "15 matches * 2 pts/match = 30 total points." },
-    { sec: dSec, topic: "Operating Profit Variance", q: "Division A revenue rose 20% to $120M while operating margin compressed from 25% to 20%. What was the net change in operating profit?", opts: isFiveOpt ? ["-$3.0M", "-$1.0M", "Zero ($0)", "+$1.0M", "+$2.0M"] : ["-$3.0M", "-$1.0M", "+$1.0M", "+$2.0M"], ans: 1, exp: "Prior profit = $25M; Current = $24M => Net change = -$1.0M." },
-    { sec: dSec, topic: "Knockout Seed-Sum Invariant", q: "In a 32-player single-elimination knockout draw (Seeds 1 to 32) with no upsets, which seed faces Seed 5 in the Quarterfinals?", opts: isFiveOpt ? ["Seed 2", "Seed 3", "Seed 4", "Seed 12", "Seed 13"] : ["Seed 3", "Seed 4", "Seed 12", "Seed 13"], ans: isFiveOpt ? 2 : 1, exp: "Quarterfinals have 8 players -> seed sum = 9 -> 9 - 5 = Seed 4." },
-    { sec: vSec, topic: "Critical Reasoning / Paradox", q: "Regional sorting automation cut per-parcel handling labor by 38% with constant volume and revenue/parcel, yet operating margin fell 2.4%. Which best explains this?", opts: isFiveOpt ? ["Competitors also automated.", "Hardware depreciation and maintenance contracts exceeded the dollar labor savings.", "Delivery speed improved.", "Fuel prices stayed constant.", "Remaining hubs will automate next year."] : ["Competitors also automated.", "Hardware depreciation and maintenance contracts exceeded the dollar labor savings.", "Delivery speed improved.", "Fuel prices stayed constant."], ans: 1, exp: "Fixed equipment depreciation + maintenance overhead exceeded labor dollar savings." },
-    { sec: vSec, topic: "Structural Paragraph Coherence", q: "Arrange into a logical paragraph: (1) This asymmetry explains loss aversion in downturns. (2) Losses inflict twice the pain of equivalent gains. (3) Consequently, investors hold losers too long. (4) Classical theory assumes symmetric valuation.", opts: isFiveOpt ? ["4 - 2 - 1 - 3", "2 - 1 - 4 - 3", "1 - 2 - 3 - 4", "2 - 4 - 3 - 1", "4 - 1 - 2 - 3"] : ["4 - 2 - 1 - 3", "2 - 1 - 4 - 3", "1 - 2 - 3 - 4", "2 - 4 - 3 - 1"], ans: 0, exp: "4 -> 2 -> 1 -> 3 = 4213." },
-    { sec: vSec, topic: "Text Completion / Contrast Hinge", q: "Because the physicist's model ______ long-cherished assumptions, it met with initial ______ before experimental data vindicated her.", opts: isFiveOpt ? ["corroborated | acclaim", "upended | skepticism", "ratified | indifference", "echoed | hostility", "presaged | unanimity"] : ["corroborated | acclaim", "upended | skepticism", "ratified | indifference", "echoed | hostility"], ans: 1, exp: "Upending assumptions triggers skepticism until experimental vindication." },
-    { sec: vSec, topic: "Reading Comprehension Thesis", q: "Passage: 'Optimizing forecasting models solely for in-sample precision induces fragility in fat-tailed systems because catastrophic structural breaks lie outside historical calibration.' Main thesis?", opts: isFiveOpt ? ["Historical data is useless.", "In-sample over-optimization creates vulnerability to rare, high-impact structural breaks.", "Fat tails never occur in finance.", "Calibration windows eliminate risk.", "Stationary regimes are unpredictable."] : ["Historical data is useless.", "In-sample over-optimization creates vulnerability to rare, high-impact structural breaks.", "Fat tails never occur in finance.", "Calibration windows eliminate risk."], ans: 1, exp: "Over-optimizing on historical data creates fragility to rare out-of-sample structural breaks." },
-    { sec: vSec, topic: "Decision Making / Scope Audit", q: "Identify the statement outside the core policy arc: (1) Urban heat islands raise city night temperatures. (2) Cool roofs mitigate thermal absorption. (3) Hydrothermal vents sustain deep-ocean tubeworms. (4) High-albedo zoning curbs cooling loads.", opts: isFiveOpt ? ["Sentence 1", "Sentence 2", "Sentence 3", "Sentence 4", "All 4 belong equally"] : ["Sentence 1", "Sentence 2", "Sentence 3", "Sentence 4"], ans: 2, exp: "Sentence 3 shifts to deep-ocean biology." }
+    { sec: qSec, topic: "Algebra & Absolute Value", q: "How many integer values of x satisfy |2x - 7| + |x - 1| <= 8?", isTita: false, opts: isFiveOpt ? ["3", "4", "5", "6", "7"] : ["4", "5", "6", "7"], ans: isFiveOpt ? 3 : 2, exp: "Testing integers x = 0, 1, 2, 3, 4, 5 gives values 8, 5, 4, 3, 4, 7 (all <= 8) -> 6 integer solutions." },
+    { sec: qSec, topic: "Mixtures & Alligation", q: "A 40-liter solution contains 30% alcohol. How many liters of pure alcohol must be added to raise the concentration to 44%?", isTita: false, opts: isFiveOpt ? ["8 L", "10 L", "12 L", "14 L", "16 L"] : ["8 L", "10 L", "12 L", "14 L"], ans: 1, exp: "Water remains constant at 28 L (70% of 40 L). At 44% alcohol, 28 L = 56% of new total V => V = 50 L => Added = 10 L." },
+    { sec: qSec, topic: "Number Properties & Cyclicity", q: "What is the remainder when 7^2026 is divided by 5?", isTita: false, opts: isFiveOpt ? ["0", "1", "2", "3", "4"] : ["1", "2", "3", "4"], ans: isFiveOpt ? 4 : 3, exp: "7 ≡ 2 (mod 5). Cycle of 2^n mod 5 is {2, 4, 3, 1}. 2026 = 4*506 + 2 => remainder = 4." },
+    { sec: qSec, topic: "Combinatorics (Surjective Mapping)", q: "In how many ways can 6 distinct software modules be assigned to 3 servers such that each server receives at least 1 module?", isTita: false, opts: isFiveOpt ? ["240", "360", "540", "600", "720"] : ["360", "540", "600", "720"], ans: isFiveOpt ? 2 : 1, exp: "3^6 - 3*(2^6) + 3*(1^6) = 729 - 192 + 3 = 540." },
+    { sec: dSec, topic: "3-Set Venn Minima", q: "In a survey of 200 analysts, 150 use Python, 140 use SQL, and 130 use R. What is the minimum number of analysts using all three tools?", isTita: false, opts: isFiveOpt ? ["0", "10", "20", "30", "40"] : ["10", "20", "30", "40"], ans: isFiveOpt ? 2 : 1, exp: "max(0, 150 + 140 + 130 - 2*200) = 20." },
+    { sec: dSec, topic: "Weighted Portfolio", q: "A $100M fund allocates capital across 6% Senior Debt and 11% Mezzanine Notes to earn $8.2M annual interest. How much is allocated to Mezzanine Notes?", isTita: false, opts: isFiveOpt ? ["$36M", "$40M", "$44M", "$50M", "$56M"] : ["$36M", "$40M", "$44M", "$50M"], ans: 2, exp: "0.06(100 - M) + 0.11M = 8.2 => 0.05M = 2.2 => M = $44M." },
+    { sec: dSec, topic: "Round-Robin Invariant", q: "In a 6-team round-robin league (2 pts win, 1 tie, 0 loss), if 3 matches tie, what is the sum of points across all 6 teams?", isTita: false, opts: isFiveOpt ? ["24", "27", "30", "33", "36"] : ["27", "30", "33", "36"], ans: isFiveOpt ? 2 : 1, exp: "15 matches * 2 pts/match = 30 total points." },
+    { sec: vSec, topic: "Critical Reasoning / Paradox", q: "Regional sorting automation cut per-parcel handling labor by 38% with constant volume and revenue/parcel, yet operating margin fell 2.4%. Which best explains this?", isTita: false, opts: isFiveOpt ? ["Competitors also automated.", "Hardware depreciation and maintenance contracts exceeded the dollar labor savings.", "Delivery speed improved.", "Fuel prices stayed constant.", "Remaining hubs will automate next year."] : ["Competitors also automated.", "Hardware depreciation and maintenance contracts exceeded the dollar labor savings.", "Delivery speed improved.", "Fuel prices stayed constant."], ans: 1, exp: "Fixed equipment depreciation + maintenance overhead exceeded labor dollar savings." },
+    { sec: vSec, topic: "Paragraph Coherence", q: "Arrange into a logical paragraph: (1) This asymmetry explains loss aversion in downturns. (2) Losses inflict twice the pain of equivalent gains. (3) Consequently, investors hold losers too long. (4) Classical theory assumes symmetric valuation.", isTita: false, opts: isFiveOpt ? ["4 - 2 - 1 - 3", "2 - 1 - 4 - 3", "1 - 2 - 3 - 4", "2 - 4 - 3 - 1", "4 - 1 - 2 - 3"] : ["4 - 2 - 1 - 3", "2 - 1 - 4 - 3", "1 - 2 - 3 - 4", "2 - 4 - 3 - 1"], ans: 0, exp: "4 -> 2 -> 1 -> 3 = 4213." }
   ];
 
-    let pgQuestions = [];
+  let pgQuestions = [];
   try {
     const res = await fetch("/api/questions?limit=150");
     if (res.ok) {
@@ -361,19 +358,19 @@ window.renderMockSimulator4 = async function (el) {
 
         const isTita = !Array.isArray(opts) || opts.length === 0 || String(q.q_type || "").includes("SA");
         const ansVal = String(q.answer ?? q.correct_index ?? "0").trim();
+        const normOpts = isTita ? [] : (isFiveOpt && opts.length === 4 ? [...opts, "None of the above"] : opts);
 
         return {
           sec: mappedSec,
           topic: q.topic || q.chapter_name || "Official Bank",
           q: promptText,
           isTita: isTita,
-          opts: isTita ? [] : opts,
+          opts: normOpts,
           ans: isTita ? ansVal : (!isNaN(parseInt(ansVal, 10)) ? parseInt(ansVal, 10) : 0),
           exp: q.explanation || "Verified PostgreSQL official solution."
         };
       }).filter(item => item.q && (item.isTita || item.opts.length >= 2));
 
-      // Fisher-Yates shuffle so every mock launch serves a non-repeating sequence
       for (let i = pgQuestions.length - 1; i > 0; i--) {
         const j = Math.floor(Math.random() * (i + 1));
         [pgQuestions[i], pgQuestions[j]] = [pgQuestions[j], pgQuestions[i]];
@@ -381,12 +378,11 @@ window.renderMockSimulator4 = async function (el) {
     }
   } catch (e) {}
 
-  // Prioritize live PostgreSQL questions first, using MASTER_BANK only if pool < bp.count
   let basePool = bp.secFilter === "ALL"
     ? [...pgQuestions, ...MASTER_BANK]
     : [...pgQuestions, ...MASTER_BANK].filter(item => item.sec === bp.secFilter);
   if (!basePool.length) basePool = MASTER_BANK;
-  // Hydrate exact bp.count questions so Question Palette matches the Blueprint 1-to-1
+
   const exactPool = [];
   for (let i = 0; i < bp.count; i++) {
     const template = basePool[i % basePool.length];
@@ -403,14 +399,17 @@ window.renderMockSimulator4 = async function (el) {
     curr: 0,
     answers: {},
     marked: {},
+    started: false,
     submitted: false,
-    secondsLeft: bp.mins * 60
+    secondsLeft: bp.mins * 60,
+    totalSeconds: bp.mins * 60,
+    serialId: `${exam}-${new Date().getFullYear()}-${Math.floor(1000 + Math.random() * 9000)}`
   };
 
   if (window._MOCK_TIMER_ID) clearInterval(window._MOCK_TIMER_ID);
   window._MOCK_TIMER_ID = setInterval(() => {
     const st = window._MOCK_STATE;
-    if (!st || st.submitted) return;
+    if (!st || !st.started || st.submitted) return;
     st.secondsLeft = Math.max(0, st.secondsLeft - 1);
     const tEl = document.getElementById("mock-live-timer");
     if (tEl) {
@@ -421,6 +420,16 @@ window.renderMockSimulator4 = async function (el) {
     if (st.secondsLeft === 0) window.submitFullMock4();
   }, 1000);
 
+  window.startMockSession4 = function () {
+    if (!window._MOCK_STATE) return;
+    window._MOCK_STATE.started = true;
+    const lobby = document.getElementById("mock-lobby-box");
+    const active = document.getElementById("mock-active-shell");
+    if (lobby) lobby.classList.add("hidden");
+    if (active) active.classList.remove("hidden");
+    window.renderMockQuestionCard();
+  };
+
   window.renderMockQuestionCard = function () {
     const st = window._MOCK_STATE;
     const qObj = st.questions[st.curr];
@@ -430,7 +439,7 @@ window.renderMockSimulator4 = async function (el) {
 
     palArea.innerHTML = st.questions.map((_, i) => {
       const isCurr = i === st.curr;
-      const isAns = st.answers[i] !== undefined;
+      const isAns = st.answers[i] !== undefined && st.answers[i] !== "";
       const isMark = st.marked[i];
       let cls = "bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 border-slate-300 dark:border-slate-700";
       if (isMark) cls = "bg-amber-400 text-slate-950 border-amber-500 font-extrabold";
@@ -440,6 +449,23 @@ window.renderMockSimulator4 = async function (el) {
     }).join("");
 
     const selected = st.answers[st.curr];
+    const isCorrect = qObj.isTita
+      ? String(selected || "").trim().toLowerCase() === String(qObj.ans).trim().toLowerCase()
+      : selected === qObj.ans;
+
+    const optionsHtml = qObj.isTita
+      ? `<div class="p-4 rounded-xl border border-indigo-300 dark:border-indigo-700 bg-indigo-50/40 dark:bg-indigo-950/30 space-y-2">
+           <label class="text-xs font-extrabold text-indigo-700 dark:text-indigo-300 block">Enter Exact Numeric / Sequence TITA Answer (Zero Negative Penalty):</label>
+           <input type="text" value="${selected !== undefined ? selected : ""}" oninput="window._MOCK_STATE.answers[${st.curr}]=this.value.trim();" placeholder="Type answer here..." class="w-full sm:w-64 px-3.5 py-2 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 text-sm font-mono font-bold">
+         </div>`
+      : qObj.opts.map((opt, oi) => `
+          <label onclick="window._MOCK_STATE.answers[${st.curr}]=${oi}; window.renderMockQuestionCard();"
+            class="flex items-center gap-3 p-3.5 rounded-xl border text-xs font-semibold cursor-pointer transition ${selected === oi ? 'border-indigo-600 bg-indigo-50 dark:bg-indigo-950/40 text-indigo-900 dark:text-indigo-200' : 'border-slate-200 dark:border-slate-700 hover:border-indigo-400'}">
+            <input type="radio" name="mock_active_opt" ${selected === oi ? "checked" : ""}>
+            <span><strong>${String.fromCharCode(65 + oi)}.</strong> ${opt}</span>
+          </label>
+        `).join("");
+
     qArea.innerHTML = `
       <div class="space-y-4">
         <div class="flex flex-wrap items-center justify-between gap-2 border-b border-slate-200 dark:border-slate-800 pb-3">
@@ -455,20 +481,11 @@ window.renderMockSimulator4 = async function (el) {
         </div>
 
         <div class="text-sm font-semibold text-slate-900 dark:text-white leading-relaxed">${qObj.q}</div>
-
-        <div class="space-y-2">
-          ${qObj.isTita ? `<div class="p-4 rounded-xl border border-indigo-300 dark:border-indigo-700 bg-indigo-50/40 dark:bg-indigo-950/30 space-y-2"><label class="text-xs font-extrabold text-indigo-700 dark:text-indigo-300 block">Enter Exact Numeric / Sequence TITA Answer (Zero Negative Penalty):</label><input type="text" value="${selected !== undefined ? selected : ''}" oninput="window._MOCK_STATE.answers[${st.curr}]=this.value.trim();" placeholder="Type answer here..." class="w-full sm:w-64 px-3.5 py-2 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 text-sm font-mono font-bold"></div>` : qObj.opts.map((opt, oi) => `
-            <label onclick="window._MOCK_STATE.answers[${st.curr}]=${oi}; window.renderMockQuestionCard();"
-              class="flex items-center gap-3 p-3.5 rounded-xl border text-xs font-semibold cursor-pointer transition ${selected === oi ? 'border-indigo-600 bg-indigo-50 dark:bg-indigo-950/40 text-indigo-900 dark:text-indigo-200' : 'border-slate-200 dark:border-slate-700 hover:border-indigo-400'}">
-              <input type="radio" name="mock_active_opt" ${selected === oi ? "checked" : ""}>
-              <span><strong>${String.fromCharCode(65 + oi)}.</strong> ${opt}</span>
-            </label>
-          `).join("")}
-        </div>
+        <div class="space-y-2">${optionsHtml}</div>
 
         ${st.submitted ? `
-          <div class="p-3.5 rounded-xl ${selected === qObj.ans ? 'bg-emerald-50 border-emerald-300 text-emerald-900' : 'bg-rose-50 border-rose-300 text-rose-900'} border text-xs">
-            <strong>${(qObj.isTita ? String(selected || "").trim().toLowerCase() === String(qObj.ans).trim().toLowerCase() : selected === qObj.ans) ? "Correct!" : "Incorrect / Unattempted."} Correct Answer: ${qObj.isTita ? qObj.ans : String.fromCharCode(65 + qObj.ans)}.</strong> ${qObj.exp}
+          <div class="p-3.5 rounded-xl ${isCorrect ? 'bg-emerald-50 border-emerald-300 text-emerald-900' : 'bg-rose-50 border-rose-300 text-rose-900'} border text-xs">
+            <strong>${isCorrect ? "Correct!" : "Incorrect / Unattempted."} Official Answer: ${qObj.isTita ? qObj.ans : "(" + String.fromCharCode(65 + qObj.ans) + ") " + (qObj.opts[qObj.ans] || "")}.</strong> ${qObj.exp}
           </div>
         ` : ""}
 
@@ -484,6 +501,95 @@ window.renderMockSimulator4 = async function (el) {
     `;
   };
 
+  window.downloadOfficialMarksheet4 = function () {
+    const st = window._MOCK_STATE;
+    if (!st) return;
+    const candidate = (window.CURRENT_USER && window.CURRENT_USER.name) ? window.CURRENT_USER.name : "Dina Shah";
+    const dateStr = new Date().toLocaleDateString("en-GB");
+    const elapsedSec = Math.max(1, st.totalSeconds - st.secondsLeft);
+    const pacePerQ = (elapsedSec / st.questions.length).toFixed(1);
+
+    let correct = 0, wrong = 0, unattempted = 0;
+    const isCat = exam === "CAT" && bp.id !== "XAT_5OPT";
+
+    const rowsHtml = st.questions.map((q, idx) => {
+      const userAns = st.answers[idx];
+      const isUn = userAns === undefined || userAns === "";
+      const isRight = !isUn && (q.isTita
+        ? String(userAns).trim().toLowerCase() === String(q.ans).trim().toLowerCase()
+        : userAns === q.ans);
+
+      let delta = 0;
+      if (isUn) { unattempted++; delta = 0; }
+      else if (isRight) { correct++; delta = isCat ? 3 : 1; }
+      else { wrong++; delta = isCat ? -1 : 0; }
+
+      const subText = isUn
+        ? "(No response submitted)"
+        : (q.isTita ? String(userAns) : `(${String.fromCharCode(65 + userAns)}) ${q.opts[userAns] || ""}`);
+      const offText = q.isTita
+        ? String(q.ans)
+        : `(${String.fromCharCode(65 + q.ans)}) ${q.opts[q.ans] || ""}`;
+      const badgeText = q.isTita
+        ? `TITA (+3/0) • ${isUn ? "Unattempted (0 Marks)" : (isRight ? "Correct (+3 Marks)" : "Incorrect (0 Marks)")}`
+        : `${isCat ? "MCQ (+3/-1)" : "MCQ"} • ${isUn ? "Unattempted (0 Marks)" : (isRight ? `Correct (+${delta})` : `Incorrect (${delta})`)}`;
+
+      return `
+        <div style="border:1px solid #cbd5e1; border-radius:8px; padding:12px; margin-bottom:12px; page-break-inside:avoid;">
+          <div style="display:flex; justify-content:space-between; font-size:11px; font-weight:700; color:#1e3a8a; margin-bottom:4px;">
+            <span>Question ${idx + 1} of ${st.questions.length}. ${q.sec} (${q.topic})</span>
+            <span>${badgeText}</span>
+          </div>
+          <div style="font-size:12px; font-weight:600; color:#0f172a; margin-bottom:6px;">${q.q}</div>
+          <div style="font-size:11px; color:#334155;"><strong>Your Submitted Response:</strong> ${subText}</div>
+          <div style="font-size:11px; color:#065f46;"><strong>Official Answer:</strong> ${offText}</div>
+          <div style="font-size:11px; color:#475569; margin-top:4px;"><strong>Solution:</strong> ${q.exp}</div>
+        </div>
+      `;
+    }).join("");
+
+    const score = isCat ? Math.max(0, correct * 3 - wrong * 1) : correct;
+    const maxScore = isCat ? st.questions.length * 3 : st.questions.length;
+    const acc = (correct + wrong) > 0 ? ((correct / (correct + wrong)) * 100).toFixed(1) : "0.0";
+    const verdict = parseFloat(pacePerQ) < 15 ? "Rushed (High Risk of Operational Slips)" : "Disciplined Exam Pacing";
+
+    const w = window.open("", "_blank");
+    if (!w) { alert("Please allow pop-ups to download the Official Diagnostic Marksheet PDF."); return; }
+    w.document.write(`
+      <!doctype html>
+      <html>
+      <head>
+        <title>${exam}_Marksheet_${dateStr.replace(/\//g, "-")}_${st.serialId}_${candidate.replace(/\s+/g, "_")}</title>
+        <style>
+          body { font-family: Arial, Helvetica, sans-serif; color: #0f172a; margin: 24px; }
+          .hdr { border-bottom: 2px solid #1e3a8a; padding-bottom: 12px; margin-bottom: 16px; }
+          .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; background: #f8fafc; border: 1px solid #cbd5e1; padding: 12px; border-radius: 8px; margin-bottom: 18px; font-size: 12px; }
+        </style>
+      </head>
+      <body>
+        <div class="hdr">
+          <div style="font-size:11px; font-weight:800; color:#4f46e5; letter-spacing:1px;">GOALISB ${exam} EVALUATION ENGINE</div>
+          <h1 style="margin:4px 0; font-size:20px;">OFFICIAL ${exam} DIAGNOSTIC MARKSHEET</h1>
+          <div style="font-size:12px; color:#334155;">
+            <strong>Candidate:</strong> ${candidate} &nbsp;|&nbsp;
+            <strong>Assessment Serial ID:</strong> ${st.serialId} &nbsp;|&nbsp;
+            <strong>Date:</strong> ${dateStr}
+          </div>
+        </div>
+        <div class="grid">
+          <div><strong>SCORE AWARDED:</strong> ${score}/${maxScore}</div>
+          <div><strong>ACCURACY:</strong> ${acc}% (${correct}C/${wrong}W/${unattempted}U)</div>
+          <div><strong>PACE PER Q:</strong> ${pacePerQ}s/Q</div>
+          <div style="grid-column: span 3;"><strong>BLUEPRINT:</strong> ${bp.title} &nbsp;|&nbsp; <strong>VERDICT:</strong> ${verdict}</div>
+        </div>
+        ${rowsHtml}
+        <script>window.onload = function(){ window.print(); };<\/script>
+      </body>
+      </html>
+    `);
+    w.document.close();
+  };
+
   window.submitFullMock4 = function () {
     const st = window._MOCK_STATE;
     st.submitted = true;
@@ -491,8 +597,9 @@ window.renderMockSimulator4 = async function (el) {
 
     let correct = 0, wrong = 0, unattempted = 0;
     st.questions.forEach((q, i) => {
-      if (st.answers[i] === undefined) unattempted++;
-      else if (q.isTita ? String(st.answers[i]).trim().toLowerCase() === String(q.ans).trim().toLowerCase() : st.answers[i] === q.ans) correct++;
+      const val = st.answers[i];
+      if (val === undefined || val === "") unattempted++;
+      else if (q.isTita ? String(val).trim().toLowerCase() === String(q.ans).trim().toLowerCase() : val === q.ans) correct++;
       else wrong++;
     });
 
@@ -502,7 +609,7 @@ window.renderMockSimulator4 = async function (el) {
     const accuracy = (correct + wrong) > 0 ? Math.round((correct / (correct + wrong)) * 100) : 0;
 
     const hist = JSON.parse(localStorage.getItem("ipm_mock_history_v1") || "[]");
-    hist.unshift({ date: new Date().toLocaleDateString(), blueprint: bp.title, score, maxScore, correct, wrong, accuracy });
+    hist.unshift({ date: new Date().toLocaleDateString(), serialId: st.serialId, blueprint: bp.title, score, maxScore, correct, wrong, unattempted, accuracy });
     localStorage.setItem("ipm_mock_history_v1", JSON.stringify(hist));
 
     const banner = document.getElementById("mock-scorecard-banner");
@@ -512,9 +619,12 @@ window.renderMockSimulator4 = async function (el) {
         <div class="flex flex-wrap items-center justify-between gap-3">
           <div>
             <div class="text-sm font-extrabold">Diagnostic Scorecard (${bp.title}): ${score} / ${maxScore} (${accuracy}% Accuracy)</div>
-            <div class="text-xs mt-0.5">Correct: <strong>${correct}</strong> &bull; Wrong: <strong>${wrong}</strong> &bull; Unattempted: <strong>${unattempted}</strong> &bull; Synced to Top Header &amp; Tab 6 Forecaster!</div>
+            <div class="text-xs mt-0.5">Serial ID: <strong>${st.serialId}</strong> &bull; Correct: <strong>${correct}</strong> &bull; Wrong: <strong>${wrong}</strong> &bull; Unattempted: <strong>${unattempted}</strong></div>
           </div>
-          <button type="button" onclick="window.selectUnifiedTab(6)" class="px-4 py-2 rounded-xl bg-indigo-600 text-white text-xs font-extrabold cursor-pointer">Open Tab 6 Score Forecaster &rarr;</button>
+          <div class="flex flex-wrap items-center gap-2">
+            <button type="button" onclick="window.downloadOfficialMarksheet4()" class="px-4 py-2 rounded-xl bg-slate-900 hover:bg-slate-800 text-white text-xs font-extrabold cursor-pointer">&#128196; Download Official Marksheet PDF</button>
+            <button type="button" onclick="window.selectUnifiedTab(6)" class="px-4 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-extrabold cursor-pointer">Open Tab 6 Score Forecaster &rarr;</button>
+          </div>
         </div>
       `;
     }
@@ -534,35 +644,72 @@ window.renderMockSimulator4 = async function (el) {
     <div class="max-w-7xl mx-auto my-4 space-y-4">
       <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3">${bpSelectorHtml}</div>
 
-      <div class="bg-slate-900 text-white rounded-2xl p-4 flex flex-wrap items-center justify-between gap-3 border border-slate-800 shadow-lg">
-        <div>
-          <span class="text-[10px] font-extrabold uppercase tracking-wider text-amber-300">${bp.tag} &bull; ${bp.scale}</span>
-          <h2 class="text-base font-extrabold">${bp.title}</h2>
-        </div>
-        <div class="flex items-center gap-3">
-          <div class="px-3.5 py-2 rounded-xl bg-slate-800 border border-slate-700 text-xs font-mono">
-            Time Remaining: <strong id="mock-live-timer" class="text-amber-300 text-sm">${bp.mins}:00</strong>
+      <!-- Proctored Pre-Exam Briefing Lobby (Timer Paused Until Explicit Start Trigger) -->
+      <div id="mock-lobby-box" class="bg-white dark:bg-slate-900 border-2 border-indigo-500/40 rounded-2xl p-6 sm:p-8 shadow-sm space-y-5">
+        <div class="flex flex-wrap items-start justify-between gap-4 border-b border-slate-200 dark:border-slate-800 pb-4">
+          <div class="space-y-1">
+            <span class="px-2.5 py-0.5 rounded-full bg-indigo-100 dark:bg-indigo-900/50 text-indigo-700 dark:text-indigo-300 text-[10px] font-extrabold uppercase">${bp.tag} &bull; READY TO LAUNCH</span>
+            <h2 class="text-xl font-extrabold text-slate-900 dark:text-white">${bp.title}</h2>
+            <p class="text-xs text-slate-600 dark:text-slate-300 max-w-3xl leading-relaxed">${bp.desc}</p>
           </div>
-          <button type="button" onclick="window.submitFullMock4()" class="px-4 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-extrabold shadow cursor-pointer">Submit Exam &amp; Forecast Score</button>
+          <button type="button" onclick="window.startMockSession4()"
+            class="px-6 py-3.5 rounded-2xl bg-indigo-600 hover:bg-indigo-500 text-white text-sm font-extrabold shadow-lg shadow-indigo-600/25 cursor-pointer transition">
+            &#9654; Start Proctored Mock Session (${bp.mins} Mins)
+          </button>
+        </div>
+
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 text-xs">
+          <div class="p-3.5 rounded-xl bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800">
+            <div class="text-[10px] font-bold uppercase text-slate-400">Question Count</div>
+            <div class="font-extrabold text-slate-900 dark:text-white mt-0.5">${exactPool.length} Questions</div>
+          </div>
+          <div class="p-3.5 rounded-xl bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800">
+            <div class="text-[10px] font-bold uppercase text-slate-400">Proctored Clock</div>
+            <div class="font-extrabold text-amber-600 dark:text-amber-400 mt-0.5">${bp.mins}:00 Minutes (Paused)</div>
+          </div>
+          <div class="p-3.5 rounded-xl bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800">
+            <div class="text-[10px] font-bold uppercase text-slate-400">Option Format</div>
+            <div class="font-extrabold text-indigo-600 dark:text-indigo-300 mt-0.5">${isFiveOpt ? "5 Choices (A–E)" : "4 Choices (A–D) + TITA"}</div>
+          </div>
+          <div class="p-3.5 rounded-xl bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800">
+            <div class="text-[10px] font-bold uppercase text-slate-400">PostgreSQL Live Bank</div>
+            <div class="font-extrabold text-emerald-600 dark:text-emerald-400 mt-0.5">${pgQuestions.length} Live DB Items Loaded</div>
+          </div>
         </div>
       </div>
 
-      <div id="mock-scorecard-banner" class="hidden p-4 rounded-2xl bg-emerald-50 dark:bg-emerald-950/50 border border-emerald-300 dark:border-emerald-700 text-emerald-900 dark:text-emerald-200"></div>
+      <!-- Active Exam Simulator (Revealed only after Start Trigger) -->
+      <div id="mock-active-shell" class="hidden space-y-4">
+        <div class="bg-slate-900 text-white rounded-2xl p-4 flex flex-wrap items-center justify-between gap-3 border border-slate-800 shadow-lg">
+          <div>
+            <span class="text-[10px] font-extrabold uppercase tracking-wider text-amber-300">${bp.tag} &bull; ${bp.scale}</span>
+            <h2 class="text-base font-extrabold">${bp.title}</h2>
+          </div>
+          <div class="flex items-center gap-3">
+            <div class="px-3.5 py-2 rounded-xl bg-slate-800 border border-slate-700 text-xs font-mono">
+              Time Remaining: <strong id="mock-live-timer" class="text-amber-300 text-sm">${bp.mins}:00</strong>
+            </div>
+            <button type="button" onclick="window.renderMockSimulator4(document.getElementById('main-workspace'));" class="px-3 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 border border-slate-700 text-xs font-bold cursor-pointer">Reset / Lobby</button>
+            <button type="button" onclick="window.submitFullMock4()" class="px-4 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-extrabold shadow cursor-pointer">Submit Exam &amp; Forecast Score</button>
+          </div>
+        </div>
 
-      <div class="grid grid-cols-1 lg:grid-cols-12 gap-5">
-        <div id="mock-q-area" class="lg:col-span-8 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-6 shadow-sm"></div>
-        <div class="lg:col-span-4 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-5 space-y-4 shadow-sm">
-          <div class="text-xs font-extrabold uppercase tracking-wider text-indigo-600">Question Palette (${exactPool.length} Qs)</div>
-          <div id="mock-palette-area" class="flex flex-wrap gap-1.5 max-h-80 overflow-y-auto pr-1"></div>
-          <div class="pt-3 border-t border-slate-200 dark:border-slate-800 text-[11px] text-slate-500 space-y-1">
-            <div><span class="inline-block w-3 h-3 rounded bg-emerald-600 mr-1.5 align-middle"></span>Answered</div>
-            <div><span class="inline-block w-3 h-3 rounded bg-amber-400 mr-1.5 align-middle"></span>Marked for Review</div>
-            <div><span class="inline-block w-3 h-3 rounded bg-slate-200 dark:bg-slate-800 mr-1.5 align-middle"></span>Not Answered</div>
+        <div id="mock-scorecard-banner" class="hidden p-4 rounded-2xl bg-emerald-50 dark:bg-emerald-950/50 border border-emerald-300 dark:border-emerald-700 text-emerald-900 dark:text-emerald-200"></div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-5">
+          <div id="mock-q-area" class="lg:col-span-8 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-6 shadow-sm"></div>
+          <div class="lg:col-span-4 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-5 space-y-4 shadow-sm">
+            <div class="text-xs font-extrabold uppercase tracking-wider text-indigo-600">Question Palette (${exactPool.length} Qs)</div>
+            <div id="mock-palette-area" class="flex flex-wrap gap-1.5 max-h-80 overflow-y-auto pr-1"></div>
+            <div class="pt-3 border-t border-slate-200 dark:border-slate-800 text-[11px] text-slate-500 space-y-1">
+              <div><span class="inline-block w-3 h-3 rounded bg-emerald-600 mr-1.5 align-middle"></span>Answered</div>
+              <div><span class="inline-block w-3 h-3 rounded bg-amber-400 mr-1.5 align-middle"></span>Marked for Review</div>
+              <div><span class="inline-block w-3 h-3 rounded bg-slate-200 dark:bg-slate-800 mr-1.5 align-middle"></span>Not Answered</div>
+            </div>
           </div>
         </div>
       </div>
     </div>
   `;
-  window.renderMockQuestionCard();
 };
 window.renderTab4 = window.renderMockSimulator4;
