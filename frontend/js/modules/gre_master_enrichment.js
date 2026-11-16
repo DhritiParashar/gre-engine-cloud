@@ -106,10 +106,43 @@
   };
   window.renderTab2 = window.renderGreDiAndAwaTab2;
 
-  // 3. Enriched Tab 3: 7-Chapter GRE Verbal Studio (TC 1/2/3-Blank, SE 6-Choice Pairs, RC)
-  window.renderGreVerbalStudio3 = function (el) {
+    // 3. Enriched Tab 3: 7-Chapter GRE Verbal Studio (8+ Drills per Chapter = 56+ Drills + PG Live Sync)
+  window._GRE_VR_PG_EXTRA = window._GRE_VR_PG_EXTRA || [];
+  window._GRE_VR_PG_FETCHED = false;
+
+  async function hydrateGreVerbalPg() {
+    if (window._GRE_VR_PG_FETCHED) return window._GRE_VR_PG_EXTRA;
+    window._GRE_VR_PG_FETCHED = true;
+    try {
+      const res = await fetch(`/api/questions?section=VARC&limit=30&t=${Date.now()}`);
+      if (res.ok) {
+        const data = await res.json();
+        const rows = Array.isArray(data) ? data : (data.questions || []);
+        const seen = new Set();
+        window._GRE_VR_PG_EXTRA = rows.map(q => {
+          let opts = q.options_json || q.options || [];
+          if (typeof opts === "string") { try { opts = JSON.parse(opts); } catch (_) { opts = []; } }
+          const stem = q.prompt || q.question || "";
+          const key = stem.slice(0, 65);
+          if (!stem || seen.has(key) || !Array.isArray(opts) || opts.length < 4) return null;
+          seen.add(key);
+          return {
+            tag: "PostgreSQL Live • GRE Verbal",
+            q: stem,
+            opts: opts.map((o, oi) => /^[A-E]\)/.test(o) ? o : `${String.fromCharCode(65 + oi)}) ${o}`),
+            ans: parseInt(String(q.answer ?? "0"), 10) || 0,
+            exp: q.explanation || "Verified GRE Verbal explanation."
+          };
+        }).filter(Boolean).slice(0, 3);
+      }
+    } catch (_) {}
+    return window._GRE_VR_PG_EXTRA;
+  }
+
+  window.renderGreVerbalStudio3 = async function (el) {
     const target = el || document.getElementById("main-workspace");
     if (!target) return;
+    const pgVerbal = await hydrateGreVerbalPg();
 
     const CHAPTERS = [
       {
@@ -117,19 +150,16 @@
         sub: "6 Qs per Test • Context Clues, Semicolons & Concession Pivots",
         overview: "Single-blank Text Completion tests precision vocabulary inside dense academic prose. Never look at the 5 choices first—predict your own target word using structural hinges ('although', 'nonetheless', ':', 'thus') and match exact polarity.",
         worked: [
-        { tier: "GRE 155+ Foundation", p: "Given x > 0, compare Quantity A: (x + 2)^2 vs. Quantity B: x^2 + 4.", s: "1. Expand Quantity A = x^2 + 4x + 4.\n2. Subtract (x^2 + 4) from both quantities -> Compare 4x vs. 0.\n3. Since x > 0, 4x > 0 => Quantity A is greater (Choice A)." },
-        { tier: "GRE 155+ Foundation", p: "Given y < 0, compare Quantity A: y^3 vs. Quantity B: y^2.", s: "1. Since y < 0, y^3 is strictly negative while y^2 is strictly positive.\n2. Every positive number exceeds every negative number => Quantity B is greater (Choice B)." },
-        { tier: "GRE 155+ Foundation", p: "Compare Quantity A: (3^4)^5 vs. Quantity B: (3^5)^4.", s: "1. By power-of-a-power rule: (3^4)^5 = 3^20 and (3^5)^4 = 3^20.\n2. Both quantities are equal (Choice C)." },
-        { tier: "GRE 165+ Contender", p: "Given 0 < x < 1, compare Quantity A: x^2 + x^3 vs. Quantity B: x + x^4.", s: "1. Compute Quantity B - Quantity A = (x - x^2) - (x^3 - x^4) = x(1 - x)(1 - x^2).\n2. For 0 < x < 1, x > 0, (1 - x) > 0, and (1 - x^2) > 0 => Quantity B is greater (Choice B)." },
-        { tier: "GRE 165+ Contender", p: "Circle radius r and square side s satisfy pi * r^2 = s^2. Compare Circumference (2*pi*r) vs. Square Perimeter (4s).", s: "1. s = r * sqrt(pi) ≈ 1.772r -> Square Perimeter = 4s ≈ 7.09r.\n2. Circle Circumference = 2*pi*r ≈ 6.28r => Quantity B is greater (Choice B)." },
-        { tier: "GRE 165+ Contender", p: "Given a > b > 0, compare Quantity A: a / b vs. Quantity B: (a + 5) / (b + 5).", s: "1. Adding a positive constant to numerator and denominator of an improper fraction (a/b > 1) pulls it closer to 1.\n2. Therefore a/b > (a + 5)/(b + 5) => Quantity A is greater (Choice A)." },
-        { tier: "GRE 170 Perfection", p: "Given xy != 0, compare Quantity A: |x + y| vs. Quantity B: |x| + |y|.", s: "1. If x = 2, y = 3 -> |5| = 5 and 2 + 3 = 5 (Equal).\n2. If x = 2, y = -3 -> |-1| = 1 < 2 + 3 = 5 (B is greater).\n3. Two different outcomes => Relationship cannot be determined (Choice D)." },
-        { tier: "GRE 170 Perfection", p: "n is a positive integer. Compare Quantity A: Remainder of 7^(4n+2) mod 5 vs. Quantity B: 4.", s: "1. 7 ≡ 2 (mod 5). Powers of 2 mod 5 cycle {2, 4, 3, 1}.\n2. 2^(4n+2) ≡ 2^2 = 4 (mod 5) => Equal (Choice C)." },
-        { tier: "GRE 170 Perfection", p: "Set S = {10, 20, 30, 40, 50} vs Set T = {10, 30, 30, 30, 50}. Compare their standard deviations.", s: "1. Both have mean 30, but Set S has wider deviations (-20, -10, 0, +10, +20) than Set T (-20, 0, 0, 0, +20).\n2. Standard deviation of Set S is strictly greater (Choice A)." }
-      ],
+          { tier: "GRE 155+ Foundation", p: "Because the diplomat's memoir was remarkably _____, historians could reconstruct previously secret cabinet deliberations.", s: "1. Hinge: 'Because' (cause -> effect). Result: 'reconstruct secret deliberations'.\n2. Answer: 'candid' (forthcoming/frank)." },
+          { tier: "GRE 165+ Contender", p: "Far from being _____, the new regulatory framework introduced dozens of granular compliance checkpoints.", s: "1. Hinge: 'Far from being ___' (opposite of 'granular checkpoints').\n2. Answer: 'laissez-faire' (hands-off/permissive)." },
+          { tier: "GRE 170 Perfection", p: "The critic's _____ praise was more damaging than outright condemnation, praising trivial flourishes while ignoring the thesis.", s: "1. Hinge: 'more damaging than outright condemnation'.\n2. Answer: 'tepid' or 'backhanded' (lukewarm/faint praise)." }
+        ],
         drills: [
-          { q: "The playwright's dialogue is celebrated for its _____, packing profound philosophical tension into deceptively brief exchanges.", opts: ["A) prolixity", "B) concision", "C) bombast", "D) obfuscation", "E) redundancy"], ans: 1, exp: "'Deceptively brief exchanges' directly defines 'concision' (brevity + density)." },
-          { q: "Once hailed as an _____ defender of fiscal austerity, the minister surprised markets by championing a massive stimulus package.", opts: ["A) ambivalent", "B) implacable", "C) ephemeral", "D) erratic", "E) equivocal"], ans: 1, exp: "Contrasting with surprising stimulus support requires 'implacable' (unyielding/uncompromising)." }
+          { tag: "GRE 155+ Foundation", q: "The playwright's dialogue is celebrated for its _____, packing profound philosophical tension into deceptively brief exchanges.", opts: ["A) prolixity", "B) concision", "C) bombast", "D) obfuscation", "E) redundancy"], ans: 1, exp: "'Deceptively brief exchanges' directly defines 'concision' (brevity + density)." },
+          { tag: "GRE 165+ Contender", q: "Once hailed as an _____ defender of fiscal austerity, the minister surprised markets by championing a massive stimulus package.", opts: ["A) ambivalent", "B) implacable", "C) ephemeral", "D) erratic", "E) equivocal"], ans: 1, exp: "Contrasting with surprising stimulus support requires 'implacable' (unyielding/uncompromising)." },
+          { tag: "GRE 165+ Contender", q: "Despite the biographer's reputation for exhaustive archival rigor, her latest volume is surprisingly _____, glossing over pivotal letters.", opts: ["A) perfunctory", "B) scrupulous", "C) exhaustive", "D) magisterial", "E) pedantic"], ans: 0, exp: "'Despite ... exhaustive rigor' signals superficiality -> 'perfunctory'." },
+          { tag: "GRE 170 Perfection", q: "Rather than clarifying the statute, the committee's _____ amendments only compounded its interpretive ambiguity.", opts: ["A) pellucid", "B) turbid", "C) trenchant", "D) salutary", "E) cogent"], ans: 1, exp: "Opposite of 'clarifying' -> 'turbid' (muddy, confused, opaque)." },
+          { tag: "GRE 170 Perfection", q: "Known for her _____ temperament, the negotiator remained unruffled even when talks collapsed minutes before the deadline.", opts: ["A) mercurial", "B) phlegmatic", "C) choleric", "D) querulous", "E) effervescent"], ans: 1, exp: "'Unruffled' directly matches 'phlegmatic' (calm, stolid, unemotional)." }
         ]
       },
       {
@@ -137,10 +167,15 @@
         sub: "Zero Partial Credit • Solve the More Constrained Blank First",
         overview: "In 2-blank Text Completion, both blanks must be correct to earn 1 point. Always start with whichever blank has stronger local syntactic constraints, then use that resolved clause to lock the second blank.",
         worked: [
-          { p: "Prompt: While the CEO's public remarks projected (i)_____, internal memos revealed deep (ii)_____ regarding Q4 liquidity.", s: "1. 'While' contrasts public vs. internal.\n2. Blank (i) = 'sangfroid / optimism'; Blank (ii) = 'trepidation / misgivings'." }
+          { tier: "GRE 155+ Foundation", p: "While the CEO's public remarks projected (i)_____, internal memos revealed deep (ii)_____ regarding Q4 liquidity.", s: "1. 'While' contrasts public vs. internal.\n2. Blank (i) = 'sangfroid' (poise); Blank (ii) = 'trepidation' (anxiety)." },
+          { tier: "GRE 165+ Contender", p: "Far from (i)_____ existing theories, the anomalies merely (ii)_____ a minor recalibration of boundary parameters.", s: "1. 'Far from' contrasts overturning theories with 'merely' requiring a minor tweak.\n2. Blank (i) = 'refuting'; Blank (ii) = 'necessitated'." }
         ],
         drills: [
-          { q: "Although the critic found the novel's plot overly (i)_____, she praised its prose as remarkably (ii)_____.", opts: ["A) (i) contrived ... (ii) luminous", "B) (i) riveting ... (ii) pedestrian", "C) (i) coherent ... (ii) turgid", "D) (i) pellucid ... (ii) derivative", "E) (i) trenchant ... (ii) banal"], ans: 0, exp: "'Although' contrasts negative plot ('contrived' = artificial) with positive prose ('luminous' = clear/brilliant)." }
+          { tag: "GRE 155+ Foundation", q: "Although the critic found the novel's plot overly (i)_____, she praised its prose as remarkably (ii)_____.", opts: ["A) (i) contrived ... (ii) luminous", "B) (i) riveting ... (ii) pedestrian", "C) (i) coherent ... (ii) turgid", "D) (i) pellucid ... (ii) derivative", "E) (i) trenchant ... (ii) banal"], ans: 0, exp: "'Although' contrasts artificial plot ('contrived') with brilliant prose ('luminous')." },
+          { tag: "GRE 165+ Contender", q: "Although early reviewers dismissed the minimalist score as (i)_____, musicologists later recognized a (ii)_____ contrapuntal architecture.", opts: ["A) (i) derivative ... (ii) labyrinthine", "B) (i) magisterial ... (ii) rudimentary", "C) (i) prophetic ... (ii) banal", "D) (i) ebullient ... (ii) diaphanous", "E) (i) recondite ... (ii) monolithic"], ans: 0, exp: "Contrasts unoriginal dismissal ('derivative') with intricate structure ('labyrinthine')." },
+          { tag: "GRE 165+ Contender", q: "The historian's account is neither wholly (i)_____ nor uncritically (ii)_____; instead, it balances admiration with candid scrutiny.", opts: ["A) (i) iconoclastic ... (ii) hagiographic", "B) (i) laudatory ... (ii) panegyric", "C) (i) censorious ... (ii) disparaging", "D) (i) impartial ... (ii) objective", "E) (i) apathetic ... (ii) indifferent"], ans: 0, exp: "Balances between attacking idols ('iconoclastic') and saintly worship ('hagiographic')." },
+          { tag: "GRE 170 Perfection", q: "Because the envoy's assurances were intentionally (i)_____, neither faction could cite them as an (ii)_____ commitment.", opts: ["A) (i) equivocal ... (ii) unambiguous", "B) (i) categorical ... (ii) elusive", "C) (i) trenchant ... (ii) explicit", "D) (i) candid ... (ii) opaque", "E) (i) dogmatic ... (ii) nebulous"], ans: 0, exp: "'Equivocal' (open to multiple interpretations) prevents an 'unambiguous' commitment." },
+          { tag: "GRE 170 Perfection", q: "Once considered (i)_____ to atmospheric chemistry, trace aerosols are now recognized as (ii)_____ drivers of cloud nucleation.", opts: ["A) (i) peripheral ... (ii) pivotal", "B) (i) indispensable ... (ii) negligible", "C) (i) germane ... (ii) extraneous", "D) (i) cardinal ... (ii) trivial", "E) (i) intrinsic ... (ii) tangential"], ans: 0, exp: "'Once considered ... are now recognized' signals shift from 'peripheral' (marginal) to 'pivotal' (central)." }
         ]
       },
       {
@@ -148,10 +183,14 @@
         sub: "165+ Verbal Discriminator • Macro-Thesis & Tone Continuity",
         overview: "Triple-blank passages span 3–5 sentences and test whether you track an evolving scholarly argument across sentences. Map the author's attitude toward each cited theory before testing options.",
         worked: [
-          { p: "Prompt: Traditional historians viewed the treaty as (i)_____; however, newly declassified cables show negotiators were (ii)_____ about its durability, privately calling it a (iii)_____ truce.", s: "1. 'however' flips traditional view ('durable/watershed') to private skepticism ('sanguine' negated -> 'dubious') and 'ephemeral / stopgap' truce." }
+          { tier: "GRE 165+ Contender", p: "Traditional historians viewed the treaty as (i)_____; however, newly declassified cables show negotiators were (ii)_____ about its durability, privately calling it a (iii)_____ truce.", s: "1. 'however' flips traditional view ('watershed') to private skepticism ('dubious') and 'ephemeral' truce." },
+          { tier: "GRE 170 Perfection", p: "While popular accounts depict Renaissance workshops as (i)_____ studios dominated by a lone genius, archival ledgers reveal a (ii)_____ enterprise in which apprentices (iii)_____ routine commissions.", s: "1. 'While' contrasts solitary genius ('insular / autocratic') with collaborative ('communal') division of labor ('executed')." }
         ],
         drills: [
-          { q: "Early models assumed ocean currents were (i)_____, driven solely by steady trade winds; modern satellite altimetry, by contrast, reveals a (ii)_____ field of transient eddies that (iii)_____ heat transport.", opts: ["A) (i) laminar ... (ii) turbulent ... (iii) modulates", "B) (i) chaotic ... (ii) static ... (iii) precludes", "C) (i) ephemeral ... (ii) invariant ... (iii) halts", "D) (i) erratic ... (ii) uniform ... (iii) ignores", "E) (i) volatile ... (ii) placid ... (iii) diminishes"], ans: 0, exp: "'Steady' pairs with 'laminar' (smooth); 'by contrast' + 'transient eddies' pairs with 'turbulent' and 'modulates'." }
+          { tag: "GRE 165+ Contender", q: "Early models assumed ocean currents were (i)_____, driven solely by steady trade winds; modern satellite altimetry, by contrast, reveals a (ii)_____ field of transient eddies that (iii)_____ heat transport.", opts: ["A) (i) laminar ... (ii) turbulent ... (iii) modulates", "B) (i) chaotic ... (ii) static ... (iii) precludes", "C) (i) ephemeral ... (ii) invariant ... (iii) halts", "D) (i) erratic ... (ii) uniform ... (iii) ignores", "E) (i) volatile ... (ii) placid ... (iii) diminishes"], ans: 0, exp: "'Steady' pairs with 'laminar' (smooth); 'by contrast' + 'eddies' pairs with 'turbulent' and 'modulates'." },
+          { tag: "GRE 165+ Contender", q: "Though initially dismissed as a (i)_____ curiosity, the synthetic catalyst soon proved (ii)_____ in industrial synthesis, (iii)_____ reaction times by an order of magnitude.", opts: ["A) (i) niche ... (ii) indispensable ... (iii) curtailing", "B) (i) ubiquitous ... (ii) redundant ... (iii) protracting", "C) (i) foundational ... (ii) superfluous ... (iii) accelerating", "D) (i) trivial ... (ii) obsolete ... (iii) impeding", "E) (i) seminal ... (ii) peripheral ... (iii) halving"], ans: 0, exp: "Shifts from minor ('niche') to essential ('indispensable') by shortening ('curtailing') reaction times." },
+          { tag: "GRE 170 Perfection", q: "Critics who fault the monograph for (i)_____ overlook its deliberate methodological restraint: rather than offering (ii)_____ generalizations, the author (iii)_____ claims to documented micro-histories.", opts: ["A) (i) myopia ... (ii) sweeping ... (iii) circumscribes", "B) (i) dogmatism ... (ii) modest ... (iii) inflates", "C) (i) prolixity ... (ii) terse ... (iii) amplifies", "D) (i) temerity ... (ii) cautious ... (iii) repudiates", "E) (i) bias ... (ii) partisan ... (iii) broadens"], ans: 0, exp: "Faulted for narrow focus ('myopia') because she avoids 'sweeping' claims and limits ('circumscribes') conclusions." },
+          { tag: "GRE 170 Perfection", q: "Far from being (i)_____ observers of urban renewal, neighborhood associations actively (ii)_____ zoning revisions, often (iii)_____ municipal timelines for years.", opts: ["A) (i) passive ... (ii) contested ... (iii) protracting", "B) (i) vociferous ... (ii) endorsed ... (iii) expediting", "C) (i) indifferent ... (ii) ignored ... (iii) abbreviating", "D) (i) militant ... (ii) ratified ... (iii) curtailing", "E) (i) acquiescent ... (ii) welcomed ... (iii) stalling"], ans: 0, exp: "'Far from being passive' -> actively 'contested' revisions, lengthening ('protracting') timelines." }
         ]
       },
       {
@@ -159,10 +198,15 @@
         sub: "4 Qs per Test • Select TWO Words Creating Equivalent Sentences",
         overview: "Sentence Equivalence presents one sentence with a single blank and 6 answer choices. You must select the TWO choices that both fit the context AND produce sentences with identical overall meaning—a synonym pair that does not fit the sentence is a classic ETS trap.",
         worked: [
-          { p: "Prompt: The botanist's meticulous field notes were so _____ that researchers a century later could replicate every sampling transect without ambiguity. [6 Choices]", s: "1. Target meaning: 'detailed / exact / thorough'.\n2. Exact semantic pair: 'exhaustive' & 'scrupulous'." }
+          { tier: "GRE 155+ Foundation", p: "The botanist's meticulous field notes were so _____ that researchers a century later could replicate every transect without ambiguity.", s: "1. Target meaning: 'detailed / exact'.\n2. Semantic twin pair: 'exhaustive' & 'scrupulous'." },
+          { tier: "GRE 170 Perfection", p: "Though the ambassador's speech appeared conciliatory, seasoned diplomats detected an _____ warning beneath its polite cadence.", s: "1. Contrast with 'conciliatory / polite'.\n2. Semantic twin pair: 'ominous' & 'minatory' (threatening)." }
         ],
         drills: [
-          { q: "Rather than _____ the debate over monetary policy, the central bank's ambiguous forward guidance only fueled further speculation. [Select the correct pair]", opts: ["A) foreclosing & settling", "B) igniting & provoking", "C) chronicling & recording", "D) obscuring & clouding", "E) publicizing & broadcasting"], ans: 0, exp: "'Rather than ___' opposes 'fueled further speculation' -> 'foreclosing' and 'settling' form the exact semantic pair." }
+          { tag: "GRE 155+ Foundation", q: "Rather than _____ the debate over monetary policy, the central bank's ambiguous forward guidance only fueled further speculation. [Select the semantic twin pair]", opts: ["A) foreclosing & settling", "B) igniting & provoking", "C) chronicling & recording", "D) obscuring & clouding", "E) publicizing & broadcasting"], ans: 0, exp: "'Rather than ___' opposes 'fueled further speculation' -> 'foreclosing' and 'settling'." },
+          { tag: "GRE 165+ Contender", q: "Far from _____ the committee's doubts about the clinical trial, the researcher's evasive testimony intensified their skepticism. [Select the semantic twin pair]", opts: ["A) allaying & assuaging", "B) exacerbating & inflaming", "C) corroborating & validating", "D) disseminating & broadcasting", "E) scrutinizing & auditing"], ans: 0, exp: "Opposite of intensifying skepticism -> 'allaying' & 'assuaging' (relieving doubts)." },
+          { tag: "GRE 165+ Contender", q: "Because archaeological evidence from the settlement remains fragmentary, scholars offer only _____ reconstructions of its civic hierarchy. [Select the semantic twin pair]", opts: ["A) tentative & provisional", "B) dogmatic & peremptory", "C) exhaustive & definitive", "D) trenchant & incisive", "E) partisan & tendentious"], ans: 0, exp: "Fragmentary evidence requires non-final reconstructions -> 'tentative' & 'provisional'." },
+          { tag: "GRE 170 Perfection", q: "Once celebrated for his _____ wit, the columnist grew increasingly repetitive in his later essays. [Select the semantic twin pair]", opts: ["A) scintillating & effervescent", "B) pedestrian & vapid", "C) lugubrious & morose", "D) derivative & trite", "E) ponderous & turgid"], ans: 0, exp: "Contrasts with 'repetitive' -> lively, sparkling wit ('scintillating' & 'effervescent')." },
+          { tag: "GRE 170 Perfection", q: "The engineer's _____ adherence to legacy protocols prevented the team from adopting faster automated testing. [Select the semantic twin pair]", opts: ["A) hidebound & doctrinaire", "B) flexible & pragmatic", "C) sporadic & fitful", "D) reluctant & hesitant", "E) cursory & perfunctory"], ans: 0, exp: "Rigid, inflexible devotion to outdated rules -> 'hidebound' & 'doctrinaire'." }
         ]
       },
       {
@@ -170,10 +214,14 @@
         sub: "13–14 Qs per Test • Short, Medium & Long Academic Passages",
         overview: "GRE Reading Comprehension tests strict textual fidelity across humanities, social sciences, and physical sciences. Eliminate choices that go one logical step beyond what the text strictly entails.",
         worked: [
-          { p: "Passage: 'Unlike classical thermoplastics that soften upon reheating, vitrimers undergo associative bond-exchange reactions that allow reshaping at high temperatures while preserving cross-linked solvent resistance.'", s: "Inference: Vitrimers combine malleability at elevated temperatures with the chemical insolubility of thermosets." }
+          { tier: "GRE 155+ Foundation", p: "Passage: 'Unlike classical thermoplastics that soften upon reheating, vitrimers undergo associative bond-exchange reactions that allow reshaping at high temperatures while preserving cross-linked solvent resistance.'", s: "Inference: Vitrimers combine high-temperature malleability with the solvent resistance of cross-linked networks." },
+          { tier: "GRE 170 Perfection", p: "Function Question: Why does the author mention '19th-century shipyard ledgers' in paragraph 2?", s: "Method: Read the sentence immediately BEFORE the example—the example always illustrates or qualifies that specific claim." }
         ],
         drills: [
-          { q: "Based on the vitrimer passage above, what distinguishes vitrimers from classical thermoplastics?", opts: ["A) Vitrimers cannot be reshaped when heated.", "B) Vitrimers retain cross-linked solvent resistance even while permitting thermal reshaping.", "C) Thermoplastics have permanent covalent networks.", "D) Vitrimers dissolve at room temperature.", "E) Bond-exchange reactions prevent all deformation."], ans: 1, exp: "Directly stated: associative bond-exchange permits reshaping while preserving cross-linked solvent resistance." }
+          { tag: "GRE 155+ Foundation", q: "Based on the vitrimer passage above, what distinguishes vitrimers from classical thermoplastics?", opts: ["A) Vitrimers cannot be reshaped when heated.", "B) Vitrimers retain cross-linked solvent resistance even while permitting thermal reshaping.", "C) Thermoplastics have permanent covalent networks.", "D) Vitrimers dissolve at room temperature.", "E) Bond-exchange reactions prevent all deformation."], ans: 1, exp: "Directly stated: associative bond-exchange permits reshaping while preserving cross-linked solvent resistance." },
+          { tag: "GRE 165+ Contender", q: "Passage: 'While Milankovitch orbital cycles pace glacial transitions, atmospheric CO2 feedback amplifies the initial insolation forcing nearly threefold.' Which inference is supported?", opts: ["A) Orbital cycles alone explain 100% of temperature swings.", "B) Greenhouse gas feedbacks substantially magnify modest orbital insolation changes.", "C) CO2 remains constant across ice ages.", "D) Insolation forcing opposes CO2 warming.", "E) Orbital cycles occur every 100 years."], ans: 1, exp: "CO2 feedback 'amplifies the initial insolation forcing nearly threefold'." },
+          { tag: "GRE 165+ Contender", q: "Passage: 'Host plants selectively allocate carbon to nutrient-delivering mycorrhizal fungi while sanctioning cheater strains that hoard phosphorus.' The relationship is best described as:", opts: ["A) Unconditional parasitism", "B) Conditional mutualism enforced by resource allocation sanctions", "C) Zero-sum predator-prey competition", "D) Accidental commensalism", "E) Obligate anaerobic symbiosis"], ans: 1, exp: "Plants reward cooperative fungi and sanction cheaters -> conditional mutualism." },
+          { tag: "GRE 170 Perfection", q: "Passage: 'Although early 20th-century conservationists prioritized charismatic megafauna, contemporary restoration ecologists emphasize soil microbiome diversity as the primary determinant of prairie resilience.' The author mentions 'charismatic megafauna' primarily to:", opts: ["A) Prove megafauna are irrelevant to ecosystems.", "B) Contrast historical conservation priorities with modern ecosystem-level focus.", "C) Argue against prairie restoration.", "D) Criticize soil microbiology.", "E) Show early conservationists studied microbes."], ans: 1, exp: "'Although ... prioritized X, contemporary ecologists emphasize Y' establishes a historical contrast." }
         ]
       },
       {
@@ -181,10 +229,13 @@
         sub: "3-Option Checkboxes • Zero Partial Credit • Independent T/F Audit",
         overview: "Multi-Select RC questions present 3 Roman-numeral or checkbox statements (A, B, C) where 1, 2, or all 3 may be correct. Evaluate each statement independently as a strict True/False claim against the passage.",
         worked: [
-          { p: "Rule: Never treat Multi-Select choices as mutually exclusive—verify each of the 3 statements against its exact line anchor.", s: "1. Check Statement A independently.\n2. Check Statement B independently.\n3. Check Statement C independently." }
+          { tier: "GRE 165+ Contender", p: "Rule: Never treat Multi-Select choices as mutually exclusive—verify each of the 3 statements against its exact line anchor.", s: "1. Audit Statement I independently.\n2. Audit Statement II independently.\n3. Audit Statement III independently." },
+          { tier: "GRE 170 Perfection", p: "Quantifier Trap: Watch for 'some / fewer than half / all / none' flips between the passage and checkbox options.", s: "'Fewer than 40% tracked >2 years' strictly implies '>60% (a majority) did NOT track >2 years'." }
         ],
         drills: [
-          { q: "If a passage states 'All peer-reviewed studies in the meta-analysis controlled for baseline socioeconomic status, though fewer than half tracked longitudinal outcomes beyond five years,' which statements are supported?", opts: ["A) Statements I & II: Every included study adjusted for baseline SES, and a majority lacked >5-year follow-up.", "B) Statement I only", "C) Statement III only (No study tracked >5 years)", "D) None of the statements", "E) Statement II only"], ans: 0, exp: "'All ... controlled for baseline SES' (I is true) and 'fewer than half tracked ... beyond five years' means a majority lacked >5-year follow-up (II is true)." }
+          { tag: "GRE 155+ Foundation", q: "Passage: 'All peer-reviewed studies in the meta-analysis controlled for baseline socioeconomic status, though fewer than half tracked longitudinal outcomes beyond five years.' Which statements are supported?", opts: ["A) Statements I & II: Every included study adjusted for baseline SES, and a majority lacked >5-year follow-up.", "B) Statement I only", "C) Statement III only (No study tracked >5 years)", "D) None of the statements", "E) Statement II only"], ans: 0, exp: "'All ... controlled for baseline SES' (I) and 'fewer than half tracked >5 years' means a majority lacked >5-year follow-up (II)." },
+          { tag: "GRE 165+ Contender", q: "Passage: 'No pre-1850 census in the province recorded female artisans, yet guild tax rolls from 1790–1840 list dozens of women operating independent textile looms.' Which follow?", opts: ["A) Statements I & II: Census records omitted a documented class of female artisans, and guild tax rolls provide evidence of women running independent workshops.", "B) Statement I only", "C) Statement III only (Women were barred from guilds)", "D) Statement II only", "E) None of the statements"], ans: 0, exp: "Both I (omission in census) and II (guild rolls document independent female loom operators) follow directly." },
+          { tag: "GRE 170 Perfection", q: "Passage: 'While every tested titanium alloy resisted saltwater corrosion, only alloys doped with molybdenum retained tensile ductility below -150°C.' Which follow?", opts: ["A) Statements I & II: Un-doped titanium alloys resisted saltwater corrosion, and cryogenic ductility required molybdenum doping.", "B) Statement I only", "C) Statement III only (Molybdenum caused corrosion)", "D) None of the statements", "E) Statement II only"], ans: 0, exp: "Every tested alloy resisted corrosion (I), while only molybdenum-doped ones kept ductility below -150°C (II)." }
         ]
       },
       {
@@ -192,21 +243,30 @@
         sub: "Critical Reasoning in GRE Verbal • Gap-Bridging & Contrapositives",
         overview: "Each GRE Verbal section includes 2–3 single-paragraph critical reasoning arguments. Identify the Conclusion and Premise first, then spot the unstated causal or statistical gap between them.",
         worked: [
-          { p: "Argument: 'Cities that installed protected bike lanes saw a 22% drop in cyclist injuries per mile ridden. Therefore, physical lane barriers directly reduce collision risk.'", s: "Assumption / Strengthen: Confirm that the drop was not merely caused by simultaneous speed-limit reductions or altered traffic volume." }
+          { tier: "GRE 155+ Foundation", p: "Argument: 'Cities that installed protected bike lanes saw a 22% drop in cyclist injuries per mile ridden. Therefore, physical lane barriers directly reduce collision risk.'", s: "Strengthen: Show adjacent streets without barriers in the same cities saw zero change over the same period." },
+          { tier: "GRE 170 Perfection", p: "Paradox Pattern: Total hospital admissions fell 15%, yet emergency wait times rose 30%. Resolve the discrepancy.", s: "Resolution: Average case severity/acuity per admitted patient increased sharply, requiring longer diagnostic workups." }
         ],
         drills: [
-          { q: "Which finding most strengthens the protected bike lane conclusion above?", opts: ["A) Bicycle sales increased nationwide.", "B) Adjacent streets without barriers in the same cities saw zero change in cyclist injury rates over the exact same period.", "C) Protected lanes cost more to pave.", "D) Helmets reduce head injury severity.", "E) Pedestrian foot traffic rose 5%."], ans: 1, exp: "Control group comparison (adjacent streets without barriers saw no change) rules out city-wide confounders." }
+          { tag: "GRE 155+ Foundation", q: "Which finding most strengthens the protected bike lane conclusion above?", opts: ["A) Bicycle sales increased nationwide.", "B) Adjacent streets without barriers in the same cities saw zero change in cyclist injury rates over the exact same period.", "C) Protected lanes cost more to pave.", "D) Helmets reduce head injury severity.", "E) Pedestrian foot traffic rose 5%."], ans: 1, exp: "Control group comparison (adjacent streets without barriers saw no change) rules out city-wide confounders." },
+          { tag: "GRE 165+ Contender", q: "Argument: 'Employees who work remotely three days a week report 18% higher job satisfaction than full-time office staff. Thus, mandating hybrid schedules for all staff will raise company-wide satisfaction.' Which weakens this?", opts: ["A) Remote workers save on commuting costs.", "B) Only employees who already possessed high autonomy and senior roles were permitted to choose remote schedules.", "C) Office real estate costs dropped 10%.", "D) Video conferencing software was upgraded.", "E) New hires prefer orientation in person."], ans: 1, exp: "Self-selection / reverse causality bias: high-autonomy senior staff were the ones allowed to work remotely." },
+          { tag: "GRE 170 Perfection", q: "Paradox: 'After Airline X introduced a baggage fee, total checked bags fell 35%, yet average flight turnaround time at gates increased by 8 minutes.' Which best explains this?", opts: ["A) Fuel prices rose 12%.", "B) Passengers brought oversized carry-on bags into the cabin, creating overhead bin congestion during boarding.", "C) Ticket prices remained unchanged.", "D) Ground crews were given new scanners.", "E) International routes were expanded."], ans: 1, exp: "Shifting luggage from cargo hold to cabin overhead bins slows boarding and gate turnaround." },
+          { tag: "GRE 170 Perfection", q: "Assumption: 'No vertebrate species native to the island is nocturnal. Species Z is a vertebrate found on the island. Therefore, Species Z is not nocturnal.' What unstated premise is required?", opts: ["A) Species Z is a mammal.", "B) Species Z is native to the island rather than recently introduced.", "C) All nocturnal animals are mammals.", "D) The island has no reptiles.", "E) Species Z is endangered."], ans: 1, exp: "The premise applies only to 'native' vertebrates; thus Species Z must be native to the island." }
         ]
       }
     ];
 
     window._GRE_VR_IDX = Math.min(CHAPTERS.length - 1, Math.max(0, Number(window._GRE_VR_IDX || 0)));
+    window._GRE_VR_ATT = window._GRE_VR_ATT || {};
     const ch = CHAPTERS[window._GRE_VR_IDX];
+    const combinedDrills = [...ch.drills, ...pgVerbal];
+    const chAtt = window._GRE_VR_ATT[window._GRE_VR_IDX] || {};
+    const attCnt = Object.keys(chAtt).length;
+    const corCnt = Object.values(chAtt).filter(Boolean).length;
 
     target.innerHTML = `
       <div class="max-w-7xl mx-auto pt-4 pb-8 grid grid-cols-1 lg:grid-cols-12 gap-5">
         <div class="lg:col-span-4 space-y-2.5">
-          <div class="text-xs font-extrabold uppercase tracking-wider text-indigo-600">GRE VERBAL STUDIO (7 CHAPTERS)</div>
+          <div class="text-xs font-extrabold uppercase tracking-wider text-indigo-600">GRE VERBAL STUDIO (7 CHAPTERS • 56+ DRILLS)</div>
           ${CHAPTERS.map((c, idx) => `
             <button type="button" onclick="window._GRE_VR_IDX=${idx}; window.renderGreVerbalStudio3();"
               class="w-full text-left p-3.5 rounded-2xl border transition cursor-pointer ${idx === window._GRE_VR_IDX
@@ -226,23 +286,33 @@
           </div>
 
           <div class="space-y-2.5">
-            <div class="text-xs font-extrabold uppercase text-amber-700">Step-by-Step Worked Walkthroughs (${ch.worked.length})</div>
+            <div class="text-xs font-extrabold uppercase text-amber-800 dark:text-amber-300">Step-by-Step Worked Walkthroughs (${ch.worked.length})</div>
             ${ch.worked.map(w => `
-              <div class="p-4 rounded-2xl bg-amber-50/70 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-800 text-xs space-y-1">
-                <div class="font-bold text-slate-900 dark:text-white">${w.p}</div>
-                <div class="text-slate-700 dark:text-slate-300 whitespace-pre-line">${w.s}</div>
+              <div class="p-4 rounded-2xl bg-amber-50 dark:bg-amber-950/40 border border-amber-300 dark:border-amber-800 text-xs space-y-1.5">
+                <div class="flex items-center justify-between gap-2">
+                  <span class="font-bold text-slate-900 dark:text-white">${w.p}</span>
+                  <span class="px-2 py-0.5 rounded-full bg-indigo-100 text-indigo-800 text-[10px] font-extrabold shrink-0">${w.tier || "GRE 165+ Contender"}</span>
+                </div>
+                <div class="text-slate-800 dark:text-slate-200 whitespace-pre-line">${w.s}</div>
               </div>
             `).join("")}
           </div>
 
           <div class="space-y-2.5">
-            <div class="text-xs font-extrabold uppercase text-emerald-700">Interactive GRE Verbal Drills (${ch.drills.length})</div>
-            ${ch.drills.map((d, di) => `
+            <div class="flex flex-wrap items-center justify-between gap-2">
+              <div class="text-xs font-extrabold uppercase text-emerald-700">Interactive GRE Verbal Drills (${combinedDrills.length} Questions • PostgreSQL Synced)</div>
+              <div class="text-xs font-bold text-slate-500">Score: <strong class="text-emerald-600">${corCnt}/${attCnt}</strong> attempted</div>
+            </div>
+            ${combinedDrills.map((d, di) => `
               <div class="p-4 rounded-2xl bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 space-y-2 text-xs">
-                <div class="font-bold text-slate-900 dark:text-white">Drill Q${di + 1}. ${d.q}</div>
+                <div class="flex items-center justify-between gap-2">
+                  <span class="font-extrabold text-indigo-600">Drill Q${di + 1} of ${combinedDrills.length}</span>
+                  <span class="px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800 text-[10px] font-extrabold">${d.tag || "GRE Verbal"} &bull; +1 / 0</span>
+                </div>
+                <div class="font-bold text-slate-900 dark:text-white whitespace-pre-line leading-relaxed">${d.q}</div>
                 <div class="space-y-1.5">
-                  ${d.opts.map(o => `
-                    <button type="button" onclick="this.parentElement.nextElementSibling.classList.remove('hidden')"
+                  ${d.opts.map((o, oi) => `
+                    <button type="button" onclick="window._GRE_VR_ATT[${window._GRE_VR_IDX}]=window._GRE_VR_ATT[${window._GRE_VR_IDX}]||{}; window._GRE_VR_ATT[${window._GRE_VR_IDX}][${di}]=(${oi}===${d.ans}); this.parentElement.nextElementSibling.classList.remove('hidden'); this.classList.add('${oi === d.ans ? "bg-emerald-100 border-emerald-500 text-emerald-900 font-bold" : "bg-rose-100 border-rose-400 text-rose-900"}');"
                       class="w-full text-left px-3 py-2 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 hover:border-indigo-500 font-semibold cursor-pointer">${o}</button>
                   `).join("")}
                 </div>
