@@ -2,18 +2,18 @@ window.IPM_PYQ_ARCHIVE = [
   {
     id: "pyq_2026_ind_1",
     year: "2026",
-    exam: "GRE General 2026 (QA-SA)",
+    exam: "GRE General (QA-SA)",
     section: "Higher Math — Logarithms & Series",
     type: "SA_NUMERIC",
     question: "If log_2(x) + log_4(x) + log_16(x) = 21/4, what is the exact value of x?",
     answer: "8",
     shortcut: "Convert all bases to base 2: log_2(x) + (1/2)log_2(x) + (1/4)log_2(x) = (7/4)log_2(x) = 21/4 => log_2(x) = 3 => x = 2^3 = 8.",
-    trapNote: "Zero negative marking in GRE General 2026 QA-SA—always verify x > 0 and enter exact integer."
+    trapNote: "Zero negative marking in GRE General QA-SA—always verify x > 0 and enter exact integer."
   },
   {
     id: "pyq_2026_ind_2",
     year: "2026",
-    exam: "GRE General 2026 (VARC)",
+    exam: "GRE General (VARC)",
     section: "Vocabulary & Confusable Usage",
     type: "MCQ",
     question: "Select the word pair that best completes the sentence: 'Although the committee remained _______ about the timeline, the chairperson promised to _______ members as soon as regulatory clearance arrived.'",
@@ -25,7 +25,7 @@ window.IPM_PYQ_ARCHIVE = [
   {
     id: "pyq_2025_ind_1",
     year: "2025",
-    exam: "GRE General 2026 (QA-MCQ)",
+    exam: "GRE General (QA-MCQ)",
     section: "Matrices & Determinants",
     type: "MCQ",
     question: "Let A be a 3 x 3 invertible matrix such that det(A) = 3. What is the value of det(3 * adj(A))?",
@@ -49,7 +49,7 @@ window.IPM_PYQ_ARCHIVE = [
   {
     id: "pyq_2024_roh_1",
     year: "2024",
-    exam: "GRE General 2026 Rohtak (LR)",
+    exam: "GRE General Rohtak (LR)",
     section: "Logical Reasoning — Clocks & Calendars",
     type: "MCQ",
     question: "What is the acute angle (in degrees) between the hour hand and the minute hand of a clock at 3:40 PM?",
@@ -61,7 +61,7 @@ window.IPM_PYQ_ARCHIVE = [
   {
     id: "pyq_2023_ind_1",
     year: "2023",
-    exam: "GRE General 2026 (QA-SA)",
+    exam: "GRE General (QA-SA)",
     section: "Combinatorics — Distribution",
     type: "SA_NUMERIC",
     question: "How many non-negative integer solutions exist for the equation x + y + z = 12?",
@@ -98,7 +98,7 @@ window.IPM_PYQ_ARCHIVE.push(
   {
     id: "pyq_2026_roh_2",
     year: "2026",
-    exam: "GRE General 2026 Rohtak (QA)",
+    exam: "GRE General Rohtak (QA)",
     section: "Arithmetic — Profit & Discount",
     type: "MCQ",
     question: "A merchant marks his goods 40% above cost price and allows a 15% discount for cash payment. What is his net profit percentage?",
@@ -110,7 +110,7 @@ window.IPM_PYQ_ARCHIVE.push(
   {
     id: "pyq_2025_ind_2",
     year: "2025",
-    exam: "GRE General 2026 (QA-SA)",
+    exam: "GRE General (QA-SA)",
     section: "Higher Math — Sequences & Series",
     type: "SA_NUMERIC",
     question: "If the sum of the first 15 terms of an Arithmetic Progression is 600, what is the 8th term of the progression?",
@@ -121,7 +121,7 @@ window.IPM_PYQ_ARCHIVE.push(
   {
     id: "pyq_2025_ind_3",
     year: "2025",
-    exam: "GRE General 2026 (VARC)",
+    exam: "GRE General (VARC)",
     section: "Grammar — Parallelism & Modifiers",
     type: "MCQ",
     question: "Identify the grammatically correct sentence:",
@@ -133,12 +133,12 @@ window.IPM_PYQ_ARCHIVE.push(
     ],
     answer: 1,
     shortcut: "Opening participial phrase 'Having analyzed...' must immediately precede its logical subject ('the board').",
-    trapNote: "Classic dangling modifier trap tested repeatedly in GRE General 2026 VARC."
+    trapNote: "Classic dangling modifier trap tested repeatedly in GRE General VARC."
   },
   {
     id: "pyq_2024_ind_1",
     year: "2024",
-    exam: "GRE General 2026 (QA-MCQ)",
+    exam: "GRE General (QA-MCQ)",
     section: "Algebra — Modulus & Inequalities",
     type: "MCQ",
     question: "What is the minimum value of f(x) = |x - 2| + |x - 5| + |x - 11| for all real numbers x?",
@@ -162,7 +162,7 @@ window.IPM_PYQ_ARCHIVE.push(
   {
     id: "pyq_2023_roh_2",
     year: "2023",
-    exam: "GRE General 2026 Rohtak (VA)",
+    exam: "GRE General Rohtak (VA)",
     section: "Vocabulary — Idioms & Usage",
     type: "MCQ",
     question: "Choose the correct meaning of the idiom 'to burn the midnight oil':",
@@ -191,7 +191,7 @@ window.IPM_PYQ_ARCHIVE.push(
   {
     id: "pyq_2022_ind_2",
     year: "2022",
-    exam: "GRE General 2026 (QA-SA)",
+    exam: "GRE General (QA-SA)",
     section: "Number System — Remainders",
     type: "SA_NUMERIC",
     question: "What is the remainder when 5^36 is divided by 13?",

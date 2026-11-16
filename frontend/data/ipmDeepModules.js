@@ -3,8 +3,8 @@ window.IPM_DEEP_MODULES = [
     id: "qc_05",
     pillar: "quant_core",
     title: "Quadratic Equations, Roots & Wavy-Curve Inequalities",
-    exams: ["ALL_IIM_MASTER", "GRE General 2026_INDORE_RANCHI", "GRE General 2026_ROHTAK", "OMETs_BG_JAMMU", "IIMB_UG_ECON_DS_DBE", "IIMM_IIML_TECH_MGMT"],
-    weightage: "Very High in CAT 2026 & IIMB (3-5 Qs)",
+    exams: ["ALL_IIM_MASTER", "GRE General_INDORE_RANCHI", "GRE General_ROHTAK", "OMETs_BG_JAMMU", "IIMB_UG_ECON_DS_DBE", "IIMM_IIML_TECH_MGMT"],
+    weightage: "Very High in CAT & IIMB (3-5 Qs)",
     concepts: [
       {
         heading: "Vieta's Root Relations & Symmetric Expressions",
@@ -51,7 +51,7 @@ window.IPM_DEEP_MODULES = [
     id: "hm_04",
     pillar: "higher_math_stats",
     title: "Statistics, Variance, Correlation & Distributions",
-    exams: ["ALL_IIM_MASTER", "IIMB_UG_ECON_DS_DBE", "GRE General 2026_INDORE_RANCHI", "IIMM_IIML_TECH_MGMT"],
+    exams: ["ALL_IIM_MASTER", "IIMB_UG_ECON_DS_DBE", "GRE General_INDORE_RANCHI", "IIMM_IIML_TECH_MGMT"],
     weightage: "Core Pillar in IIM Bangalore B.Sc. Econ/DS (6-10 Qs)",
     concepts: [
       {
@@ -90,8 +90,8 @@ window.IPM_DEEP_MODULES = [
     id: "dilr_03",
     pillar: "dilr",
     title: "Data Sufficiency, Input-Output & Multi-Variable Grids",
-    exams: ["ALL_IIM_MASTER", "GRE General 2026_ROHTAK", "OMETs_BG_JAMMU", "IIMB_UG_ECON_DS_DBE", "IIMM_IIML_TECH_MGMT"],
-    weightage: "High in GRE General 2026 Rohtak & OMETs (8-12 Qs)",
+    exams: ["ALL_IIM_MASTER", "GRE General_ROHTAK", "OMETs_BG_JAMMU", "IIMB_UG_ECON_DS_DBE", "IIMM_IIML_TECH_MGMT"],
+    weightage: "High in GRE General Rohtak & OMETs (8-12 Qs)",
     concepts: [
       {
         heading: "Strict Data Sufficiency Isolation Protocol",
@@ -113,7 +113,7 @@ window.IPM_DEEP_MODULES = [
         id: "dilr_q6",
         type: "MCQ",
         section: "dilr",
-        prompt: "[Data Sufficiency — GRE General 2026 Rohtak / OMETs]\nQuestion: What is the two-digit positive integer N?\nStatement I: The sum of the digits of N is 9, and N is divisible by 5.\nStatement II: When the digits of N are reversed, the new number exceeds N by 45.",
+        prompt: "[Data Sufficiency — GRE General Rohtak / OMETs]\nQuestion: What is the two-digit positive integer N?\nStatement I: The sum of the digits of N is 9, and N is divisible by 5.\nStatement II: When the digits of N are reversed, the new number exceeds N by 45.",
         options: [
           "Statement I alone is sufficient, while II alone is not.",
           "Statement II alone is sufficient, while I alone is not.",

@@ -4,19 +4,19 @@ window.IPM_TAGGED_PI_PROMPTS.push(
   // IIM INDORE & RANCHI (5-Yr IPM)
   {
     id: "pi_ind_02",
-    exams: ["ALL_IIM_MASTER", "GRE General 2026_INDORE_RANCHI"],
+    exams: ["ALL_IIM_MASTER", "GRE General_INDORE_RANCHI"],
     group: "Campus Fit & Vision",
     campus: "IIM Indore (5-Yr IPM)",
     category: "Liberal Arts + Management Interdisciplinary Edge",
     prompt: "Why do you want to spend three years studying Microeconomics, Calculus, Political Science, and Sociology at IIM Indore before core MBA courses, rather than pursuing a specialized B.Com (Hons) or B.Tech degree?",
     rubricHints: [
       "Show how complex business decisions sit at the intersection of quantitative modeling, human behavior, and regulatory policy.",
-      "Avoid generic 'IIM brand' answers; cite specific interdisciplinary courses in CAT 2026's BA Foundations curriculum."
+      "Avoid generic 'IIM brand' answers; cite specific interdisciplinary courses in CAT's BA Foundations curriculum."
     ]
   },
   {
     id: "pi_ran_02",
-    exams: ["ALL_IIM_MASTER", "GRE General 2026_INDORE_RANCHI"],
+    exams: ["ALL_IIM_MASTER", "GRE General_INDORE_RANCHI"],
     group: "Campus Fit & Vision",
     campus: "IIM Ranchi (5-Yr IPM)",
     category: "Social Impact, Tribal Economy & Sustainable Business",
@@ -28,7 +28,7 @@ window.IPM_TAGGED_PI_PROMPTS.push(
   },
   {
     id: "pi_ind_03",
-    exams: ["ALL_IIM_MASTER", "GRE General 2026_INDORE_RANCHI"],
+    exams: ["ALL_IIM_MASTER", "GRE General_INDORE_RANCHI"],
     group: "Class 12 Academics",
     campus: "IIM Indore & Ranchi (Academic Panel)",
     category: "Class 12 Mathematics — Calculus & Functions",
@@ -42,7 +42,7 @@ window.IPM_TAGGED_PI_PROMPTS.push(
   // IIM ROHTAK (5-Yr IPM)
   {
     id: "pi_roh_02",
-    exams: ["ALL_IIM_MASTER", "GRE General 2026_ROHTAK"],
+    exams: ["ALL_IIM_MASTER", "GRE General_ROHTAK"],
     group: "Extempore & WAT",
     campus: "IIM Rohtak (1-Min Prep Extempore)",
     category: "Extempore — Digital Economy & Regulation",
@@ -54,7 +54,7 @@ window.IPM_TAGGED_PI_PROMPTS.push(
   },
   {
     id: "pi_roh_03",
-    exams: ["ALL_IIM_MASTER", "GRE General 2026_ROHTAK"],
+    exams: ["ALL_IIM_MASTER", "GRE General_ROHTAK"],
     group: "Campus Fit & Vision",
     campus: "IIM Rohtak (5-Yr IPM)",
     category: "Governance, Public Policy & Management",
@@ -66,7 +66,7 @@ window.IPM_TAGGED_PI_PROMPTS.push(
   },
   {
     id: "pi_roh_04",
-    exams: ["ALL_IIM_MASTER", "GRE General 2026_ROHTAK"],
+    exams: ["ALL_IIM_MASTER", "GRE General_ROHTAK"],
     group: "Extempore & WAT",
     campus: "IIM Rohtak (1-Min Prep Extempore)",
     category: "Extempore — Leadership & Ethics",
@@ -158,7 +158,7 @@ window.IPM_TAGGED_PI_PROMPTS.push(
   // CROSS-CAMPUS CLASS 12 ACADEMICS & BEHAVIOURAL (All 8 IIMs)
   {
     id: "pi_acad_comm",
-    exams: ["ALL_IIM_MASTER", "GRE General 2026_INDORE_RANCHI", "GRE General 2026_ROHTAK", "IIMB_UG_ECON_DS_DBE", "IIMM_IIML_TECH_MGMT"],
+    exams: ["ALL_IIM_MASTER", "GRE General_INDORE_RANCHI", "GRE General_ROHTAK", "IIMB_UG_ECON_DS_DBE", "IIMM_IIML_TECH_MGMT"],
     group: "Class 12 Academics",
     campus: "Class 12 Accountancy & Finance Rapid-Fire",
     category: "Financial Statements — Profit vs. Cash Flow",
@@ -170,7 +170,7 @@ window.IPM_TAGGED_PI_PROMPTS.push(
   },
   {
     id: "pi_acad_hum",
-    exams: ["ALL_IIM_MASTER", "GRE General 2026_INDORE_RANCHI", "GRE General 2026_ROHTAK"],
+    exams: ["ALL_IIM_MASTER", "GRE General_INDORE_RANCHI", "GRE General_ROHTAK"],
     group: "Class 12 Academics",
     campus: "Class 12 Humanities / Political Science Rapid-Fire",
     category: "Constitutional Federalism & Fiscal Policy",
@@ -182,7 +182,7 @@ window.IPM_TAGGED_PI_PROMPTS.push(
   },
   {
     id: "pi_acad_sci",
-    exams: ["ALL_IIM_MASTER", "GRE General 2026_INDORE_RANCHI", "IIMB_UG_ECON_DS_DBE", "IIMM_IIML_TECH_MGMT"],
+    exams: ["ALL_IIM_MASTER", "GRE General_INDORE_RANCHI", "IIMB_UG_ECON_DS_DBE", "IIMM_IIML_TECH_MGMT"],
     group: "Class 12 Academics",
     campus: "Class 12 Physics / Science Stream Switcher",
     category: "Why Switch from Science/Engineering to Management at 18?",
@@ -194,7 +194,7 @@ window.IPM_TAGGED_PI_PROMPTS.push(
   },
   {
     id: "pi_curr_01",
-    exams: ["ALL_IIM_MASTER", "GRE General 2026_INDORE_RANCHI", "GRE General 2026_ROHTAK", "IIMB_UG_ECON_DS_DBE", "IIMM_IIML_TECH_MGMT"],
+    exams: ["ALL_IIM_MASTER", "GRE General_INDORE_RANCHI", "GRE General_ROHTAK", "IIMB_UG_ECON_DS_DBE", "IIMM_IIML_TECH_MGMT"],
     group: "Current Affairs & Policy",
     campus: "Current Affairs & Geoeconomics (All 8 IIMs)",
     category: "Energy Transition & Critical Minerals",
@@ -206,7 +206,7 @@ window.IPM_TAGGED_PI_PROMPTS.push(
   },
   {
     id: "pi_curr_02",
-    exams: ["ALL_IIM_MASTER", "GRE General 2026_INDORE_RANCHI", "GRE General 2026_ROHTAK", "IIMB_UG_ECON_DS_DBE"],
+    exams: ["ALL_IIM_MASTER", "GRE General_INDORE_RANCHI", "GRE General_ROHTAK", "IIMB_UG_ECON_DS_DBE"],
     group: "Current Affairs & Policy",
     campus: "Digital Public Infrastructure (DPI) Panel",
     category: "UPI, ONDC & Account Aggregator Ecosystem",
@@ -218,7 +218,7 @@ window.IPM_TAGGED_PI_PROMPTS.push(
   },
   {
     id: "pi_beh_02",
-    exams: ["ALL_IIM_MASTER", "GRE General 2026_INDORE_RANCHI", "GRE General 2026_ROHTAK", "IIMB_UG_ECON_DS_DBE", "IIMM_IIML_TECH_MGMT"],
+    exams: ["ALL_IIM_MASTER", "GRE General_INDORE_RANCHI", "GRE General_ROHTAK", "IIMB_UG_ECON_DS_DBE", "IIMM_IIML_TECH_MGMT"],
     group: "Behavioral & Ethics",
     campus: "Ethical Dilemma & Integrity Panel",
     category: "Short-Term Targets vs. Ethical Compliance",
@@ -230,11 +230,11 @@ window.IPM_TAGGED_PI_PROMPTS.push(
   },
   {
     id: "pi_beh_03",
-    exams: ["ALL_IIM_MASTER", "GRE General 2026_INDORE_RANCHI", "GRE General 2026_ROHTAK", "IIMB_UG_ECON_DS_DBE", "IIMM_IIML_TECH_MGMT"],
+    exams: ["ALL_IIM_MASTER", "GRE General_INDORE_RANCHI", "GRE General_ROHTAK", "IIMB_UG_ECON_DS_DBE", "IIMM_IIML_TECH_MGMT"],
     group: "Behavioral & Ethics",
     campus: "Self-Reflection & Personal SWOT Panel",
     category: "Greatest Weakness & Concrete Mitigation",
-    prompt: "Tell us one genuine intellectual or behavioral weakness you discovered during your Class 12 / GRE General 2026 preparation—not a disguised strength like 'I work too hard'—and how you measurably fixed it.",
+    prompt: "Tell us one genuine intellectual or behavioral weakness you discovered during your Class 12 / GRE General preparation—not a disguised strength like 'I work too hard'—and how you measurably fixed it.",
     rubricHints: [
       "Share an authentic flaw (e.g., over-attempting risky MCQs under time pressure or over-polishing slides before testing core logic).",
       "Quantify the improvement using before/after mock accuracy or project outcomes."
@@ -242,7 +242,7 @@ window.IPM_TAGGED_PI_PROMPTS.push(
   },
   {
     id: "pi_wat_02",
-    exams: ["ALL_IIM_MASTER", "GRE General 2026_INDORE_RANCHI", "GRE General 2026_ROHTAK", "OMETs_BG_JAMMU", "IIMB_UG_ECON_DS_DBE", "IIMM_IIML_TECH_MGMT"],
+    exams: ["ALL_IIM_MASTER", "GRE General_INDORE_RANCHI", "GRE General_ROHTAK", "OMETs_BG_JAMMU", "IIMB_UG_ECON_DS_DBE", "IIMM_IIML_TECH_MGMT"],
     group: "Extempore & WAT",
     campus: "WAT / Essay Studio (All 8 IIMs)",
     category: "Written Ability Test — Demographic Dividend",
@@ -254,7 +254,7 @@ window.IPM_TAGGED_PI_PROMPTS.push(
   },
   {
     id: "pi_wat_03",
-    exams: ["ALL_IIM_MASTER", "GRE General 2026_INDORE_RANCHI", "GRE General 2026_ROHTAK", "OMETs_BG_JAMMU", "IIMB_UG_ECON_DS_DBE", "IIMM_IIML_TECH_MGMT"],
+    exams: ["ALL_IIM_MASTER", "GRE General_INDORE_RANCHI", "GRE General_ROHTAK", "OMETs_BG_JAMMU", "IIMB_UG_ECON_DS_DBE", "IIMM_IIML_TECH_MGMT"],
     group: "Extempore & WAT",
     campus: "WAT / Essay Studio (All 8 IIMs)",
     category: "Written Ability Test — Data Privacy vs. Hyper-Personalization",

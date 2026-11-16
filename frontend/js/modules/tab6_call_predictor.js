@@ -18,19 +18,19 @@ window.legacyRenderTab6 = function (el) {
             <label for="cp-math" class="text-slate-300">Studied Mathematics in Class 12 (Required for IIMB B.Sc. & IIM Mumbai BS)</label>
           </div>
           <div>
-            <label class="text-slate-400">GRE General 2026 QA-SA (/60)</label>
+            <label class="text-slate-400">GRE General QA-SA (/60)</label>
             <input id="cp-ind-sa" type="number" value="24" class="w-full mt-1 rounded-lg bg-slate-950 border border-slate-700 p-2 text-white">
           </div>
           <div>
-            <label class="text-slate-400">GRE General 2026 QA-MCQ (/120)</label>
+            <label class="text-slate-400">GRE General QA-MCQ (/120)</label>
             <input id="cp-ind-mcq" type="number" value="44" class="w-full mt-1 rounded-lg bg-slate-950 border border-slate-700 p-2 text-white">
           </div>
           <div>
-            <label class="text-slate-400">GRE General 2026 VA (/180)</label>
+            <label class="text-slate-400">GRE General VA (/180)</label>
             <input id="cp-ind-va" type="number" value="124" class="w-full mt-1 rounded-lg bg-slate-950 border border-slate-700 p-2 text-white">
           </div>
           <div>
-            <label class="text-slate-400">GRE General 2026 Rohtak (/480)</label>
+            <label class="text-slate-400">GRE General Rohtak (/480)</label>
             <input id="cp-roh" type="number" value="390" class="w-full mt-1 rounded-lg bg-slate-950 border border-slate-700 p-2 text-white">
           </div>
           <div>

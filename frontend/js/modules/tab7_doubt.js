@@ -204,7 +204,7 @@ window.askSocraticTutor = async function () {
   const modeInstruction = window.DOUBT_MODE === "SOCRATIC_HINT"
     ? "[STRICT MODE: SOCRATIC HINT ONLY — Do NOT reveal the final numeric/option answer yet. Ask 2 targeted guiding questions to help the student solve it.]"
     : window.DOUBT_MODE === "SHORTCUT_30S"
-    ? "[STRICT MODE: 30-SECOND EXAM SHORTCUT — Show ONLY the fastest mental-math/elimination shortcut for GRE General 2026/OMETs in 3-4 crisp lines.]"
+    ? "[STRICT MODE: 30-SECOND EXAM SHORTCUT — Show ONLY the fastest mental-math/elimination shortcut for GRE General/OMETs in 3-4 crisp lines.]"
     : "[STRICT MODE: FULL DERIVATION + TRAP CHECK — Provide the complete step-by-step mathematical/logical proof followed by the #1 examiner trap warning.]";
 
   try {

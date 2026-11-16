@@ -7,8 +7,8 @@ window.renderTab2 = function (el) {
       <div class="bg-rose-950/30 border border-rose-800/50 rounded-2xl p-4">
         <h2 class="text-lg font-bold text-rose-300">Aptitude Trap Doctor & Negative-Marking Shield</h2>
         <p class="text-xs text-slate-300 mt-1">
-          Unlike CBSE board exams, MCQ errors in GRE General 2026, OMETs & IIMB UG deduct <strong>-1 mark</strong> (a 5-mark swing from +4).
-          In <strong>GRE General 2026 Section 1 (Short Answer)</strong>, wrong answers carry <strong>0 penalty</strong>—attempt 100% of SA questions!
+          Unlike CBSE board exams, MCQ errors in GRE General, OMETs & IIMB UG deduct <strong>-1 mark</strong> (a 5-mark swing from +4).
+          In <strong>GRE General Section 1 (Short Answer)</strong>, wrong answers carry <strong>0 penalty</strong>—attempt 100% of SA questions!
         </p>
       </div>
 

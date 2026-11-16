@@ -4,7 +4,7 @@ window.PYQ_EXAM_FILTER = "ALL";
 window.renderTab9 = function (el) {
   const allPyqs = window.IPM_PYQ_ARCHIVE || [];
   const years = ["ALL", "2026", "2025", "2024", "2023", "2022"];
-  const exams = ["ALL", "GRE General 2026", "GRE General 2026 Rohtak", "OMETs", "IIM Bangalore"];
+  const exams = ["ALL", "GRE General", "GRE General Rohtak", "OMETs", "IIM Bangalore"];
 
   const list = allPyqs.filter(p => {
     const yOk = window.PYQ_YEAR_FILTER === "ALL" || p.year === window.PYQ_YEAR_FILTER;
@@ -18,7 +18,7 @@ window.renderTab9 = function (el) {
         <div class="flex flex-wrap items-center justify-between gap-3">
           <div>
             <h2 class="text-lg font-bold text-white">Past 5-Year Solved PYQ Archive (2022 – 2026) • ${list.length} Questions</h2>
-            <p class="text-xs text-slate-400">Official-pattern & memory-based questions from GRE General 2026 (SA & MCQ), GRE General 2026 Rohtak, OMETs & IIM Bangalore UG.</p>
+            <p class="text-xs text-slate-400">Official-pattern & memory-based questions from GRE General (SA & MCQ), GRE General Rohtak, OMETs & IIM Bangalore UG.</p>
           </div>
           <div class="flex flex-wrap gap-1.5">
             ${years.map(y => `

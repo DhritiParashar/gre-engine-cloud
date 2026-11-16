@@ -1,7 +1,7 @@
 window.IPM_TRAPS_CLINIC = [
   // QUANT CORE (8 Traps)
   {
-    id: "tc_01", domain: "Quant & Higher Math", examTag: "GRE General 2026 / OMETs", penalty: "-1 Mark Swing (-5 Net)",
+    id: "tc_01", domain: "Quant & Higher Math", examTag: "GRE General / OMETs", penalty: "-1 Mark Swing (-5 Net)",
     title: "Reversing a Percentage Hike Without Shifting the Base",
     trapScenario: "A stock rises by 25% on Monday and falls by 25% on Tuesday. A student marks '0% net change'.",
     whyItFails: "The 25% drop applies to the NEW inflated base (125), not the original base (100): 125 * 0.75 = 93.75.",
@@ -27,7 +27,7 @@ window.IPM_TRAPS_CLINIC = [
     }
   },
   {
-    id: "tc_03", domain: "Quant & Higher Math", examTag: "GRE General 2026 Rohtak / OMETs", penalty: "-1 Mark in MCQ",
+    id: "tc_03", domain: "Quant & Higher Math", examTag: "GRE General Rohtak / OMETs", penalty: "-1 Mark in MCQ",
     title: "Dishonest Dealer Profit Calculated on False Weight Instead of True Cost",
     trapScenario: "Selling at CP while giving 800g instead of 1000g -> Student computes 200/1000 = 20% profit.",
     whyItFails: "The grocer's actual cost incurred is only for the 800g delivered, while he collects money for 1000g.",
@@ -40,7 +40,7 @@ window.IPM_TRAPS_CLINIC = [
     }
   },
   {
-    id: "tc_04", domain: "Quant & Higher Math", examTag: "GRE General 2026 SA & MCQ", penalty: "Wrong SA Entry",
+    id: "tc_04", domain: "Quant & Higher Math", examTag: "GRE General SA & MCQ", penalty: "Wrong SA Entry",
     title: "Ignoring 'Only' vs 'At Least' in 2-Set & 3-Set Counting",
     trapScenario: "60 play Cricket, 50 play Football, 20 play both -> Student says 60 play ONLY Cricket.",
     whyItFails: "Total set size n(C) includes the intersection n(C ∩ F).",
@@ -53,7 +53,7 @@ window.IPM_TRAPS_CLINIC = [
     }
   },
   {
-    id: "tc_05", domain: "Quant & Higher Math", examTag: "GRE General 2026 / IIMB UG", penalty: "-1 Mark / Wrong SA",
+    id: "tc_05", domain: "Quant & Higher Math", examTag: "GRE General / IIMB UG", penalty: "-1 Mark / Wrong SA",
     title: "Cross-Multiplying Variable Denominators in Inequalities",
     trapScenario: "(x - 2)/(x + 3) > 1 => Student multiplies by (x + 3) to get x - 2 > x + 3 (No solution).",
     whyItFails: "When (x + 3) < 0, multiplying reverses the inequality sign!",
@@ -66,7 +66,7 @@ window.IPM_TRAPS_CLINIC = [
     }
   },
   {
-    id: "tc_06", domain: "Quant & Higher Math", examTag: "GRE General 2026 / IIMB UG", penalty: "-1 Mark / Wrong SA",
+    id: "tc_06", domain: "Quant & Higher Math", examTag: "GRE General / IIMB UG", penalty: "-1 Mark / Wrong SA",
     title: "Retaining Extraneous Negative Roots in Logarithmic Equations",
     trapScenario: "log_2(x - 3) + log_2(x - 2) = 1 => (x - 3)(x - 2) = 2 => x = 4 or x = 1.",
     whyItFails: "At x = 1, log_2(1 - 3) = log_2(-2), which is undefined in real numbers.",
@@ -79,7 +79,7 @@ window.IPM_TRAPS_CLINIC = [
     }
   },
   {
-    id: "tc_07", domain: "Quant & Higher Math", examTag: "GRE General 2026 / IIMB UG", penalty: "-1 Mark in MCQ",
+    id: "tc_07", domain: "Quant & Higher Math", examTag: "GRE General / IIMB UG", penalty: "-1 Mark in MCQ",
     title: "Forgetting Power n When Factoring Scalar k Out of det(kA)",
     trapScenario: "For a 3x3 matrix A with |A| = 5, student writes |2A| = 2 * 5 = 10.",
     whyItFails: "Each of the n rows of A is multiplied by k, scaling the determinant by k^n.",
@@ -107,7 +107,7 @@ window.IPM_TRAPS_CLINIC = [
 
   // DI & LR (6 Traps)
   {
-    id: "tc_09", domain: "DI & LR", examTag: "GRE General 2026 / OMETs", penalty: "-1 Mark in MCQ",
+    id: "tc_09", domain: "DI & LR", examTag: "GRE General / OMETs", penalty: "-1 Mark in MCQ",
     title: "Confusing Percentage Points with Relative Percentage Growth",
     trapScenario: "Operating margin rises from 16% in FY25 to 20% in FY26 -> Student marks '4% growth'.",
     whyItFails: "20% - 16% = 4 percentage points, NOT 4% relative growth.",
@@ -120,7 +120,7 @@ window.IPM_TRAPS_CLINIC = [
     }
   },
   {
-    id: "tc_10", domain: "DI & LR", examTag: "GRE General 2026 Rohtak / OMETs", penalty: "-1 Mark in MCQ",
+    id: "tc_10", domain: "DI & LR", examTag: "GRE General Rohtak / OMETs", penalty: "-1 Mark in MCQ",
     title: "Assuming 'Some A are B' Implies 'Some A are NOT B'",
     trapScenario: "Statement: Some analysts are coders. Conclusion: Some analysts are not coders -> Marked True.",
     whyItFails: "In formal logic, 'Some' means 'at least one, possibly all'. All analysts could be coders.",
@@ -133,7 +133,7 @@ window.IPM_TRAPS_CLINIC = [
     }
   },
   {
-    id: "tc_11", domain: "DI & LR", examTag: "GRE General 2026 Rohtak / OMETs", penalty: "-1 Mark in MCQ",
+    id: "tc_11", domain: "DI & LR", examTag: "GRE General Rohtak / OMETs", penalty: "-1 Mark in MCQ",
     title: "Carrying Statement I Assumptions into Statement II in Data Sufficiency",
     trapScenario: "Statement I gives x = 4; Statement II gives y = x + 2 -> Student marks Statement II alone sufficient.",
     whyItFails: "Statement II has no idea x = 4 unless combined with Statement I.",
@@ -146,7 +146,7 @@ window.IPM_TRAPS_CLINIC = [
     }
   },
   {
-    id: "tc_12", domain: "DI & LR", examTag: "GRE General 2026 Rohtak / OMETs", penalty: "-1 Mark in MCQ",
+    id: "tc_12", domain: "DI & LR", examTag: "GRE General Rohtak / OMETs", penalty: "-1 Mark in MCQ",
     title: "Rejecting a 100% Certain 'No' as Insufficient in Yes/No Data Sufficiency",
     trapScenario: "Question: 'Is x > 10?' Statement I proves x = 3 -> Student marks Statement I insufficient.",
     whyItFails: "Sufficiency means the data uniquely answers the question—whether that unique answer is YES or NO.",
@@ -159,7 +159,7 @@ window.IPM_TRAPS_CLINIC = [
     }
   },
   {
-    id: "tc_13", domain: "DI & LR", examTag: "GRE General 2026 Rohtak / OMETs", penalty: "-1 Mark in MCQ",
+    id: "tc_13", domain: "DI & LR", examTag: "GRE General Rohtak / OMETs", penalty: "-1 Mark in MCQ",
     title: "Reversing Left/Right in Circular Seating Facing Outward vs Center",
     trapScenario: "Applying clockwise = left when people face OUTWARD from the center.",
     whyItFails: "Facing center: Left = Clockwise. Facing outward: Left = Anti-clockwise.",
@@ -172,13 +172,13 @@ window.IPM_TRAPS_CLINIC = [
     }
   },
   {
-    id: "tc_14", domain: "DI & LR", examTag: "GRE General 2026 SA DI", penalty: "Lost +4 Marks",
-    title: "Skipping Calculation-Heavy DI Tables Inside GRE General 2026 QA-SA",
+    id: "tc_14", domain: "DI & LR", examTag: "GRE General SA DI", penalty: "Lost +4 Marks",
+    title: "Skipping Calculation-Heavy DI Tables Inside GRE General QA-SA",
     trapScenario: "Seeing a 4-row table in Section 1 (SA) and leaving questions blank to save time.",
     whyItFails: "QA-SA carries ZERO negative marking—even an educated approximation has positive expected value.",
-    fixRule: "Never leave any GRE General 2026 SA box blank; enter your closest rounded integer before time expires.",
+    fixRule: "Never leave any GRE General SA box blank; enter your closest rounded integer before time expires.",
     miniDrill: {
-      prompt: "In GRE General 2026 Section 1 (QA-SA), if you are 30% sure of a numerical answer with 10 seconds left, what is the optimal move?",
+      prompt: "In GRE General Section 1 (QA-SA), if you are 30% sure of a numerical answer with 10 seconds left, what is the optimal move?",
       options: ["Leave it blank to protect accuracy", "Enter your best numerical estimate", "Type 0 on every blank question", "Skip to Section 2 early"],
       answer: 1,
       explanation: "With +4 for right and 0 for wrong, Expected Value = 0.30*(+4) + 0.70*(0) = +1.20 marks (> 0)."
@@ -187,7 +187,7 @@ window.IPM_TRAPS_CLINIC = [
 
   // VARC & VOCAB (6 Traps)
   {
-    id: "tc_15", domain: "VARC & Vocab", examTag: "GRE General 2026 2026", penalty: "-1 Mark in MCQ",
+    id: "tc_15", domain: "VARC & Vocab", examTag: "GRE General 2026", penalty: "-1 Mark in MCQ",
     title: "Homophone Swap: Appraise vs. Apprise & Discreet vs. Discrete",
     trapScenario: "'The CFO appraised the board of the audit' / 'He made a discrete inquiry.'",
     whyItFails: "Appraise = evaluate worth; Apprise = notify. Discrete = distinct/separate; Discreet = tactful/prudent.",
@@ -200,7 +200,7 @@ window.IPM_TRAPS_CLINIC = [
     }
   },
   {
-    id: "tc_16", domain: "VARC & Vocab", examTag: "GRE General 2026 / Rohtak", penalty: "-1 Mark in MCQ",
+    id: "tc_16", domain: "VARC & Vocab", examTag: "GRE General / Rohtak", penalty: "-1 Mark in MCQ",
     title: "Picking Factually True Outside Knowledge in RC Inference Questions",
     trapScenario: "Choosing an economically true real-world statement that the passage never states or implies.",
     whyItFails: "RC tests reading comprehension of the author's specific argument, not outside trivia.",
@@ -213,9 +213,9 @@ window.IPM_TRAPS_CLINIC = [
     }
   },
   {
-    id: "tc_17", domain: "VARC & Vocab", examTag: "GRE General 2026 / OMETs", penalty: "-1 Mark in MCQ",
+    id: "tc_17", domain: "VARC & Vocab", examTag: "GRE General / OMETs", penalty: "-1 Mark in MCQ",
     title: "Plural Verb After 'The number of...' or 'Each / Neither'",
-    trapScenario: "'The number of GRE General 2026 test-takers have surged' / 'Neither of the answers are right.'",
+    trapScenario: "'The number of GRE General test-takers have surged' / 'Neither of the answers are right.'",
     whyItFails: "'The number' and 'Neither' are grammatically singular subjects.",
     fixRule: "'The number of + plural noun + SINGULAR verb'; 'A number of + plural noun + PLURAL verb'.",
     miniDrill: {
@@ -226,7 +226,7 @@ window.IPM_TRAPS_CLINIC = [
     }
   },
   {
-    id: "tc_18", domain: "VARC & Vocab", examTag: "GRE General 2026 / Rohtak", penalty: "-1 Mark in MCQ",
+    id: "tc_18", domain: "VARC & Vocab", examTag: "GRE General / Rohtak", penalty: "-1 Mark in MCQ",
     title: "Pairing 'Hardly / Scarcely' with 'Than' Instead of 'When'",
     trapScenario: "'Scarcely had the presentation ended than questions began.'",
     whyItFails: "'Than' belongs exclusively to 'No sooner... than'.",
@@ -239,7 +239,7 @@ window.IPM_TRAPS_CLINIC = [
     }
   },
   {
-    id: "tc_19", domain: "VARC & Vocab", examTag: "GRE General 2026 VARC", penalty: "-1 Mark in MCQ",
+    id: "tc_19", domain: "VARC & Vocab", examTag: "GRE General VARC", penalty: "-1 Mark in MCQ",
     title: "Dangling Participial Modifiers at Sentence Openings",
     trapScenario: "'Reviewing the financial statements, several errors were found by the auditor.'",
     whyItFails: "The noun immediately after the comma ('several errors') becomes the grammatical subject—implying the errors reviewed the statements!",
@@ -252,7 +252,7 @@ window.IPM_TRAPS_CLINIC = [
     }
   },
   {
-    id: "tc_20", domain: "VARC & Vocab", examTag: "GRE General 2026 2026 Vocab", penalty: "-1 Mark in MCQ",
+    id: "tc_20", domain: "VARC & Vocab", examTag: "GRE General 2026 Vocab", penalty: "-1 Mark in MCQ",
     title: "Confusing 'Disinterested' (Impartial) with 'Uninterested' (Bored)",
     trapScenario: "'A judge must remain uninterested in the outcome of a case.'",
     whyItFails: "'Uninterested' means lacking curiosity/bored; an unbiased referee is 'disinterested'.",

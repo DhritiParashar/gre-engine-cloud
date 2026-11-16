@@ -3,7 +3,7 @@ window.IPM_TRAPS_CLINIC = window.IPM_TRAPS_CLINIC || [];
 window.IPM_TRAPS_CLINIC.push(
   // +12 QUANT & HIGHER MATH TRAPS (Brings Quant & Higher Math from 8 -> 20 Traps)
   {
-    id: "tc_q09", domain: "Quant & Higher Math", examTag: "GRE General 2026 / OMETs", penalty: "-1 Mark in MCQ",
+    id: "tc_q09", domain: "Quant & Higher Math", examTag: "GRE General / OMETs", penalty: "-1 Mark in MCQ",
     title: "Using Simple Interest Proportionality for Compound Interest Multipliers",
     trapScenario: "A sum doubles at CI in 6 years -> Student says it becomes 4x in 18 years (thinking +100% every 6 yrs).",
     whyItFails: "CI compounds multiplicatively (2x, 4x, 8x), not additively (2x, 3x, 4x).",
@@ -29,7 +29,7 @@ window.IPM_TRAPS_CLINIC.push(
     }
   },
   {
-    id: "tc_q11", domain: "Quant & Higher Math", examTag: "GRE General 2026 Rohtak / OMETs", penalty: "-1 Mark in MCQ",
+    id: "tc_q11", domain: "Quant & Higher Math", examTag: "GRE General Rohtak / OMETs", penalty: "-1 Mark in MCQ",
     title: "Forgetting Train Length When Crossing a Platform vs. a Pole",
     trapScenario: "A 200m train at 20 m/s crosses a 300m platform -> Student computes 300 / 20 = 15 seconds.",
     whyItFails: "To clear the platform completely, the train must travel (Train Length + Platform Length).",
@@ -42,7 +42,7 @@ window.IPM_TRAPS_CLINIC.push(
     }
   },
   {
-    id: "tc_q12", domain: "Quant & Higher Math", examTag: "GRE General 2026 SA", penalty: "Wrong SA Entry",
+    id: "tc_q12", domain: "Quant & Higher Math", examTag: "GRE General SA", penalty: "Wrong SA Entry",
     title: "Treating Downstream & Upstream Boat Speeds as Directly Additive Without Halving",
     trapScenario: "Downstream = 14 km/h, Upstream = 6 km/h -> Student states Boat Speed = 14 + 6 = 20 km/h.",
     whyItFails: "(B + S) + (B - S) = 2B, not B.",
@@ -55,7 +55,7 @@ window.IPM_TRAPS_CLINIC.push(
     }
   },
   {
-    id: "tc_q13", domain: "Quant & Higher Math", examTag: "GRE General 2026 / OMETs", penalty: "-1 Mark in MCQ",
+    id: "tc_q13", domain: "Quant & Higher Math", examTag: "GRE General / OMETs", penalty: "-1 Mark in MCQ",
     title: "Assuming 1 is a Prime Number or Forgetting 2 is the Only Even Prime",
     trapScenario: "Listing primes under 10 as {1, 2, 3, 5, 7} -> Counting 5 primes instead of 4.",
     whyItFails: "By definition, a prime has EXACTLY two distinct positive factors; 1 has only one factor.",
@@ -68,7 +68,7 @@ window.IPM_TRAPS_CLINIC.push(
     }
   },
   {
-    id: "tc_q14", domain: "Quant & Higher Math", examTag: "GRE General 2026 SA", penalty: "Wrong SA Entry",
+    id: "tc_q14", domain: "Quant & Higher Math", examTag: "GRE General SA", penalty: "Wrong SA Entry",
     title: "Using Positive-Integer Stars & Bars When Zero is Allowed (or Vice Versa)",
     trapScenario: "Non-negative solutions to x + y + z = 10 -> Student uses C(10-1, 3-1) = C(9,2) = 36.",
     whyItFails: "C(n - 1, r - 1) requires strictly positive integers (x, y, z >= 1).",
@@ -81,7 +81,7 @@ window.IPM_TRAPS_CLINIC.push(
     }
   },
   {
-    id: "tc_q15", domain: "Quant & Higher Math", examTag: "GRE General 2026 / IIMB UG", penalty: "-1 Mark in MCQ",
+    id: "tc_q15", domain: "Quant & Higher Math", examTag: "GRE General / IIMB UG", penalty: "-1 Mark in MCQ",
     title: "Canceling Common Variable Factors on Both Sides of an Equation",
     trapScenario: "x^2 = 5x => Student divides both sides by x to get only x = 5.",
     whyItFails: "Dividing by x implicitly assumes x != 0, losing the valid root x = 0.",
@@ -94,7 +94,7 @@ window.IPM_TRAPS_CLINIC.push(
     }
   },
   {
-    id: "tc_q16", domain: "Quant & Higher Math", examTag: "GRE General 2026 / IIMB UG", penalty: "-1 Mark in MCQ",
+    id: "tc_q16", domain: "Quant & Higher Math", examTag: "GRE General / IIMB UG", penalty: "-1 Mark in MCQ",
     title: "Forgetting +- Sign When Taking Square Root of x^2",
     trapScenario: "sqrt((x - 4)^2) = 5 => Student writes x - 4 = 5 => x = 9 only.",
     whyItFails: "sqrt(u^2) = |u|, NOT u.",
@@ -107,7 +107,7 @@ window.IPM_TRAPS_CLINIC.push(
     }
   },
   {
-    id: "tc_q17", domain: "Quant & Higher Math", examTag: "GRE General 2026 Higher Math", penalty: "-1 Mark in MCQ",
+    id: "tc_q17", domain: "Quant & Higher Math", examTag: "GRE General Higher Math", penalty: "-1 Mark in MCQ",
     title: "Applying Infinite GP Formula S = a/(1 - r) When |r| >= 1",
     trapScenario: "1 + 2 + 4 + 8 + ... -> Student plugs a=1, r=2 into 1/(1 - 2) = -1.",
     whyItFails: "An infinite GP converges ONLY when common ratio satisfies -1 < r < 1.",
@@ -120,7 +120,7 @@ window.IPM_TRAPS_CLINIC.push(
     }
   },
   {
-    id: "tc_q18", domain: "Quant & Higher Math", examTag: "GRE General 2026 / IIMB UG", penalty: "-1 Mark in MCQ",
+    id: "tc_q18", domain: "Quant & Higher Math", examTag: "GRE General / IIMB UG", penalty: "-1 Mark in MCQ",
     title: "Assuming Matrix Multiplication Commutes: (A + B)^2 = A^2 + 2AB + B^2",
     trapScenario: "Expanding (A + B)^2 as A^2 + 2AB + B^2 for two square matrices A and B.",
     whyItFails: "In general, AB != BA for matrices.",
@@ -133,7 +133,7 @@ window.IPM_TRAPS_CLINIC.push(
     }
   },
   {
-    id: "tc_q19", domain: "Quant & Higher Math", examTag: "IIMB UG / GRE General 2026", penalty: "-1 Mark in MCQ",
+    id: "tc_q19", domain: "Quant & Higher Math", examTag: "IIMB UG / GRE General", penalty: "-1 Mark in MCQ",
     title: "Confusing Mutually Exclusive Events with Independent Events",
     trapScenario: "P(A)=0.4, P(B)=0.5 are independent -> Student computes P(A ∩ B) = 0.",
     whyItFails: "Mutually exclusive means P(A ∩ B) = 0; Independent means P(A ∩ B) = P(A) * P(B).",
@@ -161,7 +161,7 @@ window.IPM_TRAPS_CLINIC.push(
 
   // +12 DI & LR TRAPS (Brings DI & LR from 6 -> 18 Traps)
   {
-    id: "tc_d07", domain: "DI & LR", examTag: "OMETs / GRE General 2026 DI", penalty: "-1 Mark in MCQ",
+    id: "tc_d07", domain: "DI & LR", examTag: "OMETs / GRE General DI", penalty: "-1 Mark in MCQ",
     title: "Comparing Pie Chart Percentage Shares Without Checking Total Pie Size",
     trapScenario: "Sector A is 30% in 2025 pie and 25% in 2026 pie -> Student concludes Sector A revenue fell.",
     whyItFails: "If the 2026 total pie grew from Rs. 100 Cr to Rs. 200 Cr, 25% of 200 (50 Cr) > 30% of 100 (30 Cr).",
@@ -187,7 +187,7 @@ window.IPM_TRAPS_CLINIC.push(
     }
   },
   {
-    id: "tc_d09", domain: "DI & LR", examTag: "GRE General 2026 Rohtak / OMETs", penalty: "-1 Mark in MCQ",
+    id: "tc_d09", domain: "DI & LR", examTag: "GRE General Rohtak / OMETs", penalty: "-1 Mark in MCQ",
     title: "Using Straight-Line Average Instead of Compounded CAGR Across Multi-Year Tables",
     trapScenario: "Sales double (+100%) in 4 years -> Student divides 100% / 4 = 25% annual growth.",
     whyItFails: "Compounding makes actual annual CAGR (~18.9%) strictly lower than (Total % Growth / Years).",
@@ -200,7 +200,7 @@ window.IPM_TRAPS_CLINIC.push(
     }
   },
   {
-    id: "tc_d10", domain: "DI & LR", examTag: "GRE General 2026 / OMETs", penalty: "-1 Mark in MCQ",
+    id: "tc_d10", domain: "DI & LR", examTag: "GRE General / OMETs", penalty: "-1 Mark in MCQ",
     title: "Double-Counting Pairwise Overlaps in 3-Set Venn Diagrams",
     trapScenario: "Using n(A) + n(B) + n(C) - n(A∩B) - n(B∩C) - n(C∩A) without adding back n(A∩B∩C).",
     whyItFails: "Subtracting all three pairwise intersections removes the center triple-overlap three times after adding it three times.",
@@ -213,7 +213,7 @@ window.IPM_TRAPS_CLINIC.push(
     }
   },
   {
-    id: "tc_d11", domain: "DI & LR", examTag: "GRE General 2026 Rohtak / OMETs", penalty: "-1 Mark in MCQ",
+    id: "tc_d11", domain: "DI & LR", examTag: "GRE General Rohtak / OMETs", penalty: "-1 Mark in MCQ",
     title: "Treating 'A is 2 places away from B' as 2 People Between A and B",
     trapScenario: "Placing two empty seats between A and B when a clue says 'A sits 2nd to the left of B'.",
     whyItFails: "'2nd to the left' means ONLY 1 person sits between them.",
@@ -226,7 +226,7 @@ window.IPM_TRAPS_CLINIC.push(
     }
   },
   {
-    id: "tc_d12", domain: "DI & LR", examTag: "GRE General 2026 Rohtak / OMETs", penalty: "-1 Mark in MCQ",
+    id: "tc_d12", domain: "DI & LR", examTag: "GRE General Rohtak / OMETs", penalty: "-1 Mark in MCQ",
     title: "Assuming Gender From Names in Blood Relation Puzzles",
     trapScenario: "Assuming 'Kiran' or 'Alex' is male/female without explicit relational proof.",
     whyItFails: "Exam setters deliberately use gender-neutral names to trap assumptions.",
@@ -239,7 +239,7 @@ window.IPM_TRAPS_CLINIC.push(
     }
   },
   {
-    id: "tc_d13", domain: "DI & LR", examTag: "GRE General 2026 Rohtak / OMETs", penalty: "-1 Mark in MCQ",
+    id: "tc_d13", domain: "DI & LR", examTag: "GRE General Rohtak / OMETs", penalty: "-1 Mark in MCQ",
     title: "Misreading 'Only A are B' in Syllogisms",
     trapScenario: "Translating 'Only managers are directors' as 'All managers are directors'.",
     whyItFails: "'Only A are B' reverses the universal quantifier to 'All B are A'.",
@@ -252,7 +252,7 @@ window.IPM_TRAPS_CLINIC.push(
     }
   },
   {
-    id: "tc_d14", domain: "DI & LR", examTag: "GRE General 2026 Rohtak / OMETs", penalty: "-1 Mark in MCQ",
+    id: "tc_d14", domain: "DI & LR", examTag: "GRE General Rohtak / OMETs", penalty: "-1 Mark in MCQ",
     title: "Forgetting 1900 is NOT a Leap Year in Calendar Odd-Day Calculations",
     trapScenario: "Dividing 1900 by 4 and treating February 1900 as having 29 days.",
     whyItFails: "Century years (ending in 00) must be divisible by 400 to be leap years.",
@@ -265,7 +265,7 @@ window.IPM_TRAPS_CLINIC.push(
     }
   },
   {
-    id: "tc_d15", domain: "DI & LR", examTag: "GRE General 2026 Rohtak / OMETs", penalty: "-1 Mark in MCQ",
+    id: "tc_d15", domain: "DI & LR", examTag: "GRE General Rohtak / OMETs", penalty: "-1 Mark in MCQ",
     title: "Using Straight Subtraction Instead of +1 in Rank-from-Both-Ends Problems",
     trapScenario: "Total 40 students, rank 15th from top -> Student computes 40 - 15 = 25th from bottom.",
     whyItFails: "Subtracting 15 removes the student themselves from the count.",
@@ -278,7 +278,7 @@ window.IPM_TRAPS_CLINIC.push(
     }
   },
   {
-    id: "tc_d16", domain: "DI & LR", examTag: "GRE General 2026 Rohtak / OMETs", penalty: "-1 Mark in MCQ",
+    id: "tc_d16", domain: "DI & LR", examTag: "GRE General Rohtak / OMETs", penalty: "-1 Mark in MCQ",
     title: "Forgetting Hour-Hand Drift in Clock Angle Calculations",
     trapScenario: "At 6:30, assuming the hour hand sits exactly on 6 and minute hand on 6 -> 0° angle.",
     whyItFails: "In 30 minutes, the hour hand advances 30 * 0.5° = 15° past 6.",
@@ -291,7 +291,7 @@ window.IPM_TRAPS_CLINIC.push(
     }
   },
   {
-    id: "tc_d17", domain: "DI & LR", examTag: "GRE General 2026 Rohtak / OMETs", penalty: "-1 Mark in MCQ",
+    id: "tc_d17", domain: "DI & LR", examTag: "GRE General Rohtak / OMETs", penalty: "-1 Mark in MCQ",
     title: "Stopping After Statement I Suffices in Data Sufficiency Without Testing Statement II",
     trapScenario: "Statement I alone works -> Student immediately picks 'Statement I alone' without checking if Statement II ALSO works alone.",
     whyItFails: "If both statements work independently, the correct option is 'Either Statement I alone OR Statement II alone'.",
@@ -304,7 +304,7 @@ window.IPM_TRAPS_CLINIC.push(
     }
   },
   {
-    id: "tc_d18", domain: "DI & LR", examTag: "GRE General 2026 Rohtak / OMETs", penalty: "-1 Mark in MCQ",
+    id: "tc_d18", domain: "DI & LR", examTag: "GRE General Rohtak / OMETs", penalty: "-1 Mark in MCQ",
     title: "Misinterpreting 'Neither Nor' vs 'Either Or' in Complementary Syllogism Pairs",
     trapScenario: "Marking 'Neither follows' when Conclusions I and II form a valid complementary pair ('Some A are B' + 'No A is B').",
     whyItFails: "In every Venn diagram, either some overlap exists or zero overlap exists—one of the two MUST hold.",
@@ -320,7 +320,7 @@ window.IPM_TRAPS_CLINIC.push(
 window.IPM_TRAPS_CLINIC.push(
   // +12 VARC & VOCAB TRAPS (Brings VARC & Vocab from 6 -> 18 Traps)
   {
-    id: "tc_v07", domain: "VARC & Vocab", examTag: "GRE General 2026 / Rohtak", penalty: "-1 Mark in MCQ",
+    id: "tc_v07", domain: "VARC & Vocab", examTag: "GRE General / Rohtak", penalty: "-1 Mark in MCQ",
     title: "Using 'Less' Instead of 'Fewer' for Countable Plural Nouns",
     trapScenario: "'Less students appeared for the exam this year' / 'Fewer water was wasted.'",
     whyItFails: "'Fewer' modifies countable plurals (students, errors, questions); 'Less' modifies uncountable mass nouns (time, water, money).",
@@ -333,7 +333,7 @@ window.IPM_TRAPS_CLINIC.push(
     }
   },
   {
-    id: "tc_v08", domain: "VARC & Vocab", examTag: "GRE General 2026 / OMETs", penalty: "-1 Mark in MCQ",
+    id: "tc_v08", domain: "VARC & Vocab", examTag: "GRE General / OMETs", penalty: "-1 Mark in MCQ",
     title: "Confusing 'Affect' (Verb) with 'Effect' (Noun)",
     trapScenario: "'How will the rate hike effect borrowers?' / 'The new policy had a positive affect.'",
     whyItFails: "Affect is almost always a verb (to influence); Effect is almost always a noun (result).",
@@ -346,7 +346,7 @@ window.IPM_TRAPS_CLINIC.push(
     }
   },
   {
-    id: "tc_v09", domain: "VARC & Vocab", examTag: "GRE General 2026 / Rohtak", penalty: "-1 Mark in MCQ",
+    id: "tc_v09", domain: "VARC & Vocab", examTag: "GRE General / Rohtak", penalty: "-1 Mark in MCQ",
     title: "Pronoun Case Error After Prepositions: 'Between You and I'",
     trapScenario: "'Between you and I, the DI set was tricky' / 'The prize was split between he and she.'",
     whyItFails: "Prepositions ('between, for, with, to') require objective pronouns ('me, him, her, us, them').",
@@ -359,7 +359,7 @@ window.IPM_TRAPS_CLINIC.push(
     }
   },
   {
-    id: "tc_v10", domain: "VARC & Vocab", examTag: "GRE General 2026 VARC", penalty: "-1 Mark in MCQ",
+    id: "tc_v10", domain: "VARC & Vocab", examTag: "GRE General VARC", penalty: "-1 Mark in MCQ",
     title: "Using Indicative 'Was' Instead of Subjunctive 'Were' in Hypothetical Wishes",
     trapScenario: "'If I was the RBI Governor, I would hold rates steady.'",
     whyItFails: "Contrary-to-fact wishes and hypothetical 'If' clauses require the subjunctive 'were'.",
@@ -372,7 +372,7 @@ window.IPM_TRAPS_CLINIC.push(
     }
   },
   {
-    id: "tc_v11", domain: "VARC & Vocab", examTag: "GRE General 2026 2026 Vocab", penalty: "-1 Mark in MCQ",
+    id: "tc_v11", domain: "VARC & Vocab", examTag: "GRE General 2026 Vocab", penalty: "-1 Mark in MCQ",
     title: "Homophone Confusion: 'Elicit' (Draw Out) vs. 'Illicit' (Illegal)",
     trapScenario: "'The survey failed to illicit honest feedback' / 'He was arrested for elicit trading.'",
     whyItFails: "Elicit is a verb meaning evoke/extract; Illicit is an adjective meaning unlawful.",
@@ -385,7 +385,7 @@ window.IPM_TRAPS_CLINIC.push(
     }
   },
   {
-    id: "tc_v12", domain: "VARC & Vocab", examTag: "GRE General 2026 2026 Vocab", penalty: "-1 Mark in MCQ",
+    id: "tc_v12", domain: "VARC & Vocab", examTag: "GRE General 2026 Vocab", penalty: "-1 Mark in MCQ",
     title: "Confusing 'Complacent' (Smug) with 'Complaisant' (Eager to Please)",
     trapScenario: "'After topping one mock, he grew complaisant and stopped revising.'",
     whyItFails: "Smug self-satisfaction is 'complacent'; obliging/accommodating is 'complaisant'.",
@@ -398,7 +398,7 @@ window.IPM_TRAPS_CLINIC.push(
     }
   },
   {
-    id: "tc_v13", domain: "VARC & Vocab", examTag: "GRE General 2026 / Rohtak", penalty: "-1 Mark in MCQ",
+    id: "tc_v13", domain: "VARC & Vocab", examTag: "GRE General / Rohtak", penalty: "-1 Mark in MCQ",
     title: "Redundant Double Comparatives & Superlatives",
     trapScenario: "'This approach is more faster' / 'She is the most brightest candidate.'",
     whyItFails: "Adding 'more/most' before an '-er/-est' adjective creates grammatical redundancy.",
@@ -411,7 +411,7 @@ window.IPM_TRAPS_CLINIC.push(
     }
   },
   {
-    id: "tc_v14", domain: "VARC & Vocab", examTag: "GRE General 2026 RC", penalty: "-1 Mark in MCQ",
+    id: "tc_v14", domain: "VARC & Vocab", examTag: "GRE General RC", penalty: "-1 Mark in MCQ",
     title: "Falling for Extreme Modifiers ('Always, Never, Only, Solely') in RC Options",
     trapScenario: "Passage says 'Tariffs often raise consumer prices' -> Student picks 'Tariffs ALWAYS cause hyperinflation.'",
     whyItFails: "Academic authors use hedged qualifiers ('often, tends to, may'); extreme options overstate the claim.",
@@ -424,7 +424,7 @@ window.IPM_TRAPS_CLINIC.push(
     }
   },
   {
-    id: "tc_v15", domain: "VARC & Vocab", examTag: "GRE General 2026 Para-Jumbles", penalty: "-1 Mark in MCQ",
+    id: "tc_v15", domain: "VARC & Vocab", examTag: "GRE General Para-Jumbles", penalty: "-1 Mark in MCQ",
     title: "Starting a Para-Jumble with Demonstrative Pronouns ('This, These, Such, It')",
     trapScenario: "Placing 'This phenomenon has reshaped urban retail' as Sentence 1 of a Para-Jumble.",
     whyItFails: "A demonstrative pronoun requires an antecedent noun introduced in an earlier sentence.",
@@ -437,7 +437,7 @@ window.IPM_TRAPS_CLINIC.push(
     }
   },
   {
-    id: "tc_v16", domain: "VARC & Vocab", examTag: "GRE General 2026 / OMETs", penalty: "-1 Mark in MCQ",
+    id: "tc_v16", domain: "VARC & Vocab", examTag: "GRE General / OMETs", penalty: "-1 Mark in MCQ",
     title: "Using 'Despite of' Instead of 'Despite' or 'In Spite Of'",
     trapScenario: "'Despite of heavy rain, the candidates reached the test center on time.'",
     whyItFails: "'Despite' never takes 'of'; 'In spite' always takes 'of'.",
@@ -450,7 +450,7 @@ window.IPM_TRAPS_CLINIC.push(
     }
   },
   {
-    id: "tc_v17", domain: "VARC & Vocab", examTag: "GRE General 2026 / Rohtak", penalty: "-1 Mark in MCQ",
+    id: "tc_v17", domain: "VARC & Vocab", examTag: "GRE General / Rohtak", penalty: "-1 Mark in MCQ",
     title: "Verb Agreement with 'As Well As / Along With / Together With'",
     trapScenario: "'The CEO, along with the board members, were present at the AGM.'",
     whyItFails: "Parenthetical phrases introduced by 'along with / as well as' do NOT make a singular subject plural.",
@@ -463,7 +463,7 @@ window.IPM_TRAPS_CLINIC.push(
     }
   },
   {
-    id: "tc_v18", domain: "VARC & Vocab", examTag: "GRE General 2026 2026 Vocab", penalty: "-1 Mark in MCQ",
+    id: "tc_v18", domain: "VARC & Vocab", examTag: "GRE General 2026 Vocab", penalty: "-1 Mark in MCQ",
     title: "Confusing 'Imminent' (About to Happen) with 'Eminent' (Famous) & 'Immanent' (Inherent)",
     trapScenario: "'An eminent recession is threatening export-driven economies.'",
     whyItFails: "Distinguished scholars are 'eminent'; an impending event is 'imminent'.",

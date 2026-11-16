@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>GOALisB GRE General Master Engine</title>
+  <title>GOALisB GRE Master</title>
   <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body class="bg-slate-950 text-slate-100 min-h-screen font-sans">
@@ -14,7 +14,7 @@
           <div class="w-9 h-9 rounded-xl bg-indigo-600 flex items-center justify-center font-extrabold text-white shadow" text-[11px] tracking-tight">GRE</div>
           <div>
             <div class="flex items-center gap-2">
-              <h1 class="font-bold text-base text-white">GOALisB GRE General Master Engine</h1>
+              <h1 class="font-bold text-base text-white">GOALisB GRE Master</h1>
               <span class="text-[10px] px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-300 font-bold">GRE 340</span>
             </div>
             <p class="text-[11px] text-slate-400">MIT &bull; Stanford &bull; UC Berkeley &bull; CMU &bull; ETH Zurich &bull; Oxford &bull; Cambridge &bull; Georgia Tech</p>
@@ -334,7 +334,7 @@
 
         <div class="p-4 rounded-xl bg-indigo-950/50 border-2 border-amber-400 space-y-2">
           <div class="font-bold text-amber-300 uppercase">&#11088; Pro Learner (Full Season Pass)</div>
-          <div class="text-xl font-extrabold text-white">&#8377;1,999 <span class="text-xs font-normal text-slate-300">/ Full GRE General 2026 & UG Season</span></div>
+          <div class="text-xl font-extrabold text-white">&#8377;1,999 <span class="text-xs font-normal text-slate-300">/ Full GRE General & UG Season</span></div>
           <ul class="list-disc list-inside text-slate-200 space-y-1">
             <li>All 360 Worked Quant & Higher Math Drills</li>
             <li>56 Interactive Trap Doctor Clinics + EV Sim</li>
@@ -380,7 +380,7 @@
 
   window.setPyqExamFilter = function (ex) {
     window.PYQ_EXAM_FILTER = ex;
-    if (ex !== "ALL" && ex !== "GRE General 2026" && window.PYQ_YEAR_FILTER === "ARCHIVE_2019_2021") {
+    if (ex !== "ALL" && ex !== "GRE General" && window.PYQ_YEAR_FILTER === "ARCHIVE_2019_2021") {
       window.PYQ_YEAR_FILTER = "ALL";
     }
     if (ex === "IIM Bangalore" && ["2022", "2023"].includes(window.PYQ_YEAR_FILTER)) {
@@ -429,7 +429,7 @@
       window.fetchAllPyqFromPostgres();
     }
     const pool = (window.PYQ_PG_CACHE && window.PYQ_PG_CACHE.length) ? window.PYQ_PG_CACHE : (window.IPM_PYQ_ARCHIVE || []);
-    const exams = ["ALL", "GRE General 2026", "GRE General 2026 Rohtak", "OMETs", "IIM Bangalore", "IIM Mumbai & Lucknow", "IIM Kozhikode BMS", "CUET-UG"];
+    const exams = ["ALL", "GRE General", "GRE General Rohtak", "OMETs", "IIM Bangalore", "IIM Mumbai & Lucknow", "IIM Kozhikode BMS", "CUET-UG"];
     const years = ["ALL", "2026", "2025", "2024", "2023", "2022", "ARCHIVE_2019_2021"];
 
     const normEx = (s) => String(s || "").toLowerCase().replace("iimb", "iim bangalore").trim();
@@ -446,7 +446,7 @@
 
     const isIimb = window.PYQ_EXAM_FILTER === "IIM Bangalore";
     const isNewUg2025 = (window.PYQ_EXAM_FILTER === "IIM Mumbai & Lucknow" || window.PYQ_EXAM_FILTER === "IIM Kozhikode BMS");
-    const archiveAllowed = (window.PYQ_EXAM_FILTER === "ALL" || window.PYQ_EXAM_FILTER === "GRE General 2026");
+    const archiveAllowed = (window.PYQ_EXAM_FILTER === "ALL" || window.PYQ_EXAM_FILTER === "GRE General");
 
     el.innerHTML = `
       <div class="space-y-4">
@@ -459,7 +459,7 @@
                 <button type="button" onclick="window.launchPyqAsTimedMock()" class="text-[11px] px-3 py-1 rounded-full bg-indigo-600 hover:bg-indigo-500 text-white font-bold shadow transition">Practice Filtered Set in Tab 8 Mock &rarr;</button>
               </div>
               <p class="text-xs text-slate-400">
-                Complete 2022–2026 vault across GRE General 2026 (+ 2019–21 Official Archive), Rohtak, OMETs, IIMB (2024–26), IIMM/IIML/IIMK (2025–26) &amp; CUET-UG.
+                Complete 2022–2026 vault across GRE General (+ 2019–21 Official Archive), Rohtak, OMETs, IIMB (2024–26), IIMM/IIML/IIMK (2025–26) &amp; CUET-UG.
               </p>
             </div>
             <div class="flex flex-wrap gap-1.5">
@@ -726,11 +726,11 @@
               </div>
 
               <div class="p-4 rounded-2xl bg-slate-950 border border-slate-800 space-y-2.5">
-                <div class="text-xs font-bold text-amber-400">GRE General 2026 INDORE &amp; RANCHI</div>
+                <div class="text-xs font-bold text-amber-400">GRE General INDORE &amp; RANCHI</div>
                 <div class="text-sm font-bold text-white">25 Questions &bull; 38 Mins</div>
-                <p class="text-xs text-slate-400">Higher Math, Short-Answer Numerics, and VARC calibrated to GRE General 2026.</p>
-                <button type="button" onclick="window.preparePgMock('GRE General 2026', 25, 'GRE General 2026 & Ranchi Mock (25 Qs)')" class="w-full py-2.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 text-xs font-extrabold transition">
-                  Start GRE General 2026 Mock &rarr;
+                <p class="text-xs text-slate-400">Higher Math, Short-Answer Numerics, and VARC calibrated to GRE General.</p>
+                <button type="button" onclick="window.preparePgMock('GRE General', 25, 'GRE General & Ranchi Mock (25 Qs)')" class="w-full py-2.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 text-xs font-extrabold transition">
+                  Start GRE General Mock &rarr;
                 </button>
               </div>
 
@@ -1175,15 +1175,23 @@
 
 <script src="js/modules/tab6_college_predictor.js?v=20261115"></script>
 
+
 <script id="pg-boot-auth-gate">
 (function () {
   const CFG = {
     badge: "GRE",
-    title: "GOALisB GRE General Master Engine",
-    tag: "260–340 SCALE",
+    title: "GOALisB GRE Master",
+    tag: "GRE GENERAL",
     sub: "Quantitative (27 Qs • 47m) &bull; Verbal (27 Qs • 41m) &bull; Analytical Writing (1 Essay • 30m)",
+    marking: "MCQ +1/0 | Numeric Entry +1/0 (Zero Guessing Penalty)",
+    pattern: "54 Qs + AWA | 118 Mins | Section-Adaptive Routing",
+    modes: [{"label":"GRE General Standard (54 Qs + AWA)","sub":"(260–340 Scale)","id":"STANDARD"},{"label":"Quant 170 Perfection Sprint","sub":"(130–170 Q)","id":"Q170"},{"label":"Verbal 165+ \u0026 AWA 5.5 Studio","sub":"(TC / SE / RC)","id":"V165"}],
+    tabs: ["1. Quantitative Reasoning (QC \u0026 PS)","2. Data Interpretation \u0026 AWA Lab","3. Verbal Studio (TC, SE \u0026 RC)","4. Section-Adaptive Mock","5. Trap Doctor \u0026 AI Doubts","6. GRE 260–340 Score Forecaster"],
     defaultTel: "Target: 332/340 GRE &bull; Readiness: 326 (Q166 / V160 / AWA 4.5)"
   };
+
+  window._ACTIVE_MODE_IDX = window._ACTIVE_MODE_IDX || 0;
+  window._ACTIVE_TAB_NUM  = window._ACTIVE_TAB_NUM  || 1;
 
   function getUser() {
     try {
@@ -1201,6 +1209,24 @@
     localStorage.removeItem("ipm_token");
     window.IPM_USER = null;
     window.location.reload();
+  };
+
+  window.selectUnifiedTab = function (tabNum) {
+    window._ACTIVE_TAB_NUM = tabNum;
+    renderCleanHeader();
+    if (typeof window.switchTab === "function") {
+      window.switchTab(tabNum);
+      return;
+    }
+    if (typeof window.setActiveTab === "function") {
+      window.setActiveTab(tabNum);
+      return;
+    }
+    const el = document.getElementById("tab-content") || document.querySelector("main");
+    if (el) {
+      const fn = window["renderTab" + tabNum];
+      if (typeof fn === "function") fn(el);
+    }
   };
 
   function renderCleanHeader() {
@@ -1227,68 +1253,96 @@
         telemetry = `Mocks: ${hist.length} &bull; Latest Scaled: ${scaled198}/198`;
       }
     } else if (user && user.targetScore) {
-      telemetry = `Target: ${user.targetScore} (${user.examMonth || "2026"}) &bull; Mocks: 0`;
+      telemetry = `Target: ${user.targetScore} &bull; Mocks: 0`;
     }
 
     const isDark = document.documentElement.classList.contains("dark");
+    const modePills = CFG.modes.map((m, idx) => {
+      const active = idx === window._ACTIVE_MODE_IDX;
+      return `<button type="button" onclick="window._ACTIVE_MODE_IDX=${idx}; renderCleanHeader();"
+        class="px-3.5 py-1.5 rounded-full text-xs font-bold transition cursor-pointer ${active ? 'bg-indigo-600 text-white shadow-sm' : 'bg-white dark:bg-slate-900 text-slate-700 dark:text-slate-200 border border-slate-300 dark:border-slate-700 hover:border-indigo-500'}">
+        ${m.label} <span class="opacity-75 font-normal text-[11px]">${m.sub}</span>
+      </button>`;
+    }).join("");
+
+    const tabPills = CFG.tabs.map((lbl, idx) => {
+      const num = idx + 1;
+      const active = num === window._ACTIVE_TAB_NUM;
+      return `<button type="button" onclick="window.selectUnifiedTab(${num})"
+        class="px-3.5 py-2 rounded-full text-xs font-bold transition cursor-pointer ${active ? 'bg-indigo-600 text-white shadow-sm' : 'bg-white dark:bg-slate-900 text-slate-700 dark:text-slate-200 border border-slate-300 dark:border-slate-700 hover:border-indigo-500'}">
+        ${lbl}
+      </button>`;
+    }).join("");
+
     header.innerHTML = `
-      <div class="max-w-7xl mx-auto px-4 py-3 flex flex-wrap items-center justify-between gap-3">
-        <div class="flex items-center gap-3">
-          <div class="w-10 h-10 rounded-xl bg-indigo-600 text-white font-black text-xs flex items-center justify-center shadow-md shrink-0">${CFG.badge}</div>
-          <div>
-            <div class="flex items-center gap-2 flex-wrap">
-              <span class="font-extrabold text-base text-slate-900 dark:text-white tracking-tight">${CFG.title}</span>
-              <span class="text-[10px] font-extrabold px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-700 dark:bg-emerald-500/20 dark:text-emerald-300">${CFG.tag}</span>
+      <div class="max-w-7xl mx-auto px-4 pt-3 pb-2 space-y-3">
+        <!-- Row 1: Brand Title + Candidate Readiness Pill + Action Buttons -->
+        <div class="flex flex-wrap items-center justify-between gap-3">
+          <div class="flex items-center gap-3">
+            <div class="w-10 h-10 rounded-xl bg-indigo-600 text-white font-black text-xs flex items-center justify-center shadow-md shrink-0">${CFG.badge}</div>
+            <div>
+              <div class="flex items-center gap-2 flex-wrap">
+                <span class="font-extrabold text-lg text-slate-900 dark:text-white tracking-tight">${CFG.title}</span>
+                <span class="text-[10px] font-extrabold px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-700 dark:bg-emerald-500/20 dark:text-emerald-300">${CFG.tag}</span>
+              </div>
+              <div class="text-[11px] text-slate-500 dark:text-slate-400">${CFG.sub}</div>
             </div>
-            <div class="text-[11px] text-slate-500 dark:text-slate-400">${CFG.sub}</div>
+          </div>
+
+          <div class="flex items-center gap-2.5 flex-wrap">
+            <button type="button" onclick="if(typeof window.openPostgradAuthGate==='function') window.openPostgradAuthGate('REGISTER');"
+              title="Click to update Target Score"
+              class="px-3.5 py-1.5 rounded-full bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 text-xs flex items-center gap-1.5 hover:border-indigo-500 transition cursor-pointer">
+              <span class="font-bold text-slate-900 dark:text-white">&#128100; ${name}</span>
+              <span class="text-slate-400">|</span>
+              <span class="font-semibold text-indigo-600 dark:text-indigo-300">${telemetry}</span>
+            </button>
+
+            <button type="button" onclick="if(typeof window.openUpgradeModal==='function') window.openUpgradeModal();"
+              class="px-3.5 py-1.5 rounded-xl bg-amber-400 hover:bg-amber-300 text-slate-950 text-xs font-extrabold shadow-sm cursor-pointer">
+              &#11088; Go Pro Learner
+            </button>
+
+            ${user ? `
+              <button type="button" onclick="window.handlePostgradLogout()"
+                class="px-3.5 py-1.5 rounded-xl bg-rose-600 hover:bg-rose-500 text-white text-xs font-bold shadow-sm cursor-pointer">
+                Exit / Logout
+              </button>
+            ` : `
+              <button type="button" onclick="if(typeof window.openPostgradAuthGate==='function') window.openPostgradAuthGate('REGISTER');"
+                class="px-3.5 py-1.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-bold shadow-sm cursor-pointer">
+                Login / Register
+              </button>
+            `}
+
+            <button type="button" onclick="document.documentElement.classList.toggle('dark'); renderCleanHeader();"
+              class="px-3 py-1.5 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 text-xs font-semibold text-slate-700 dark:text-slate-200 cursor-pointer">
+              ${isDark ? "&#9728; Light Mode" : "&#127769; Dark Mode"}
+            </button>
           </div>
         </div>
 
-        <div class="flex items-center gap-2.5 flex-wrap">
-          <button type="button" onclick="if(typeof window.openPostgradAuthGate==='function') window.openPostgradAuthGate('REGISTER');"
-            title="Click to update Target Score & Exam Window"
-            class="px-3.5 py-1.5 rounded-full bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 text-xs flex items-center gap-1.5 hover:border-indigo-500 transition cursor-pointer">
-            <span class="font-bold text-slate-900 dark:text-white">&#128100; ${name}</span>
-            <span class="text-slate-400">|</span>
-            <span class="font-semibold text-indigo-600 dark:text-indigo-300">${telemetry}</span>
-          </button>
+        <!-- Row 2: Exam Track Pills -->
+        <div class="flex flex-wrap items-center gap-2">${modePills}</div>
 
-          <button type="button" onclick="if(typeof window.openUpgradeModal==='function') window.openUpgradeModal();"
-            class="px-3.5 py-1.5 rounded-xl bg-amber-400 hover:bg-amber-300 text-slate-950 text-xs font-extrabold shadow-sm cursor-pointer">
-            &#11088; Go Pro Learner
-          </button>
-
-          ${user ? `
-            <button type="button" onclick="window.handlePostgradLogout()"
-              class="px-3.5 py-1.5 rounded-xl bg-rose-600 hover:bg-rose-500 text-white text-xs font-bold shadow-sm cursor-pointer">
-              Exit / Logout
-            </button>
-          ` : `
-            <button type="button" onclick="if(typeof window.openPostgradAuthGate==='function') window.openPostgradAuthGate('REGISTER');"
-              class="px-3.5 py-1.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-bold shadow-sm cursor-pointer">
-              Login / Register
-            </button>
-          `}
-
-          <button type="button" onclick="document.documentElement.classList.toggle('dark'); renderCleanHeader();"
-            class="px-3 py-1.5 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 text-xs font-semibold text-slate-700 dark:text-slate-200 cursor-pointer">
-            ${isDark ? "&#9728; Light Mode" : "&#127769; Dark Mode"}
-          </button>
+        <!-- Row 3: Exam Sections & Marking Telemetry Box -->
+        <div class="px-4 py-2.5 rounded-2xl bg-slate-50 dark:bg-slate-900/90 border border-slate-200 dark:border-slate-800 flex flex-wrap items-center justify-between gap-2 text-xs">
+          <div><strong class="text-indigo-700 dark:text-indigo-300">Exam Sections:</strong> <span class="text-slate-700 dark:text-slate-300">${CFG.sub}</span></div>
+          <div class="flex flex-wrap items-center gap-4 text-[11px]">
+            <span><strong class="text-emerald-700 dark:text-emerald-400">Pattern:</strong> ${CFG.pattern}</span>
+            <span><strong class="text-amber-700 dark:text-amber-400">Marking:</strong> ${CFG.marking}</span>
+          </div>
         </div>
+
+        <!-- Row 4: 6 Main Navigation Tabs -->
+        <div class="flex flex-wrap items-center gap-2 pt-0.5">${tabPills}</div>
       </div>
     `;
-
-    // Also scrub any residual 'Target Campuses:' text in the sub-header banner
-    document.querySelectorAll("div, span, p").forEach(el => {
-      if (el.children.length <= 2 && (el.textContent || "").includes("Target Campuses:")) {
-        el.innerHTML = `<strong class="text-indigo-700 dark:text-indigo-300">Exam Sections:</strong> ${CFG.sub}`;
-      }
-    });
   }
 
   window.renderCleanHeader = renderCleanHeader;
   window.addEventListener("DOMContentLoaded", renderCleanHeader);
-  setInterval(renderCleanHeader, 500);
+  setInterval(renderCleanHeader, 800);
 })();
 </script>
 </body>

@@ -64,7 +64,7 @@ window.IPM_QUANT_SHORTCUTS = {
   hm_01: {
     formulas: [
       { name: "Log Base-Change & Power Pull", formula: "log_(b^k)(a^m) = (m / k) * log_b(a)", trick: "Telescoping product: log_a(b) * log_b(c) * log_c(d) = log_a(d)." },
-      { name: "Characteristic & Digits", formula: "Digits in a^n = floor(n * log_10(a)) + 1", trick: "Memorize log_10(2) ≈ 0.3010 and log_10(3) ≈ 0.4771 for GRE General 2026 SA." },
+      { name: "Characteristic & Digits", formula: "Digits in a^n = floor(n * log_10(a)) + 1", trick: "Memorize log_10(2) ≈ 0.3010 and log_10(3) ≈ 0.4771 for GRE General SA." },
       { name: "AM >= GM Minimization", formula: "Min of a*x + b/x (x > 0) = 2 * sqrt(a * b)", trick: "Attained when both terms are equal: a*x = b/x." },
       { name: "AP Middle-Term Sum", formula: "Sum of n terms of AP (odd n) = n * (Middle Term)", trick: "If sum of 9 terms of an AP is 180, the 5th term is immediately 180/9 = 20." }
     ],
@@ -78,7 +78,7 @@ window.IPM_QUANT_SHORTCUTS = {
       { name: "Stars & Bars Distribution", formula: "Non-negative: C(n + r - 1, r - 1)  |  Positive (>=1): C(n - 1, r - 1)", trick: "Applies to distributing n IDENTICAL objects into r DISTINCT boxes." },
       { name: "Circular Arrangements", formula: "Distinct persons: (n - 1)!  |  Necklace/Garland (clockwise = anti): (n - 1)! / 2", trick: "Fix 1 person to break rotational symmetry, then arrange remaining (n-1) linearly." },
       { name: "Total Selections from n Items", formula: "At least 1 from n distinct = 2^n - 1  |  From identical p, q, r = (p+1)(q+1)(r+1) - 1", trick: "Identical item selection mirrors the divisor-counting formula!" },
-      { name: "Derangements D_n", formula: "D_2 = 1,  D_3 = 2,  D_4 = 9,  D_5 = 44", trick: "Memorize D_3=2 and D_4=9—saves 60 seconds in GRE General 2026." }
+      { name: "Derangements D_n", formula: "D_2 = 1,  D_3 = 2,  D_4 = 9,  D_5 = 44", trick: "Memorize D_3=2 and D_4=9—saves 60 seconds in GRE General." }
     ],
     extraDrills: [
       { id: "hm02_d1", type: "SA_NUMERIC", prompt: "[Speed Drill] How many positive integer solutions exist for x + y + z + w = 10?", answer: "84", explanation: "Positive solutions: C(10 - 1, 4 - 1) = C(9, 3) = (9 * 8 * 7) / 6 = 84." },

@@ -1,5 +1,5 @@
 window.IPM_MANIFEST = {
-  brand: "GOALisB GRE General Master Engine",
+  brand: "GOALisB GRE Master",
   tagline: "Section-Adaptive Prep for GRE General (260–340 Scale + AWA 6.0) • MS, PhD & MBA",
 
   examModes: {
