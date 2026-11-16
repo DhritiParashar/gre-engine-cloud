@@ -43,3 +43,4 @@ window.renderTab5 = function (el) {
     </div>
   `;
 };
+window.renderTrapClinic5 = window.renderTab5;

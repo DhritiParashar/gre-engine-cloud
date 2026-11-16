@@ -50,7 +50,7 @@ window.startExtemporeTimer = function () {
   }, 1000);
 };
 
-window.renderTab5 = function (el) {
+window.renderTab5 = function (el) { if (typeof window.GMAT_TRAPS_18 !== "undefined" || typeof window.GRE_TRAPS_18 !== "undefined" || typeof window.CAT_TRAPS_18 !== "undefined") { return window.renderTrapClinic5(el); }
   if (!window.LIVE_CA_PROMPTS.length && !window.LIVE_CA_LOADING) {
     window.fetchLiveCurrentAffairs(false);
   }
