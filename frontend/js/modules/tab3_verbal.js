@@ -295,6 +295,10 @@ window.renderVerbalStudio3 = function (el) {
 // ==============================================================================
 // PROCTORED 5-BLUEPRINT MOCK ENGINE + OFFICIAL DIAGNOSTIC MARKSHEET PDF (TAB 4)
 // ==============================================================================
+
+// ==============================================================================
+// PROCTORED 5-BLUEPRINT MOCK ENGINE + SERIAL LOG + EXIT WITHOUT SUBMISSION (TAB 4)
+// ==============================================================================
 window.renderMockSimulator4 = async function (el) {
   const host = window.location.host.toLowerCase();
   const exam = host.includes("gmat") ? "GMAT" : (host.includes("gre") ? "GRE" : "CAT");
@@ -394,6 +398,8 @@ window.renderMockSimulator4 = async function (el) {
     });
   }
 
+  const nextSerialId = `${exam}-${new Date().getFullYear()}-${Math.floor(1000 + Math.random() * 9000)}`;
+
   window._MOCK_STATE = {
     questions: exactPool,
     curr: 0,
@@ -403,7 +409,9 @@ window.renderMockSimulator4 = async function (el) {
     submitted: false,
     secondsLeft: bp.mins * 60,
     totalSeconds: bp.mins * 60,
-    serialId: `${exam}-${new Date().getFullYear()}-${Math.floor(1000 + Math.random() * 9000)}`
+    serialId: nextSerialId,
+    blueprintTitle: bp.title,
+    bpId: bp.id
   };
 
   if (window._MOCK_TIMER_ID) clearInterval(window._MOCK_TIMER_ID);
@@ -430,8 +438,23 @@ window.renderMockSimulator4 = async function (el) {
     window.renderMockQuestionCard();
   };
 
+  window.exitMockWithoutSubmission4 = function () {
+    if (!confirm("Exit this mock session without submitting? Your timer will stop and no score will be logged.")) return;
+    if (window._MOCK_TIMER_ID) clearInterval(window._MOCK_TIMER_ID);
+    window._MOCK_STATE = null;
+    window.renderMockSimulator4(document.getElementById("main-workspace"));
+  };
+
+  window.clearMockLog4 = function () {
+    if (!confirm("Clear all recorded Serial Mock IDs and diagnostic attempt logs? This resets your Preparation Level baseline.")) return;
+    localStorage.removeItem("ipm_mock_history_v1");
+    if (typeof window.syncPreparationReadinessHeader === "function") window.syncPreparationReadinessHeader();
+    window.renderMockSimulator4(document.getElementById("main-workspace"));
+  };
+
   window.renderMockQuestionCard = function () {
     const st = window._MOCK_STATE;
+    if (!st) return;
     const qObj = st.questions[st.curr];
     const qArea = document.getElementById("mock-q-area");
     const palArea = document.getElementById("mock-palette-area");
@@ -469,7 +492,7 @@ window.renderMockSimulator4 = async function (el) {
     qArea.innerHTML = `
       <div class="space-y-4">
         <div class="flex flex-wrap items-center justify-between gap-2 border-b border-slate-200 dark:border-slate-800 pb-3">
-          <div class="flex items-center gap-2">
+          <div class="flex flex-wrap items-center gap-2">
             <span class="px-2.5 py-0.5 rounded-full bg-indigo-600 text-white text-[11px] font-extrabold">Question ${st.curr + 1} of ${st.questions.length}</span>
             <span class="px-2.5 py-0.5 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 text-[11px] font-bold">${qObj.sec} &bull; ${qObj.topic}</span>
             <span class="px-2 py-0.5 rounded-full bg-emerald-500/15 text-emerald-700 dark:text-emerald-300 text-[10px] font-bold">${qObj.isTita ? "TITA (Type-In Answer)" : qObj.opts.length + "-Option Format"}</span>
@@ -501,19 +524,27 @@ window.renderMockSimulator4 = async function (el) {
     `;
   };
 
-  window.downloadOfficialMarksheet4 = function () {
-    const st = window._MOCK_STATE;
-    if (!st) return;
+  window.downloadOfficialMarksheet4 = function (serialLookup) {
+    let st = window._MOCK_STATE;
+    if (serialLookup) {
+      const hist = JSON.parse(localStorage.getItem("ipm_mock_history_v1") || "[]");
+      const found = hist.find(h => h.serialId === serialLookup);
+      if (found && found.snapshot) st = found.snapshot;
+    }
+    if (!st || !st.questions) {
+      alert("Detailed item snapshot is available for all newly submitted mocks.");
+      return;
+    }
     const candidate = (window.CURRENT_USER && window.CURRENT_USER.name) ? window.CURRENT_USER.name : "Dina Shah";
-    const dateStr = new Date().toLocaleDateString("en-GB");
-    const elapsedSec = Math.max(1, st.totalSeconds - st.secondsLeft);
+    const dateStr = st.dateStr || new Date().toLocaleDateString("en-GB");
+    const elapsedSec = Math.max(1, (st.totalSeconds || 3600) - (st.secondsLeft || 0));
     const pacePerQ = (elapsedSec / st.questions.length).toFixed(1);
 
     let correct = 0, wrong = 0, unattempted = 0;
-    const isCat = exam === "CAT" && bp.id !== "XAT_5OPT";
+    const isCat = exam === "CAT" && (st.bpId || bp.id) !== "XAT_5OPT";
 
     const rowsHtml = st.questions.map((q, idx) => {
-      const userAns = st.answers[idx];
+      const userAns = (st.answers || {})[idx];
       const isUn = userAns === undefined || userAns === "";
       const isRight = !isUn && (q.isTita
         ? String(userAns).trim().toLowerCase() === String(q.ans).trim().toLowerCase()
@@ -580,7 +611,7 @@ window.renderMockSimulator4 = async function (el) {
           <div><strong>SCORE AWARDED:</strong> ${score}/${maxScore}</div>
           <div><strong>ACCURACY:</strong> ${acc}% (${correct}C/${wrong}W/${unattempted}U)</div>
           <div><strong>PACE PER Q:</strong> ${pacePerQ}s/Q</div>
-          <div style="grid-column: span 3;"><strong>BLUEPRINT:</strong> ${bp.title} &nbsp;|&nbsp; <strong>VERDICT:</strong> ${verdict}</div>
+          <div style="grid-column: span 3;"><strong>BLUEPRINT:</strong> ${st.blueprintTitle || bp.title} &nbsp;|&nbsp; <strong>VERDICT:</strong> ${verdict}</div>
         </div>
         ${rowsHtml}
         <script>window.onload = function(){ window.print(); };<\/script>
@@ -592,7 +623,9 @@ window.renderMockSimulator4 = async function (el) {
 
   window.submitFullMock4 = function () {
     const st = window._MOCK_STATE;
+    if (!st) return;
     st.submitted = true;
+    st.dateStr = new Date().toLocaleDateString("en-GB");
     if (window._MOCK_TIMER_ID) clearInterval(window._MOCK_TIMER_ID);
 
     let correct = 0, wrong = 0, unattempted = 0;
@@ -607,10 +640,34 @@ window.renderMockSimulator4 = async function (el) {
     const score = isCat ? Math.max(0, correct * 3 - wrong * 1) : correct;
     const maxScore = isCat ? st.questions.length * 3 : st.questions.length;
     const accuracy = (correct + wrong) > 0 ? Math.round((correct / (correct + wrong)) * 100) : 0;
+    const pctScore = maxScore > 0 ? Math.round((score / maxScore) * 100) : 0;
 
     const hist = JSON.parse(localStorage.getItem("ipm_mock_history_v1") || "[]");
-    hist.unshift({ date: new Date().toLocaleDateString(), serialId: st.serialId, blueprint: bp.title, score, maxScore, correct, wrong, unattempted, accuracy });
-    localStorage.setItem("ipm_mock_history_v1", JSON.stringify(hist));
+    hist.unshift({
+      date: st.dateStr,
+      time: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
+      serialId: st.serialId,
+      blueprint: bp.title,
+      score,
+      maxScore,
+      pctScore,
+      correct,
+      wrong,
+      unattempted,
+      accuracy,
+      snapshot: {
+        serialId: st.serialId,
+        dateStr: st.dateStr,
+        blueprintTitle: bp.title,
+        bpId: bp.id,
+        totalSeconds: st.totalSeconds,
+        secondsLeft: st.secondsLeft,
+        questions: st.questions,
+        answers: st.answers
+      }
+    });
+    localStorage.setItem("ipm_mock_history_v1", JSON.stringify(hist.slice(0, 25)));
+    if (typeof window.syncPreparationReadinessHeader === "function") window.syncPreparationReadinessHeader();
 
     const banner = document.getElementById("mock-scorecard-banner");
     if (banner) {
@@ -619,17 +676,33 @@ window.renderMockSimulator4 = async function (el) {
         <div class="flex flex-wrap items-center justify-between gap-3">
           <div>
             <div class="text-sm font-extrabold">Diagnostic Scorecard (${bp.title}): ${score} / ${maxScore} (${accuracy}% Accuracy)</div>
-            <div class="text-xs mt-0.5">Serial ID: <strong>${st.serialId}</strong> &bull; Correct: <strong>${correct}</strong> &bull; Wrong: <strong>${wrong}</strong> &bull; Unattempted: <strong>${unattempted}</strong></div>
+            <div class="text-xs mt-0.5">Assessment Serial ID: <strong>${st.serialId}</strong> &bull; Correct: <strong>${correct}</strong> &bull; Wrong: <strong>${wrong}</strong> &bull; Unattempted: <strong>${unattempted}</strong></div>
           </div>
           <div class="flex flex-wrap items-center gap-2">
-            <button type="button" onclick="window.downloadOfficialMarksheet4()" class="px-4 py-2 rounded-xl bg-slate-900 hover:bg-slate-800 text-white text-xs font-extrabold cursor-pointer">&#128196; Download Official Marksheet PDF</button>
-            <button type="button" onclick="window.selectUnifiedTab(6)" class="px-4 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-extrabold cursor-pointer">Open Tab 6 Score Forecaster &rarr;</button>
+            <button type="button" onclick="window.downloadOfficialMarksheet4('${st.serialId}')" class="px-4 py-2 rounded-xl bg-slate-900 hover:bg-slate-800 text-white text-xs font-extrabold cursor-pointer">&#128196; Download Official Marksheet PDF</button>
+            <button type="button" onclick="window.selectUnifiedTab(6)" class="px-4 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-extrabold cursor-pointer">View Prep Level in Tab 6 &rarr;</button>
           </div>
         </div>
       `;
     }
     window.renderMockQuestionCard();
   };
+
+  const savedHist = JSON.parse(localStorage.getItem("ipm_mock_history_v1") || "[]");
+  const historyRowsHtml = savedHist.length
+    ? savedHist.map((h, idx) => `
+        <tr class="border-t border-slate-200 dark:border-slate-800 text-xs">
+          <td class="py-2.5 px-3 font-mono font-extrabold text-indigo-600">${h.serialId || (exam + "-2026-" + (1000 + idx))}</td>
+          <td class="py-2.5 px-3 text-slate-500">${h.date || ""} ${h.time || ""}</td>
+          <td class="py-2.5 px-3 font-bold text-slate-800 dark:text-slate-200">${h.blueprint || bp.title}</td>
+          <td class="py-2.5 px-3 font-extrabold text-emerald-600">${h.score} / ${h.maxScore}</td>
+          <td class="py-2.5 px-3 font-bold">${h.accuracy}% (${h.correct || 0}C/${h.wrong || 0}W)</td>
+          <td class="py-2.5 px-3 text-right">
+            <button type="button" onclick="window.downloadOfficialMarksheet4('${h.serialId}')" class="px-2.5 py-1 rounded-lg bg-slate-900 text-white text-[11px] font-bold cursor-pointer">PDF</button>
+          </td>
+        </tr>
+      `).join("")
+    : `<tr><td colspan="6" class="py-5 text-center text-xs text-slate-400">No submitted mock sessions recorded yet. Start a proctored session above to generate your first Serial Mock ID.</td></tr>`;
 
   const bpSelectorHtml = BLUEPRINTS.map((item, idx) => `
     <button type="button" onclick="window._SELECTED_MOCK_BP=${idx}; window.renderMockSimulator4(document.getElementById('main-workspace'));"
@@ -644,52 +717,86 @@ window.renderMockSimulator4 = async function (el) {
     <div class="max-w-7xl mx-auto my-4 space-y-4">
       <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3">${bpSelectorHtml}</div>
 
-      <!-- Proctored Pre-Exam Briefing Lobby (Timer Paused Until Explicit Start Trigger) -->
-      <div id="mock-lobby-box" class="bg-white dark:bg-slate-900 border-2 border-indigo-500/40 rounded-2xl p-6 sm:p-8 shadow-sm space-y-5">
-        <div class="flex flex-wrap items-start justify-between gap-4 border-b border-slate-200 dark:border-slate-800 pb-4">
-          <div class="space-y-1">
-            <span class="px-2.5 py-0.5 rounded-full bg-indigo-100 dark:bg-indigo-900/50 text-indigo-700 dark:text-indigo-300 text-[10px] font-extrabold uppercase">${bp.tag} &bull; READY TO LAUNCH</span>
-            <h2 class="text-xl font-extrabold text-slate-900 dark:text-white">${bp.title}</h2>
-            <p class="text-xs text-slate-600 dark:text-slate-300 max-w-3xl leading-relaxed">${bp.desc}</p>
+      <!-- Proctored Pre-Exam Briefing Lobby -->
+      <div id="mock-lobby-box" class="space-y-4">
+        <div class="bg-white dark:bg-slate-900 border-2 border-indigo-500/40 rounded-2xl p-6 sm:p-8 shadow-sm space-y-5">
+          <div class="flex flex-wrap items-start justify-between gap-4 border-b border-slate-200 dark:border-slate-800 pb-4">
+            <div class="space-y-1">
+              <div class="flex flex-wrap items-center gap-2">
+                <span class="px-2.5 py-0.5 rounded-full bg-indigo-100 dark:bg-indigo-900/50 text-indigo-700 dark:text-indigo-300 text-[10px] font-extrabold uppercase">${bp.tag} &bull; READY TO LAUNCH</span>
+                <span class="px-2.5 py-0.5 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 text-[10px] font-mono font-extrabold">Next Serial ID: ${nextSerialId}</span>
+              </div>
+              <h2 class="text-xl font-extrabold text-slate-900 dark:text-white">${bp.title}</h2>
+              <p class="text-xs text-slate-600 dark:text-slate-300 max-w-3xl leading-relaxed">${bp.desc}</p>
+            </div>
+            <button type="button" onclick="window.startMockSession4()"
+              class="px-6 py-3.5 rounded-2xl bg-indigo-600 hover:bg-indigo-500 text-white text-sm font-extrabold shadow-lg shadow-indigo-600/25 cursor-pointer transition">
+              &#9654; Start Proctored Mock Session (${bp.mins} Mins)
+            </button>
           </div>
-          <button type="button" onclick="window.startMockSession4()"
-            class="px-6 py-3.5 rounded-2xl bg-indigo-600 hover:bg-indigo-500 text-white text-sm font-extrabold shadow-lg shadow-indigo-600/25 cursor-pointer transition">
-            &#9654; Start Proctored Mock Session (${bp.mins} Mins)
-          </button>
+
+          <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 text-xs">
+            <div class="p-3.5 rounded-xl bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800">
+              <div class="text-[10px] font-bold uppercase text-slate-400">Question Count</div>
+              <div class="font-extrabold text-slate-900 dark:text-white mt-0.5">${exactPool.length} Questions</div>
+            </div>
+            <div class="p-3.5 rounded-xl bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800">
+              <div class="text-[10px] font-bold uppercase text-slate-400">Proctored Clock</div>
+              <div class="font-extrabold text-amber-600 dark:text-amber-400 mt-0.5">${bp.mins}:00 Minutes (Paused)</div>
+            </div>
+            <div class="p-3.5 rounded-xl bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800">
+              <div class="text-[10px] font-bold uppercase text-slate-400">Option Format</div>
+              <div class="font-extrabold text-indigo-600 dark:text-indigo-300 mt-0.5">${isFiveOpt ? "5 Choices (A–E)" : "4 Choices (A–D) + TITA"}</div>
+            </div>
+            <div class="p-3.5 rounded-xl bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800">
+              <div class="text-[10px] font-bold uppercase text-slate-400">PostgreSQL Live Bank</div>
+              <div class="font-extrabold text-emerald-600 dark:text-emerald-400 mt-0.5">${pgQuestions.length} Live DB Items Loaded</div>
+            </div>
+          </div>
         </div>
 
-        <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 text-xs">
-          <div class="p-3.5 rounded-xl bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800">
-            <div class="text-[10px] font-bold uppercase text-slate-400">Question Count</div>
-            <div class="font-extrabold text-slate-900 dark:text-white mt-0.5">${exactPool.length} Questions</div>
+        <!-- Serial Mock ID & Attempt History Log -->
+        <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-5 shadow-sm space-y-3">
+          <div class="flex flex-wrap items-center justify-between gap-2">
+            <div>
+              <span class="text-[10px] font-extrabold uppercase tracking-wider text-indigo-600">PERSISTENT ASSESSMENT LEDGER</span>
+              <h3 class="text-sm font-extrabold text-slate-900 dark:text-white">Serial Mock ID &amp; Diagnostic Score History (${savedHist.length} Logged)</h3>
+            </div>
+            <div class="flex items-center gap-2">
+              <button type="button" onclick="window.selectUnifiedTab(6)" class="px-3 py-1.5 rounded-xl bg-indigo-50 dark:bg-indigo-950 text-indigo-700 dark:text-indigo-300 text-xs font-extrabold cursor-pointer">View Prep Level in Tab 6 &rarr;</button>
+              <button type="button" onclick="window.clearMockLog4()" class="px-3 py-1.5 rounded-xl bg-rose-50 hover:bg-rose-100 dark:bg-rose-950/50 text-rose-700 dark:text-rose-300 border border-rose-200 dark:border-rose-800 text-xs font-extrabold cursor-pointer">&#128465; Clear Log</button>
+            </div>
           </div>
-          <div class="p-3.5 rounded-xl bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800">
-            <div class="text-[10px] font-bold uppercase text-slate-400">Proctored Clock</div>
-            <div class="font-extrabold text-amber-600 dark:text-amber-400 mt-0.5">${bp.mins}:00 Minutes (Paused)</div>
-          </div>
-          <div class="p-3.5 rounded-xl bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800">
-            <div class="text-[10px] font-bold uppercase text-slate-400">Option Format</div>
-            <div class="font-extrabold text-indigo-600 dark:text-indigo-300 mt-0.5">${isFiveOpt ? "5 Choices (A–E)" : "4 Choices (A–D) + TITA"}</div>
-          </div>
-          <div class="p-3.5 rounded-xl bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800">
-            <div class="text-[10px] font-bold uppercase text-slate-400">PostgreSQL Live Bank</div>
-            <div class="font-extrabold text-emerald-600 dark:text-emerald-400 mt-0.5">${pgQuestions.length} Live DB Items Loaded</div>
+          <div class="overflow-x-auto">
+            <table class="w-full text-left border-collapse">
+              <thead>
+                <tr class="text-[10px] font-extrabold uppercase text-slate-400 bg-slate-50 dark:bg-slate-950">
+                  <th class="py-2 px-3">Serial Mock ID</th>
+                  <th class="py-2 px-3">Date &amp; Time</th>
+                  <th class="py-2 px-3">Mock Blueprint</th>
+                  <th class="py-2 px-3">Score</th>
+                  <th class="py-2 px-3">Accuracy</th>
+                  <th class="py-2 px-3 text-right">Marksheet</th>
+                </tr>
+              </thead>
+              <tbody>${historyRowsHtml}</tbody>
+            </table>
           </div>
         </div>
       </div>
 
-      <!-- Active Exam Simulator (Revealed only after Start Trigger) -->
+      <!-- Active Exam Simulator -->
       <div id="mock-active-shell" class="hidden space-y-4">
         <div class="bg-slate-900 text-white rounded-2xl p-4 flex flex-wrap items-center justify-between gap-3 border border-slate-800 shadow-lg">
           <div>
-            <span class="text-[10px] font-extrabold uppercase tracking-wider text-amber-300">${bp.tag} &bull; ${bp.scale}</span>
+            <span class="text-[10px] font-extrabold uppercase tracking-wider text-amber-300">${bp.tag} &bull; Serial ID: ${nextSerialId}</span>
             <h2 class="text-base font-extrabold">${bp.title}</h2>
           </div>
-          <div class="flex items-center gap-3">
+          <div class="flex flex-wrap items-center gap-2.5">
             <div class="px-3.5 py-2 rounded-xl bg-slate-800 border border-slate-700 text-xs font-mono">
               Time Remaining: <strong id="mock-live-timer" class="text-amber-300 text-sm">${bp.mins}:00</strong>
             </div>
-            <button type="button" onclick="window.renderMockSimulator4(document.getElementById('main-workspace'));" class="px-3 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 border border-slate-700 text-xs font-bold cursor-pointer">Reset / Lobby</button>
+            <button type="button" onclick="window.exitMockWithoutSubmission4()" class="px-3.5 py-2.5 rounded-xl bg-rose-600/90 hover:bg-rose-600 text-white text-xs font-extrabold shadow cursor-pointer">&#10005; Exit Without Submission</button>
             <button type="button" onclick="window.submitFullMock4()" class="px-4 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-extrabold shadow cursor-pointer">Submit Exam &amp; Forecast Score</button>
           </div>
         </div>
@@ -713,3 +820,147 @@ window.renderMockSimulator4 = async function (el) {
   `;
 };
 window.renderTab4 = window.renderMockSimulator4;
+
+// ==============================================================================
+// TAB 6: DYNAMIC PREPARATION LEVEL & PERCENTILE FORECASTER (DRIVEN BY MOCK LOG)
+// ==============================================================================
+window.syncPreparationReadinessHeader = function () {
+  const host = window.location.host.toLowerCase();
+  const exam = host.includes("gmat") ? "GMAT" : (host.includes("gre") ? "GRE" : "CAT");
+  const hist = JSON.parse(localStorage.getItem("ipm_mock_history_v1") || "[]");
+  if (!hist.length) return;
+
+  const avgPct = hist.reduce((acc, h) => acc + (h.maxScore > 0 ? (h.score / h.maxScore) : 0), 0) / hist.length;
+  const labelText = exam === "CAT"
+    ? `Readiness: ${Math.round(avgPct * 198)}/198 (~${Math.min(99.9, (65 + avgPct * 34.8)).toFixed(1)}%ile)`
+    : (exam === "GMAT"
+      ? `Readiness: ${Math.round(205 + avgPct * 600)}/805`
+      : `Readiness: ${Math.round(260 + avgPct * 80)}/340`);
+
+  document.querySelectorAll("span, div").forEach(node => {
+    if (node.children.length === 0 && node.textContent && node.textContent.includes("Readiness:")) {
+      node.textContent = node.textContent.replace(/Readiness:[^|)]+/, labelText);
+    }
+  });
+};
+
+window.renderScoreForecaster6 = function (el) {
+  const host = window.location.host.toLowerCase();
+  const exam = host.includes("gmat") ? "GMAT" : (host.includes("gre") ? "GRE" : "CAT");
+  const hist = JSON.parse(localStorage.getItem("ipm_mock_history_v1") || "[]");
+
+  const avgRatio = hist.length
+    ? hist.reduce((s, h) => s + (h.maxScore > 0 ? h.score / h.maxScore : 0), 0) / hist.length
+    : 0.47;
+  const avgAccuracy = hist.length
+    ? Math.round(hist.reduce((s, h) => s + (h.accuracy || 0), 0) / hist.length)
+    : 0;
+  const latest = hist[0] || null;
+
+  let prepStage = "Stage 1: Diagnostic Baseline (Start Logging Mocks)";
+  let stageBadge = "bg-slate-100 text-slate-700";
+  let nextAction = "Complete at least 2 timed mocks in Tab 4 to calibrate your live preparation tier.";
+
+  if (hist.length > 0) {
+    if (avgRatio >= 0.72 && avgAccuracy >= 82) {
+      prepStage = "Tier 4: 99+ Percentile Elite Ready";
+      stageBadge = "bg-emerald-100 text-emerald-800 border-emerald-300";
+      nextAction = "Maintain 2 full-length mocks per week, protect accuracy above 85%, and focus on Trap Doctor review.";
+    } else if (avgRatio >= 0.52 && avgAccuracy >= 72) {
+      prepStage = "Tier 3: 95–98.5 Percentile Contender";
+      stageBadge = "bg-indigo-100 text-indigo-800 border-indigo-300";
+      nextAction = "Eliminate negative-marking guesses on borderline MCQs to convert +12 net marks into the 99%ile zone.";
+    } else if (avgRatio >= 0.30) {
+      prepStage = "Tier 2: Concept Consolidation & Pacing Build";
+      stageBadge = "bg-amber-100 text-amber-800 border-amber-300";
+      nextAction = "Drill high-yield chapters in Tabs 1–3 and target 78%+ accuracy before increasing attempt volume.";
+    } else {
+      prepStage = "Tier 1: Foundation & Accuracy Calibration";
+      stageBadge = "bg-rose-100 text-rose-800 border-rose-300";
+      nextAction = "Review worked examples in Tabs 1–3 and avoid rushed submissions (aim for >= 90s per attempted question).";
+    }
+  }
+
+  const projectedMetric = exam === "CAT"
+    ? `${Math.round(avgRatio * 198)} / 198 Marks (~${Math.min(99.9, (65 + avgRatio * 34.8)).toFixed(1)}%ile)`
+    : (exam === "GMAT"
+      ? `${Math.round(205 + avgRatio * 600)} / 805 Scaled Score`
+      : `${Math.round(260 + avgRatio * 80)} / 340 Composite Score`);
+
+  const logRows = hist.length
+    ? hist.map(h => `
+        <tr class="border-t border-slate-200 dark:border-slate-800 text-xs">
+          <td class="py-2.5 px-3 font-mono font-extrabold text-indigo-600">${h.serialId}</td>
+          <td class="py-2.5 px-3 text-slate-500">${h.date} ${h.time || ""}</td>
+          <td class="py-2.5 px-3 font-bold">${h.blueprint}</td>
+          <td class="py-2.5 px-3 font-extrabold text-emerald-600">${h.score} / ${h.maxScore}</td>
+          <td class="py-2.5 px-3">${h.accuracy}%</td>
+          <td class="py-2.5 px-3 text-right">
+            <button type="button" onclick="window.downloadOfficialMarksheet4('${h.serialId}')" class="px-2.5 py-1 rounded-lg bg-slate-900 text-white text-[11px] font-bold cursor-pointer">Download PDF</button>
+          </td>
+        </tr>
+      `).join("")
+    : `<tr><td colspan="6" class="py-6 text-center text-xs text-slate-400">No mock attempts logged yet. Launch a mock in Tab 4 to compute your live Preparation Level.</td></tr>`;
+
+  el.innerHTML = `
+    <div class="max-w-7xl mx-auto my-4 space-y-5">
+      <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-6 shadow-sm space-y-4">
+        <div class="flex flex-wrap items-center justify-between gap-3 border-b border-slate-200 dark:border-slate-800 pb-4">
+          <div>
+            <span class="text-[10px] font-extrabold uppercase tracking-wider text-indigo-600">${exam} READINESS &amp; PREPARATION LEVEL ENGINE</span>
+            <h2 class="text-xl font-extrabold text-slate-900 dark:text-white mt-0.5">Preparation Level Ascertained From Logged Mock Trajectory</h2>
+          </div>
+          <span class="px-3.5 py-1.5 rounded-full border text-xs font-extrabold ${stageBadge}">${prepStage}</span>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-4 gap-3 text-xs">
+          <div class="p-4 rounded-xl bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800">
+            <div class="text-[10px] font-bold uppercase text-slate-400">Logged Mocks Analyzed</div>
+            <div class="text-lg font-extrabold text-slate-900 dark:text-white mt-0.5">${hist.length} Sessions</div>
+          </div>
+          <div class="p-4 rounded-xl bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800">
+            <div class="text-[10px] font-bold uppercase text-slate-400">Projected ${exam} Score</div>
+            <div class="text-lg font-extrabold text-indigo-600 dark:text-indigo-400 mt-0.5">${projectedMetric}</div>
+          </div>
+          <div class="p-4 rounded-xl bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800">
+            <div class="text-[10px] font-bold uppercase text-slate-400">Mean Attempt Accuracy</div>
+            <div class="text-lg font-extrabold text-emerald-600 dark:text-emerald-400 mt-0.5">${avgAccuracy}%</div>
+          </div>
+          <div class="p-4 rounded-xl bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800">
+            <div class="text-[10px] font-bold uppercase text-slate-400">Latest Serial ID</div>
+            <div class="text-sm font-mono font-extrabold text-slate-900 dark:text-white mt-1">${latest ? latest.serialId : "None yet"}</div>
+          </div>
+        </div>
+
+        <div class="p-4 rounded-xl bg-indigo-50/70 dark:bg-indigo-950/30 border border-indigo-200 dark:border-indigo-800 text-xs text-slate-800 dark:text-slate-200">
+          <strong>Prescribed Next Step for Your Preparation Tier:</strong> ${nextAction}
+        </div>
+      </div>
+
+      <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-6 shadow-sm space-y-3">
+        <div class="flex flex-wrap items-center justify-between gap-2">
+          <h3 class="text-sm font-extrabold text-slate-900 dark:text-white">Verified Serial Mock Log (${hist.length} Records)</h3>
+          <button type="button" onclick="window.clearMockLog4(); window.renderScoreForecaster6(document.getElementById('main-workspace'));"
+            class="px-3 py-1.5 rounded-xl bg-rose-50 hover:bg-rose-100 text-rose-700 border border-rose-200 text-xs font-extrabold cursor-pointer">&#128465; Clear Log</button>
+        </div>
+        <div class="overflow-x-auto">
+          <table class="w-full text-left border-collapse">
+            <thead>
+              <tr class="text-[10px] font-extrabold uppercase text-slate-400 bg-slate-50 dark:bg-slate-950">
+                <th class="py-2 px-3">Serial Mock ID</th>
+                <th class="py-2 px-3">Date &amp; Time</th>
+                <th class="py-2 px-3">Blueprint</th>
+                <th class="py-2 px-3">Score</th>
+                <th class="py-2 px-3">Accuracy</th>
+                <th class="py-2 px-3 text-right">Marksheet</th>
+              </tr>
+            </thead>
+            <tbody>${logRows}</tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  `;
+};
+window.renderTab6 = window.renderScoreForecaster6;
+setTimeout(() => window.syncPreparationReadinessHeader(), 500);
