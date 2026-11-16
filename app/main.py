@@ -1885,7 +1885,7 @@ def api_get_questions(section: str = "ALL", topic: str = "ALL", exam: str = "ALL
     from sqlalchemy import text
     from app.db_engine import engine
     clauses = ["1=1"]
-    params = {"lim": max(1, min(limit, 150))}
+    params = {"lim": max(1, min(limit, 600))}
     if section and section.upper() != "ALL":
         clauses.append("UPPER(section) = :sec")
         params["sec"] = section.upper().strip()

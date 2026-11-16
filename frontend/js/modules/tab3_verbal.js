@@ -345,7 +345,7 @@ window.renderMockSimulator4 = async function (el) {
 
   let pgQuestions = [];
   try {
-    const res = await fetch("/api/questions?limit=150");
+    const res = await fetch("/api/questions?limit=500");
     if (res.ok) {
       const data = await res.json();
       const rawList = Array.isArray(data) ? data : (data.questions || data.rows || []);
