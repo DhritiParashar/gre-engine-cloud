@@ -380,7 +380,7 @@
       </div>
     </div>
   </div>
-  <script src="/js/authAndBilling.js?v=20261117logout"></script>
+  <script src="/js/authAndBilling.js?v=20261117unified"></script>
 <!-- LIVE POSTGRES PYQ TAB9 OVERRIDE -->
 <script>
 (function () {
@@ -1335,7 +1335,7 @@
     if (!header) return;
 
     const user = getUser();
-    const name = user ? user.name : "Dina Shah";
+    const name = user ? user.name : "Guest Aspirant";
     let hist = [];
     try { hist = JSON.parse(localStorage.getItem("ipm_mock_history_v1") || "[]"); } catch (e) {}
     const latest = hist[0];
