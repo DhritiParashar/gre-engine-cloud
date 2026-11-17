@@ -1283,136 +1283,217 @@
   window.addEventListener("DOMContentLoaded", () => setTimeout(() => window.renderGreQuantTab1(), 120));
 })();
 
+  
   // ============================================================================
-  // TAB 6: FULL-LENGTH-MOCK-ONLY GRE SCORE FORECASTER (260-340 SCALE)
+  // TAB 6: GRE WHAT-IF SLIDERS (DEFAULT) + FULL-MOCK-ONLY SYNC ENGINE
   // ============================================================================
+  window.updateGreWhatIfView = function () {
+    const qSlider = document.getElementById("gre-q-slider");
+    const vSlider = document.getElementById("gre-v-slider");
+    const aSlider = document.getElementById("gre-awa-slider");
+    if (!qSlider || !vSlider || !aSlider) return;
+
+    const qVal = Number(qSlider.value);
+    const vVal = Number(vSlider.value);
+    const aVal = Number(aSlider.value);
+    const total = qVal + vVal;
+
+    const qLbl = document.getElementById("gre-q-val");
+    const vLbl = document.getElementById("gre-v-val");
+    const aLbl = document.getElementById("gre-awa-val");
+    const compLbl = document.getElementById("gre-comp-val");
+    const qGate = document.getElementById("gre-q-gate");
+    const vGate = document.getElementById("gre-v-gate");
+
+    if (qLbl) qLbl.textContent = `${qVal} / 170`;
+    if (vLbl) vLbl.textContent = `${vVal} / 170`;
+    if (aLbl) aLbl.textContent = `${aVal.toFixed(1)} / 6.0`;
+    if (compLbl) compLbl.textContent = `${total} / 340 (Q${qVal} V${vVal})`;
+    if (qGate) qGate.textContent = qVal >= 165 ? "Hard Stage-2 Unlocked (≥9/12 in Stage 1)" : (qVal >= 155 ? "Medium Stage-2 Routing" : "Medium Stage-2 Risk (Need ≥9/12 in Stage 1)");
+    if (vGate) vGate.textContent = vVal >= 160 ? "Hard Stage-2 Unlocked (≥8/12 in Stage 1)" : (vVal >= 152 ? "Medium Stage-2 Routing" : "Medium Stage-2 Risk (Need ≥8/12 in Stage 1)");
+
+    [334, 330, 325, 318].forEach(target => {
+      const badge = document.getElementById(`gre-tier-badge-${target}`);
+      if (!badge) return;
+      const gap = target - total;
+      if (gap <= 0) {
+        badge.textContent = "Target Achieved ✓";
+        badge.className = "px-3 py-1 rounded-full text-xs font-extrabold bg-emerald-100 text-emerald-800";
+      } else {
+        badge.textContent = `Need +${gap} GRE Points`;
+        badge.className = "px-3 py-1 rounded-full text-xs font-extrabold bg-amber-100 text-amber-800";
+      }
+    });
+  };
+
+  window.syncGreFullMockToSliders = function () {
+    const rawHist = JSON.parse(localStorage.getItem("ipm_mock_history_v1") || "[]");
+    const fullMocks = rawHist.filter(h =>
+      (Number(h.maxScore || 0) >= 54 || String(h.blueprint || "").includes("Full GRE General")) &&
+      Number(h.score || 0) > 0
+    );
+    const savedAwa = JSON.parse(localStorage.getItem("gre_awa_latest_v1") || "null");
+    const statusEl = document.getElementById("gre-sync-status");
+
+    if (!fullMocks.length) {
+      if (statusEl) {
+        statusEl.textContent = "No completed Full-Length 54-Q Mock found yet (practice drills & 0/54 runs excluded) — showing What-If Simulator";
+        statusEl.className = "text-xs font-bold text-amber-600";
+      }
+      if (savedAwa && document.getElementById("gre-awa-slider")) {
+        document.getElementById("gre-awa-slider").value = Number(savedAwa.score).toFixed(1);
+        window.updateGreWhatIfView();
+      }
+      return;
+    }
+
+    const latest = fullMocks[0];
+    const qScore = Math.min(170, Math.max(130, Number(latest.quant170 || 130)));
+    const vScore = Math.min(170, Math.max(130, Number(latest.verbal170 || 130)));
+    const aScore = savedAwa ? Number(savedAwa.score) : Number(latest.awaScore || 4.5);
+
+    const qSlider = document.getElementById("gre-q-slider");
+    const vSlider = document.getElementById("gre-v-slider");
+    const aSlider = document.getElementById("gre-awa-slider");
+    if (qSlider) qSlider.value = qScore;
+    if (vSlider) vSlider.value = vScore;
+    if (aSlider) aSlider.value = aScore.toFixed(1);
+
+    if (statusEl) {
+      statusEl.textContent = `Synced from Full Mock ${latest.serialId} (${latest.score}/${latest.maxScore}) → Actual Q${qScore} • V${vScore} • AWA ${aScore.toFixed(1)}`;
+      statusEl.className = "text-xs font-extrabold text-emerald-600";
+    }
+    window.updateGreWhatIfView();
+  };
+
   window.renderGreScoreForecaster6 = function (el) {
     const target = el || document.getElementById("main-workspace");
     if (!target) return;
 
     const rawHist = JSON.parse(localStorage.getItem("ipm_mock_history_v1") || "[]");
-    // Filter strictly to Full-Length 54-Question GRE Mocks (exclude practice drills, sectional sprints, and 0-score aborted runs)
     const fullMocks = rawHist.filter(h =>
       (Number(h.maxScore || 0) >= 54 || String(h.blueprint || "").includes("Full GRE General")) &&
       Number(h.score || 0) > 0
     );
-
     const savedAwa = JSON.parse(localStorage.getItem("gre_awa_latest_v1") || "null");
-    const awaScore = savedAwa ? Number(savedAwa.score) : 4.5;
-
-    const hasMocks = fullMocks.length > 0;
-    const latest = hasMocks ? fullMocks[0] : null;
-    const latest340 = hasMocks ? Number(latest.scaled340 || (Number(latest.quant170 || 130) + Number(latest.verbal170 || 130))) : null;
-    const avg340 = hasMocks
-      ? Math.round(fullMocks.reduce((acc, m) => acc + Number(m.scaled340 || 260), 0) / fullMocks.length)
-      : null;
-    const best340 = hasMocks
-      ? Math.max(...fullMocks.map(m => Number(m.scaled340 || 260)))
-      : null;
-
-    // Weighted Forecast: 60% Latest Full Mock + 25% Full-Mock Mean + 15% Peak Full Mock
-    const projected340 = hasMocks
-      ? Math.min(340, Math.max(260, Math.round(0.60 * latest340 + 0.25 * avg340 + 0.15 * best340)))
-      : null;
-    const latestQ = hasMocks ? Number(latest.quant170 || 130) : null;
-    const latestV = hasMocks ? Number(latest.verbal170 || 130) : null;
+    const defaultAwa = savedAwa ? Number(savedAwa.score).toFixed(1) : "4.5";
 
     const tiers = [
-      { band: "334+ (99th %ile) Perfection Zone", req: "Required Split: Q 169–170 • V 164+ • AWA 5.0+", gate: "Stage 1 ≥11/12 (Quant) & ≥10/12 (Verbal) -> Hard Stage-2 Unlocked", rx: "Zero careless slips on Numeric Entry & 3-blank Text Completion logic pivots.", targetScore: 334 },
-      { band: "330+ (97th %ile) Benchmark", req: "Required Split: Q 167–168 • V 162+ • AWA 4.5+", gate: "Hard Stage-2 Routing Active in Both Sections", rx: "Apply FROZEN boundary testing on every Quantitative Comparison item to eliminate Choice-D misses.", targetScore: 330 },
-      { band: "325+ (92nd %ile) Benchmark", req: "Required Split: Q 165+ • V 160+ • AWA 4.5+", gate: "Hard Stage-2 Quant • Medium/Hard Stage-2 Verbal", rx: "Drill Tab 3 Sentence Equivalence semantic pairs and multi-paragraph RC inference.", targetScore: 325 },
-      { band: "318+ (80th %ile) Competitive STEM / MS", req: "Required Split: Q 162+ • V 156+ • AWA 4.0+", gate: "Consistent Stage-1 Accuracy ≥75%", rx: "Stabilize pacing across Data Interpretation and 2-blank Text Completion.", targetScore: 318 }
+      { target: 334, band: "334+ (99th %ile) Perfection Zone", req: "Required Split: Q 169–170 • V 164+ • AWA 5.0+", gate: "Stage 1 ≥11/12 (Quant) & ≥10/12 (Verbal) -> Hard Stage-2 Unlocked", rx: "Zero careless slips on Numeric Entry & 3-blank Text Completion logic pivots." },
+      { target: 330, band: "330+ (97th %ile) Benchmark", req: "Required Split: Q 167–168 • V 162+ • AWA 4.5+", gate: "Hard Stage-2 Routing Active in Both Sections", rx: "Apply FROZEN boundary testing on every Quantitative Comparison item to eliminate Choice-D misses." },
+      { target: 325, band: "325+ (92nd %ile) Benchmark", req: "Required Split: Q 165+ • V 160+ • AWA 4.5+", gate: "Hard Stage-2 Quant • Medium/Hard Stage-2 Verbal", rx: "Drill Tab 3 Sentence Equivalence semantic pairs and multi-paragraph RC inference." },
+      { target: 318, band: "318+ (80th %ile) Competitive STEM / MS", req: "Required Split: Q 162+ • V 156+ • AWA 4.0+", gate: "Consistent Stage-1 Accuracy ≥75%", rx: "Stabilize pacing across Data Interpretation and 2-blank Text Completion." }
     ];
 
     target.innerHTML = `
-      <div class="max-w-7xl mx-auto pt-4 pb-8 grid grid-cols-1 lg:grid-cols-12 gap-5">
-        <div class="lg:col-span-5 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-6 space-y-4 shadow-sm">
-          <div class="flex items-center justify-between gap-2">
-            <div>
-              <div class="text-[10px] font-extrabold uppercase tracking-wider text-indigo-600">FULL-MOCK-ONLY DIAGNOSTIC ENGINE</div>
-              <h2 class="text-xl font-extrabold text-slate-900 dark:text-white mt-0.5">GRE Score Forecast (260–340)</h2>
-            </div>
-            <button type="button" onclick="window.renderGreScoreForecaster6();"
-              class="px-3.5 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-extrabold cursor-pointer">&#8635; Refresh Full Mocks</button>
-          </div>
-
-          <div class="p-3 rounded-xl bg-indigo-50/80 dark:bg-indigo-950/40 border border-indigo-200 dark:border-indigo-800 text-[11px] text-indigo-900 dark:text-indigo-200 font-semibold">
-            Calibrated <strong>exclusively</strong> from completed Full-Length 54-Question Section-Adaptive Mocks (Tab 4 Blueprint 1) + Graded AWA (Tab 2). Practice drills and sectional sprints do not alter this forecast.
-          </div>
-
-          ${hasMocks ? `
-            <div class="p-5 rounded-2xl bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 space-y-3">
-              <div class="flex items-baseline justify-between">
-                <span class="text-xs font-extrabold uppercase text-slate-500">Projected Composite GRE</span>
-                <span class="text-3xl font-extrabold text-indigo-600">${projected340} / 340</span>
+      <div class="max-w-7xl mx-auto pt-4 pb-8 space-y-5">
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-5">
+          <div class="lg:col-span-5 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-6 space-y-4 shadow-sm">
+            <div class="flex items-start justify-between gap-3">
+              <div>
+                <div class="text-[10px] font-extrabold uppercase tracking-wider text-indigo-600">GRE GENERAL 260–340 DIAGNOSTIC ENGINE</div>
+                <h2 class="text-xl font-extrabold text-slate-900 dark:text-white mt-0.5">Section-Adaptive Score &amp; Routing Forecaster</h2>
               </div>
-              <div class="text-xs font-bold text-slate-700 dark:text-slate-300">
-                Latest Full Mock (<strong>${latest.serialId}</strong>): <span class="text-emerald-600 font-extrabold">${latest340}/340</span> (Q${latestQ} &bull; V${latestV}) &bull; AWA: <strong>${awaScore.toFixed(1)}/6.0</strong>
-              </div>
-              <div class="grid grid-cols-3 gap-2 pt-2 border-t border-slate-200 dark:border-slate-800 text-xs">
-                <div class="p-2.5 rounded-xl bg-white dark:bg-slate-900 border"><div class="text-[10px] font-bold text-slate-400">FULL MOCKS</div><div class="font-extrabold text-slate-900 dark:text-white mt-0.5">${fullMocks.length} Valid</div></div>
-                <div class="p-2.5 rounded-xl bg-white dark:bg-slate-900 border"><div class="text-[10px] font-bold text-slate-400">FULL-MOCK AVG</div><div class="font-extrabold text-indigo-600 mt-0.5">${avg340} / 340</div></div>
-                <div class="p-2.5 rounded-xl bg-white dark:bg-slate-900 border"><div class="text-[10px] font-bold text-slate-400">PEAK FULL MOCK</div><div class="font-extrabold text-emerald-600 mt-0.5">${best340} / 340</div></div>
-              </div>
+              <button type="button" onclick="window.syncGreFullMockToSliders();"
+                class="px-3.5 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-extrabold shadow shrink-0 cursor-pointer">&#8635; Sync Full Mock</button>
             </div>
 
-            <div class="space-y-2">
-              <div class="text-xs font-extrabold uppercase text-slate-500">Verified Full-Length Mock Trajectory</div>
-              ${fullMocks.slice(0, 5).map(m => `
-                <div class="flex items-center justify-between p-3 rounded-xl bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 text-xs">
-                  <div>
-                    <span class="font-mono font-extrabold text-indigo-600">${m.serialId}</span>
-                    <span class="text-slate-500 ml-1.5">${m.date || ""}</span>
-                  </div>
-                  <div class="font-extrabold text-slate-900 dark:text-white">
-                    ${m.scaled340}/340 <span class="text-[11px] font-semibold text-slate-500">(Q${m.quant170 || 130} V${m.verbal170 || 130} &bull; ${m.accuracy}%)</span>
-                  </div>
+            <div id="gre-sync-status" class="text-xs font-bold text-indigo-600">
+              What-If Target Simulator Active &bull; Click &ldquo;Sync Full Mock&rdquo; to load actual 54-Q Mock results
+            </div>
+
+            <div class="space-y-3.5 pt-1">
+              <div>
+                <div class="flex justify-between text-xs font-bold mb-1">
+                  <span>Quantitative Reasoning (130–170 &bull; 27 Qs)</span>
+                  <span id="gre-q-val" class="font-extrabold text-indigo-600">162 / 170</span>
                 </div>
-              `).join("")}
-            </div>
-          ` : `
-            <div class="p-5 rounded-2xl bg-amber-50 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-800 space-y-3 text-xs">
-              <div class="font-extrabold text-amber-900 dark:text-amber-200 text-sm">No Scored Full-Length 54-Q GRE Mocks Completed Yet</div>
-              <p class="text-slate-700 dark:text-slate-300 leading-relaxed">
-                Practice drills in Tabs 1–3 and unattempted (0/54) test launches are excluded from forecasting. Complete at least one <strong>Full GRE General Section-Adaptive Simulation (54 Qs • 118 Mins)</strong> in Tab 4 to unlock your calibrated 260–340 projection.
-              </p>
-              <button type="button" onclick="window.switchTab(4);"
-                class="px-4 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-extrabold cursor-pointer">Launch Full 54-Q GRE Mock in Tab 4 &rarr;</button>
-            </div>
-          `}
+                <input id="gre-q-slider" type="range" min="130" max="170" value="162" oninput="window.updateGreWhatIfView()" class="w-full accent-indigo-600 cursor-pointer" />
+              </div>
 
-          ${rawHist.some(h => Number(h.score || 0) === 0) ? `
-            <div class="pt-1">
-              <button type="button" onclick="const clean=JSON.parse(localStorage.getItem('ipm_mock_history_v1')||'[]').filter(h=>Number(h.score||0)>0); localStorage.setItem('ipm_mock_history_v1',JSON.stringify(clean)); window.renderGreScoreForecaster6();"
-                class="px-3 py-1.5 rounded-xl bg-rose-50 hover:bg-rose-100 text-rose-700 border border-rose-200 text-[11px] font-extrabold cursor-pointer">Remove Unattempted (0/54) Test Entries</button>
-            </div>
-          ` : ""}
-        </div>
+              <div>
+                <div class="flex justify-between text-xs font-bold mb-1">
+                  <span>Verbal Reasoning (130–170 &bull; 27 Qs)</span>
+                  <span id="gre-v-val" class="font-extrabold text-indigo-600">158 / 170</span>
+                </div>
+                <input id="gre-v-slider" type="range" min="130" max="170" value="158" oninput="window.updateGreWhatIfView()" class="w-full accent-indigo-600 cursor-pointer" />
+              </div>
 
-        <div class="lg:col-span-7 space-y-3">
-          ${tiers.map(t => {
-            const gap = hasMocks ? (t.targetScore - projected340) : null;
-            const badgeText = !hasMocks
-              ? "Awaiting Full 54-Q Mock"
-              : (gap <= 0 ? "Target Achieved ✓" : `Need +${gap} GRE Points`);
-            const badgeCls = !hasMocks
-              ? "bg-slate-100 text-slate-600"
-              : (gap <= 0 ? "bg-emerald-100 text-emerald-800" : "bg-amber-100 text-amber-800");
-            return `
+              <div>
+                <div class="flex justify-between text-xs font-bold mb-1">
+                  <span>Analytical Writing (AWA 0.0–6.0 &bull; 30m)</span>
+                  <span id="gre-awa-val" class="font-extrabold text-indigo-600">${defaultAwa} / 6.0</span>
+                </div>
+                <input id="gre-awa-slider" type="range" min="0" max="6" step="0.5" value="${defaultAwa}" oninput="window.updateGreWhatIfView()" class="w-full accent-indigo-600 cursor-pointer" />
+              </div>
+            </div>
+
+            <div class="p-4 rounded-2xl bg-indigo-50/70 dark:bg-indigo-950/30 border border-indigo-200 dark:border-indigo-800 space-y-1 text-xs">
+              <div class="flex items-center justify-between">
+                <span class="font-extrabold text-slate-900 dark:text-white">Projected Composite GRE:</span>
+                <span id="gre-comp-val" class="text-base font-extrabold text-indigo-700">320 / 340 (Q162 V158)</span>
+              </div>
+              <div class="text-slate-600 dark:text-slate-300"><strong>Quant Routing:</strong> <span id="gre-q-gate">Medium Stage-2 Routing</span></div>
+              <div class="text-slate-600 dark:text-slate-300"><strong>Verbal Routing:</strong> <span id="gre-v-gate">Medium Stage-2 Routing</span></div>
+            </div>
+          </div>
+
+          <div class="lg:col-span-7 space-y-3">
+            ${tiers.map(t => `
               <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-5 shadow-sm space-y-1.5">
                 <div class="flex flex-wrap items-center justify-between gap-2">
                   <h3 class="text-base font-extrabold text-slate-900 dark:text-white">${t.band}</h3>
-                  <span class="px-3 py-1 rounded-full text-xs font-extrabold ${badgeCls}">${badgeText}</span>
+                  <span id="gre-tier-badge-${t.target}" class="px-3 py-1 rounded-full text-xs font-extrabold bg-amber-100 text-amber-800">Need +${t.target - 320} GRE Points</span>
                 </div>
                 <div class="text-xs font-bold text-indigo-600">${t.req}</div>
                 <div class="text-xs text-slate-700 dark:text-slate-300"><strong>Section-Adaptive Gate:</strong> ${t.gate}</div>
                 <div class="text-xs text-slate-500"><strong>Prep Prescription:</strong> ${t.rx}</div>
               </div>
-            `;
-          }).join("")}
+            `).join("")}
+          </div>
+        </div>
+
+        <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-6 shadow-sm space-y-3">
+          <div class="flex flex-wrap items-center justify-between gap-2">
+            <div>
+              <h3 class="text-sm font-extrabold text-slate-900 dark:text-white">GRE Full-Length Mock Ledger (${fullMocks.length} Valid 54-Q Mocks Synced)</h3>
+              <p class="text-[11px] text-slate-500">Only scored Full-Length 54-Question GRE Mocks are eligible for &ldquo;Sync Full Mock&rdquo; (practice drills &amp; unattempted 0/54 runs are excluded).</p>
+            </div>
+            ${rawHist.some(h => Number(h.score || 0) <= 0) ? `
+              <button type="button" onclick="const clean=JSON.parse(localStorage.getItem('ipm_mock_history_v1')||'[]').filter(h=>Number(h.score||0)>0); localStorage.setItem('ipm_mock_history_v1',JSON.stringify(clean)); window.renderGreScoreForecaster6();"
+                class="px-3 py-1.5 rounded-xl bg-rose-50 hover:bg-rose-100 text-rose-700 border border-rose-200 text-xs font-extrabold cursor-pointer">Purge 0/54 Test Entries</button>
+            ` : ""}
+          </div>
+          <div class="overflow-x-auto">
+            <table class="w-full text-left border-collapse">
+              <thead>
+                <tr class="text-[10px] font-extrabold uppercase text-slate-400 bg-slate-50 dark:bg-slate-950">
+                  <th class="py-2 px-3">Serial Mock ID</th>
+                  <th class="py-2 px-3">Date &amp; Time</th>
+                  <th class="py-2 px-3">GRE Full Blueprint</th>
+                  <th class="py-2 px-3">Scaled (260–340)</th>
+                  <th class="py-2 px-3">Quant / Verbal</th>
+                  <th class="py-2 px-3">Accuracy</th>
+                </tr>
+              </thead>
+              <tbody>
+                ${fullMocks.length ? fullMocks.map(m => `
+                  <tr class="border-t border-slate-200 dark:border-slate-800 text-xs">
+                    <td class="py-2.5 px-3 font-mono font-extrabold text-indigo-600">${m.serialId}</td>
+                    <td class="py-2.5 px-3 text-slate-500">${m.date || ""} ${m.time || ""}</td>
+                    <td class="py-2.5 px-3 font-bold">${m.blueprint}</td>
+                    <td class="py-2.5 px-3 font-extrabold text-emerald-600">${m.scaled340} / 340</td>
+                    <td class="py-2.5 px-3 font-bold">Q${m.quant170 || 130} &bull; V${m.verbal170 || 130}</td>
+                    <td class="py-2.5 px-3 font-bold">${m.accuracy}%</td>
+                  </tr>
+                `).join("") : `<tr><td colspan="6" class="py-5 text-center text-xs text-slate-400">No scored Full-Length 54-Q GRE Mocks recorded yet. Use the What-If sliders above to simulate target scores, or complete Blueprint 1 in Tab 4 and press &ldquo;Sync Full Mock&rdquo;.</td></tr>`}
+              </tbody>
+            </table>
+          </div>
         </div>
       </div>
     `;
+    window.updateGreWhatIfView();
   };
 
   window.renderTab6 = window.renderGreScoreForecaster6;
