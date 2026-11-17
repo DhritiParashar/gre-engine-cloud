@@ -1326,41 +1326,40 @@
     });
   };
 
-  window.syncGreFullMockToSliders = function () {
+    window.syncGreFullMockToSliders = function () {
     const rawHist = JSON.parse(localStorage.getItem("ipm_mock_history_v1") || "[]");
     const fullMocks = rawHist.filter(h =>
-      (Number(h.maxScore || 0) >= 54 || String(h.blueprint || "").includes("Full GRE General")) &&
-      Number(h.score || 0) > 0
+      (Number(h.maxScore || 0) >= 54 || String(h.blueprint || "").includes("Full GRE General"))
     );
     const savedAwa = JSON.parse(localStorage.getItem("gre_awa_latest_v1") || "null");
     const statusEl = document.getElementById("gre-sync-status");
+    const qSlider = document.getElementById("gre-q-slider");
+    const vSlider = document.getElementById("gre-v-slider");
+    const aSlider = document.getElementById("gre-awa-slider");
 
     if (!fullMocks.length) {
+      if (qSlider) qSlider.value = 130;
+      if (vSlider) vSlider.value = 130;
+      if (aSlider) aSlider.value = savedAwa ? Number(savedAwa.score).toFixed(1) : "0.0";
       if (statusEl) {
-        statusEl.textContent = "No completed Full-Length 54-Q Mock found yet (practice drills & 0/54 runs excluded) — showing What-If Simulator";
-        statusEl.className = "text-xs font-bold text-amber-600";
+        statusEl.textContent = "Synced Actuals: 0 Full Mocks Completed → Zeroed to Baseline 260/340 (Q130 • V130 • AWA " + (savedAwa ? Number(savedAwa.score).toFixed(1) : "0.0") + ")";
+        statusEl.className = "text-xs font-extrabold text-amber-600";
       }
-      if (savedAwa && document.getElementById("gre-awa-slider")) {
-        document.getElementById("gre-awa-slider").value = Number(savedAwa.score).toFixed(1);
-        window.updateGreWhatIfView();
-      }
+      window.updateGreWhatIfView();
       return;
     }
 
     const latest = fullMocks[0];
     const qScore = Math.min(170, Math.max(130, Number(latest.quant170 || 130)));
     const vScore = Math.min(170, Math.max(130, Number(latest.verbal170 || 130)));
-    const aScore = savedAwa ? Number(savedAwa.score) : Number(latest.awaScore || 4.5);
+    const aScore = savedAwa ? Number(savedAwa.score) : Number(latest.awaScore || 0);
 
-    const qSlider = document.getElementById("gre-q-slider");
-    const vSlider = document.getElementById("gre-v-slider");
-    const aSlider = document.getElementById("gre-awa-slider");
     if (qSlider) qSlider.value = qScore;
     if (vSlider) vSlider.value = vScore;
     if (aSlider) aSlider.value = aScore.toFixed(1);
 
     if (statusEl) {
-      statusEl.textContent = `Synced from Full Mock ${latest.serialId} (${latest.score}/${latest.maxScore}) → Actual Q${qScore} • V${vScore} • AWA ${aScore.toFixed(1)}`;
+      statusEl.textContent = `Synced Actuals from ${latest.serialId} (${latest.score}/${latest.maxScore}) → Q${qScore} • V${vScore} • AWA ${aScore.toFixed(1)} (${qScore + vScore}/340)`;
       statusEl.className = "text-xs font-extrabold text-emerald-600";
     }
     window.updateGreWhatIfView();
