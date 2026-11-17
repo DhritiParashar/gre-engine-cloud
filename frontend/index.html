@@ -5,6 +5,22 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>GOALisB GRE Master</title>
   <script src="https://cdn.tailwindcss.com"></script>
+<style id="goal-high-legibility-theme">
+  /* Crisp WCAG AA+ typography on low-contrast / high-gamma laptop displays without altering layout or color palette */
+  body { -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility; }
+  .text-slate-400 { color: #475569 !important; } /* Elevated from #94a3b8 -> slate-600 */
+  .text-slate-500 { color: #334155 !important; } /* Elevated from #64748b -> slate-700 */
+  .text-slate-600 { color: #1e293b !important; } /* Elevated from #475569 -> slate-800 */
+  .text-gray-400  { color: #4b5563 !important; }
+  .text-gray-500  { color: #374151 !important; }
+  .border-slate-200 { border-color: #cbd5e1 !important; } /* Subtle border definition on bright screens */
+
+  /* Dark mode high-legibility equivalents */
+  .dark .text-slate-400 { color: #cbd5e1 !important; }
+  .dark .text-slate-500 { color: #e2e8f0 !important; }
+  .dark .text-slate-600 { color: #f1f5f9 !important; }
+  .dark .border-slate-800 { border-color: #334155 !important; }
+</style>
 </head>
 <body class="bg-slate-950 text-slate-100 min-h-screen font-sans">
   <header class="border-b border-slate-800 bg-slate-900/90 sticky top-0 z-30 backdrop-blur">
