@@ -1819,7 +1819,8 @@ def api_list_vouchers():
         rows = db.query(BetaVoucher).order_by(BetaVoucher.id.desc()).all()
         return {"vouchers": [{"code": r.code, "label": r.label, "valid_days": r.valid_days, "used": r.used_count, "max_uses": r.max_uses, "active": r.is_active} for r in rows]}
     finally:
-        db.close()
+        db.close()
+
 
 from app.db_engine import get_pyq_questions_from_db
 class EvaluationRequest(BaseModel):
@@ -2108,3 +2109,14 @@ async def head_ping_middleware(request, call_next):
     if request.method == "HEAD":
         return Response(status_code=200)
     return await call_next(request)
+
+from app.db_engine import resend_otp_challenge
+
+@app.post("/api/auth/otp/resend")
+async def api_resend_otp(request: Request):
+    body = await request.json()
+    cid = body.get("challenge_id")
+    purpose = body.get("purpose", "Account Registration")
+    if not cid:
+        return {"ok": False, "error": "Missing challenge_id. Please submit Step 1 first."}
+    return resend_otp_challenge(int(str(cid).strip()), purpose)
