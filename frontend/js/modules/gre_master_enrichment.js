@@ -978,7 +978,7 @@
 // AUTHORITATIVE GRE TAB 1 OVERRIDE (QC & PS • 130-170 SCALE • POSTGRESQL SYNCED)
 // ==============================================================================
 (function () {
-  const GRE_QUANT_MODULES = [
+    const GRE_QUANT_MODULES = [
     {
       id: "gre_q1",
       kicker: "ETS QUANTITATIVE COMPARISON • PILLAR 1 OF 5",
@@ -988,16 +988,33 @@
       pace: "1.25 mins / QC Question",
       scoring: "+1 / 0 (Zero Guessing Penalty)",
       strategy: "FROZEN Boundary Plug-In",
-      overview: "Quantitative Comparison (QC) is unique to the GRE: you compare Quantity A and Quantity B and choose A (A is greater), B (B is greater), C (Equal), or D (Cannot be determined). Top scorers never compute full values when algebraic cancellation or testing FROZEN boundary numbers (Fractions, Roots, One, Zero, Extremes, Negatives) reveals the relationship in 35 seconds.",
-      bridge: "Treat Quantity A vs. Quantity B like an inequality: you may add or subtract identical terms from both sides, or multiply/divide both sides ONLY by a strictly positive quantity.",
+      overview: "Quantitative Comparison (QC) accounts for nearly 40% of all GRE Quantitative Reasoning questions and is the single fastest lever for reaching a 168–170 Quant score. Rather than solving for a single numerical value, you evaluate the invariant order relationship between Quantity A and Quantity B across the entire permissible domain of the given constraints: Choice A (Quantity A is always greater), Choice B (Quantity B is always greater), Choice C (the two quantities are always equal), or Choice D (the relationship cannot be determined from the information given). High-scoring test-takers avoid brute-force arithmetic and instead simplify both columns symmetrically—canceling identical additive terms and factoring out strictly positive expressions—before testing extreme boundary cases.",
+      bridge: "Treat Quantity A versus Quantity B exactly like an inequality with an unknown comparator (?): you may add or subtract identical expressions from both quantities freely, and you may multiply or divide both quantities ONLY by an expression guaranteed to be strictly positive. Whenever a variable lacks explicit sign, integer, or non-zero restrictions, immediately deploy the FROZEN boundary checklist (Fractions, Roots, One, Zero, Extremes, Negatives)—a single flip between A > B and B > A locks Choice D in under 30 seconds.",
       rules: [
-        { name: "Law 1: The FROZEN Boundary Checklist", desc: "Whenever variables lack sign or integer restrictions, test Fractions (1/2), Zero (0), One (1), Extremes (100), and Negatives (-2). One flip between A > B and B > A immediately locks Choice D." },
-        { name: "Law 2: Positive-Only Scaling", desc: "Never divide both quantities by x unless x > 0 is guaranteed; if x can be negative or zero, dividing flips the inequality or divides by zero." }
+        { name: "Law 1: The FROZEN Boundary Checklist", desc: "Whenever variables lack sign or integer restrictions, test Fractions (1/2, -1/2), Roots (sqrt(2)), Zero (0), One (1, -1), Extremes (100, -100), and Negatives (-2). One single flip between A > B and B > A immediately proves Choice D." },
+        { name: "Law 2: Strictly Positive Scaling Invariance", desc: "Never multiply or divide both quantities by a variable expression x unless x > 0 is guaranteed by the stem; if x can be negative (flips inequality) or zero (undefined division), Choice D is almost always triggered." },
+        { name: "Law 3: Difference & Ratio Comparison Transform", desc: "To compare complicated algebraic polynomials or exponents, compute (Quantity A − Quantity B) and factor completely to inspect sign, or for strictly positive quantities compare (Quantity A / Quantity B) against 1." },
+        { name: "Law 4: Constant-vs-Constant Choice D Elimination", desc: "If both Quantity A and Quantity B contain zero variables (pure numerical expressions or fixed geometric ratios), Choice D is 100% impossible—a deterministic relationship always exists." }
       ],
       worked: [
-        { tier: "GRE 155+ Foundation", p: "Given x > 0, compare Quantity A: (x + 2)^2 vs. Quantity B: x^2 + 4.", s: "1. Expand Quantity A = x^2 + 4x + 4.\n2. Subtract (x^2 + 4) from both quantities -> Compare 4x vs. 0.\n3. Since x > 0, 4x > 0 => Quantity A is greater (Choice A)." },
-        { tier: "GRE 165+ Contender", p: "Given 0 < x < 1, compare Quantity A: x^2 + x^3 vs. Quantity B: x + x^4.", s: "1. Compute Quantity B - Quantity A = (x - x^2) - (x^3 - x^4) = x(1 - x)(1 - x^2).\n2. For 0 < x < 1, x > 0, (1 - x) > 0, and (1 - x^2) > 0 => Quantity B is greater (Choice B)." },
-        { tier: "GRE 170 Perfection", p: "Given xy != 0, compare Quantity A: |x + y| vs. Quantity B: |x| + |y|.", s: "1. If x = 2, y = 3 -> |5| = 5 and 2 + 3 = 5 (Equal).\n2. If x = 2, y = -3 -> |-1| = 1 < 2 + 3 = 5 (B is greater).\n3. Two different outcomes => Relationship cannot be determined (Choice D)." }
+        { tier: "GRE 155+ Foundation", p: "Given x > 0, compare Quantity A: (x + 2)^2 vs. Quantity B: x^2 + 4.", s: "1. Expand Quantity A: (x + 2)^2 = x^2 + 4x + 4.
+2. Subtract identical terms (x^2 + 4) from both quantities -> Compare 4x vs. 0.
+3. Since x > 0 is given, 4x > 0 is guaranteed => Quantity A is greater (Choice A)." },
+        { tier: "GRE 155+ Foundation", p: "Given 3a + 2b = 18 and a > 0, compare Quantity A: 6a + 4b vs. Quantity B: 36.", s: "1. Factor Quantity A: 6a + 4b = 2(3a + 2b).
+2. Substitute 3a + 2b = 18 -> Quantity A = 2(18) = 36.
+3. Both quantities equal 36 for all valid (a, b) => The two quantities are equal (Choice C)." },
+        { tier: "GRE 165+ Contender", p: "Given 0 < x < 1, compare Quantity A: x^2 + x^3 vs. Quantity B: x + x^4.", s: "1. Compute Difference: Quantity B − Quantity A = (x − x^2) − (x^3 − x^4) = x(1 − x) − x^3(1 − x) = x(1 − x)(1 − x^2).
+2. For 0 < x < 1, every factor is strictly positive: x > 0, (1 − x) > 0, and (1 − x^2) > 0.
+3. Therefore Quantity B − Quantity A > 0 => Quantity B is greater (Choice B)." },
+        { tier: "GRE 165+ Contender", p: "Given x < y < 0, compare Quantity A: x^2 * y^3 vs. Quantity B: x^3 * y^2.", s: "1. Since x < 0 and y < 0, x^2 * y^2 is strictly positive (> 0).
+2. Divide both quantities by x^2 * y^2: Quantity A simplifies to y, and Quantity B simplifies to x.
+3. Since x < y is given, y > x => Quantity A is greater (Choice A)." },
+        { tier: "GRE 170 Perfection", p: "Given xy != 0, compare Quantity A: |x + y| vs. Quantity B: |x| + |y|.", s: "1. Case 1 (Same signs): Let x = 2, y = 3 -> Quantity A = |5| = 5; Quantity B = |2| + |3| = 5 (Equal).
+2. Case 2 (Opposite signs): Let x = 2, y = −3 -> Quantity A = |−1| = 1; Quantity B = |2| + |−3| = 5 (B is greater).
+3. Two valid plug-ins yield different relationships => Cannot be determined (Choice D)." },
+        { tier: "GRE 170 Perfection", p: "n is an integer > 1. Compare Quantity A: (n + 1)/n vs. Quantity B: (n + 2)/(n + 1).", s: "1. Rewrite each fraction as 1 + 1/k: Quantity A = 1 + 1/n; Quantity B = 1 + 1/(n + 1).
+2. Subtract 1 from both quantities -> Compare 1/n vs. 1/(n + 1).
+3. Since n > 1 > 0, n < n + 1 => 1/n > 1/(n + 1) => Quantity A is greater (Choice A)." }
       ],
       drills: [
         { tag: "GRE 155+ Foundation • QC", q: "Given x > 0:\nQuantity A: (x + 2)^2 - 4\nQuantity B: x^2 + 4x", opts: ["A. Quantity A is greater.", "B. Quantity B is greater.", "C. The two quantities are equal.", "D. The relationship cannot be determined from the information given."], ans: 2, exp: "(x + 2)^2 - 4 = x^2 + 4x + 4 - 4 = x^2 + 4x = Quantity B (Choice C)." },
@@ -1006,7 +1023,7 @@
         { tag: "GRE 165+ Contender • QC", q: "x^2 < 16 and y^2 < 25 (x, y are real numbers).\nQuantity A: x + y\nQuantity B: 8", opts: ["A. Quantity A is greater.", "B. Quantity B is greater.", "C. The two quantities are equal.", "D. The relationship cannot be determined from the information given."], ans: 3, exp: "If x = 3.9, y = 4.9 -> x + y = 8.8 > 8 (A). If x = 0, y = 0 -> 0 < 8 (B). Cannot be determined (Choice D)." }
       ]
     },
-    {
+        {
       id: "gre_q2",
       kicker: "ETS QUANTITATIVE REASONING • PILLAR 2 OF 5",
       title: "Algebra, Exponents, Inequalities & Functions (PS & Numeric Entry)",
@@ -1015,16 +1032,32 @@
       pace: "1.75 mins / PS Question",
       scoring: "5-Option PS (A–E) & Numeric Entry (+1 / 0)",
       strategy: "Prime Base & Vertex Completion",
-      overview: "GRE Algebra combines 5-choice Problem Solving and exact Numeric Entry boxes across nested exponents, quadratic vertex shifts, absolute-value intervals, and recursive functions.",
-      bridge: "Whenever exponents appear in sums (e.g., 2^12 + 2^12 + 2^12 + 2^12), factor out the smallest power immediately rather than computing huge integers.",
+      overview: "GRE Algebra blends 5-choice Problem Solving (A–E) with exact Numeric Entry input boxes across nested exponential equations, quadratic vertex optimization, compound absolute-value inequalities, and recursive sequence definitions. In Stage-2 Hard Quant sections, ETS frequently disguises linear or quadratic systems inside exponential bases (such as 4^x, 8^y, 27^(x−2)) or asks for integer solution counts over symmetric intervals. Mastering prime-base decomposition and vertex form eliminates multi-step algebraic expansion.",
+      bridge: "Whenever identical exponential terms appear in sums (for example, 3^10 + 3^10 + 3^10), immediately factor out the smallest power (3^10 * (1 + 1 + 1) = 3^11) rather than estimating large numbers. For quadratic expressions ax^2 + bx + c, completing the square into a(x − h)^2 + k reveals both the axis of symmetry x = h and the global extremum k in one line.",
       rules: [
-        { name: "Law 1: Common Base Factorization", desc: "2^n + 2^n = 2 * 2^n = 2^(n+1). Always reduce composite bases (4, 8, 9, 27) to prime factors." },
-        { name: "Law 2: Parabola Vertex Form", desc: "f(x) = a(x - h)^2 + k achieves its global minimum (a > 0) or maximum (a < 0) at x = h with value k." }
+        { name: "Law 1: Prime-Base Exponential Decomposition", desc: "Convert all composite bases (4, 8, 9, 16, 27, 32) into prime powers (2^k, 3^k) before equating exponents or factoring out common terms." },
+        { name: "Law 2: Parabola Vertex & Discriminant Bounds", desc: "f(x) = a(x − h)^2 + k achieves its global minimum (if a > 0) or maximum (if a < 0) at x = h with extremum k = c − b^2/(4a)." },
+        { name: "Law 3: Symmetric Absolute-Value Intervals", desc: "|ax − b| <= c (for c >= 0) expands directly to −c <= ax − b <= c, while |ax − b| >= c splits into two disjoint rays: ax − b <= −c or ax − b >= c." },
+        { name: "Law 4: Difference-of-Squares & Vieta Sum/Product", desc: "For ax^2 + bx + c = 0, sum of roots r1 + r2 = −b/a and product r1 * r2 = c/a—allowing you to compute r1^2 + r2^2 = (r1 + r2)^2 − 2r1r2 without solving radicals." }
       ],
       worked: [
-        { tier: "GRE 155+ Foundation", p: "Solve for x: 3^(2x - 1) = 27^(x - 2).", s: "1. Rewrite 27^(x - 2) = (3^3)^(x - 2) = 3^(3x - 6).\n2. Equate exponents: 2x - 1 = 3x - 6 => x = 5." },
-        { tier: "GRE 165+ Contender", p: "Find the minimum value of f(x) = x^2 - 6x + 14 for all real x.", s: "1. Complete the square: f(x) = (x - 3)^2 + 5.\n2. Since (x - 3)^2 >= 0, minimum value is 5." },
-        { tier: "GRE 170 Perfection", p: "How many integers satisfy |2x - 5| <= 9?", s: "1. -9 <= 2x - 5 <= 9 => -4 <= 2x <= 14 => -2 <= x <= 7.\n2. Count = 7 - (-2) + 1 = 10 integers." }
+        { tier: "GRE 155+ Foundation", p: "Solve for x: 3^(2x − 1) = 27^(x − 2).", s: "1. Express 27 as 3^3: 27^(x − 2) = (3^3)^(x − 2) = 3^(3x − 6).
+2. Equate exponents with identical base 3: 2x − 1 = 3x − 6.
+3. Subtract 2x and add 6 to both sides => x = 5." },
+        { tier: "GRE 155+ Foundation", p: "If 4x − 3y = 19 and 2x + y = 17, find the value of x + y.", s: "1. Multiply the second equation by 3: 6x + 3y = 51.
+2. Add to the first equation: (4x − 3y) + (6x + 3y) = 19 + 51 => 10x = 70 => x = 7.
+3. Substitute x = 7 into 2(7) + y = 17 => y = 3, so x + y = 10." },
+        { tier: "GRE 165+ Contender", p: "Find the minimum value of f(x) = x^2 − 6x + 14 for all real x.", s: "1. Complete the square on the first two terms: x^2 − 6x + 9 = (x − 3)^2.
+2. Rewrite f(x) = (x − 3)^2 + 5.
+3. Since (x − 3)^2 >= 0 for all real x, the minimum value is 5 (attained at x = 3)." },
+        { tier: "GRE 165+ Contender", p: "Simplify (2^14 + 2^14 + 2^14 + 2^14) / 4^6.", s: "1. Factor numerator: 4 * 2^14 = 2^2 * 2^14 = 2^16.
+2. Rewrite denominator in base 2: 4^6 = (2^2)^6 = 2^12.
+3. Divide: 2^16 / 2^12 = 2^(16 − 12) = 2^4 = 16." },
+        { tier: "GRE 170 Perfection", p: "How many integer values of x satisfy |2x − 5| <= 9?", s: "1. Expand compound inequality: −9 <= 2x − 5 <= 9.
+2. Add 5 across all parts: −4 <= 2x <= 14 => Divide by 2: −2 <= x <= 7.
+3. Inclusive integer count = 7 − (−2) + 1 = 10 integers." },
+        { tier: "GRE 170 Perfection", p: "If r and s are roots of 2x^2 − 10x + 7 = 0, find r^2 + s^2.", s: "1. By Vieta's formulas: r + s = −(−10)/2 = 5, and r * s = 7/2 = 3.5.
+2. Use identity r^2 + s^2 = (r + s)^2 − 2rs = 5^2 − 2(3.5) = 25 − 7 = 18." }
       ],
       drills: [
         { tag: "GRE 155+ Foundation • Exponents", q: "If 3^(2x - 1) = 27^(x - 2), what is the value of x?", opts: ["A. 3", "B. 4", "C. 5", "D. 6", "E. 7"], ans: 2, exp: "2x - 1 = 3(x - 2) => 2x - 1 = 3x - 6 => x = 5." },
@@ -1032,7 +1065,7 @@
         { tag: "GRE 170 Perfection • Inequalities", q: "How many integer values of x satisfy |2x - 5| <= 9?", opts: ["A. 7", "B. 8", "C. 9", "D. 10", "E. 11"], ans: 3, exp: "-2 <= x <= 7 gives 10 integers." }
       ]
     },
-    {
+        {
       id: "gre_q3",
       kicker: "ETS QUANTITATIVE REASONING • PILLAR 3 OF 5",
       title: "Number Properties, Divisibility, Remainders & Counting",
@@ -1041,16 +1074,31 @@
       pace: "1.80 mins / Question",
       scoring: "+1 / 0 (Zero Guessing Penalty)",
       strategy: "Prime Factorization & Complement Counting",
-      overview: "Stage-2 Hard GRE Quant sections lean heavily on prime factor counts, trailing zeros, remainder cycles, and 'at least one' combinatorics.",
-      bridge: "Total factors of N = p^a * q^b * r^c equals (a + 1)(b + 1)(c + 1); N is a perfect square if and only if all prime exponents are even.",
+      overview: "Stage-2 Hard GRE Quant sections lean heavily on prime factor exponents, trailing-zero powers of 5, cyclic units digits, modular remainder arithmetic, and 'at least one' combinatorics. Because GRE questions rarely permit brute-force listing when numbers reach 100! or 7^42, knowing how to extract prime exponents and apply complement probability turns 3-minute problems into 40-second wins.",
+      bridge: "Every positive integer N > 1 has a unique prime factorization N = p1^a * p2^b * p3^c. From those exponents alone, you immediately know total positive divisors = (a + 1)(b + 1)(c + 1), whether N is a perfect square (all exponents even) or perfect cube (all exponents multiples of 3), and the exact power of any prime dividing N!.",
       rules: [
-        { name: "Law 1: Complement Probability / Counting", desc: "P(at least one) = 1 - P(none). Subtract invalid cases from total unrestricted arrangements." },
-        { name: "Law 2: Modular Remainder Arithmetic", desc: "Replace large bases with their remainders mod d before raising to exponents." }
+        { name: "Law 1: Divisor Count & Perfect Power Parity", desc: "For N = p^a * q^b * r^c, total positive factors = (a + 1)(b + 1)(c + 1). N has an odd number of divisors if and only if N is a perfect square." },
+        { name: "Law 2: Modular Remainder Substitution", desc: "To find the remainder of (A * B + C)^k divided by d, replace A, B, and C with their remainders mod d first, then track the repeating cycle of powers." },
+        { name: "Law 3: Complement Counting ('At Least One')", desc: "Whenever a counting or probability stem asks for 'at least one' or 'no two adjacent', compute Total Unrestricted Cases − Unwanted Complement Cases." },
+        { name: "Law 4: Trailing Zeros in Factorials (Legendre's Formula)", desc: "The number of trailing zeros in n! equals floor(n/5) + floor(n/25) + floor(n/125) + ..., counting factors of 5 paired with abundant factors of 2." }
       ],
       worked: [
-        { tier: "GRE 155+ Foundation", p: "Find the total number of positive divisors of 360.", s: "1. 360 = 2^3 * 3^2 * 5^1.\n2. Divisors = (3 + 1)(2 + 1)(1 + 1) = 4 * 3 * 2 = 24." },
-        { tier: "GRE 165+ Contender", p: "Find the greatest prime factor of 3^6 - 1.", s: "1. 3^6 - 1 = (3^3 - 1)(3^3 + 1) = 26 * 28 = 2 * 13 * 4 * 7.\n2. Greatest prime factor = 13." },
-        { tier: "GRE 170 Perfection", p: "When n is divided by 12, remainder is 7. Find remainder when 5n is divided by 12.", s: "1. 5n ≡ 5 * 7 = 35 (mod 12).\n2. 35 = 12 * 2 + 11 => remainder = 11." }
+        { tier: "GRE 155+ Foundation", p: "Find the total number of positive divisors of 360.", s: "1. Prime factorize: 360 = 36 * 10 = (2^2 * 3^2) * (2 * 5) = 2^3 * 3^2 * 5^1.
+2. Add 1 to each exponent and multiply: (3 + 1)(2 + 1)(1 + 1) = 4 * 3 * 2 = 24 positive divisors." },
+        { tier: "GRE 155+ Foundation", p: "How many trailing zeros are at the end of 65! ?", s: "1. Count factors of 5 in 65!: floor(65/5) + floor(65/25) = 13 + 2 = 15.
+2. Since factors of 2 exceed 15, 65! ends in exactly 15 trailing zeros." },
+        { tier: "GRE 165+ Contender", p: "Find the greatest prime factor of 3^6 − 1.", s: "1. Factor as a difference of squares: 3^6 − 1 = (3^3 − 1)(3^3 + 1) = 26 * 28.
+2. Prime factorize both terms: 26 = 2 * 13, and 28 = 2^2 * 7.
+3. Combining gives 2^3 * 7 * 13 => The greatest prime factor is 13." },
+        { tier: "GRE 165+ Contender", p: "A committee of 4 is chosen from 5 economists and 4 statisticians. How many committees have at least 3 economists?", s: "1. Case 1 (3 economists, 1 statistician): 5C3 * 4C1 = 10 * 4 = 40.
+2. Case 2 (4 economists, 0 statisticians): 5C4 * 4C0 = 5 * 1 = 5.
+3. Total valid committees = 40 + 5 = 45." },
+        { tier: "GRE 170 Perfection", p: "When positive integer n is divided by 12, the remainder is 7. Find the remainder when 5n is divided by 12.", s: "1. Write n = 12k + 7 for non-negative integer k.
+2. Multiply by 5: 5n = 60k + 35 = 12(5k + 2) + 11.
+3. Since 0 <= 11 < 12, the remainder is 11." },
+        { tier: "GRE 170 Perfection", p: "What is the units digit of 7^2026 + 3^2026 ?", s: "1. Units digits of 7^k cycle every 4: {7, 9, 3, 1}. Since 2026 = 4(506) + 2, 7^2026 ends in 9.
+2. Units digits of 3^k cycle every 4: {3, 9, 7, 1}. Since 2026 ≡ 2 (mod 4), 3^2026 ends in 9.
+3. Sum of units digits = 9 + 9 = 18 => Units digit is 8." }
       ],
       drills: [
         { tag: "GRE 155+ Foundation • Divisors", q: "How many positive integers are divisors of 360?", opts: ["A. 18", "B. 20", "C. 24", "D. 30", "E. 36"], ans: 2, exp: "360 = 2^3 * 3^2 * 5^1 => (4)(3)(2) = 24 divisors." },
@@ -1058,7 +1106,7 @@
         { tag: "GRE 170 Perfection • Remainders", q: "When positive integer n is divided by 12, the remainder is 7. What is the remainder when 5n is divided by 12?", opts: ["A. 1", "B. 3", "C. 5", "D. 7", "E. 11"], ans: 4, exp: "5 * 7 = 35 = 24 + 11 => remainder 11." }
       ]
     },
-    {
+        {
       id: "gre_q4",
       kicker: "ETS QUANTITATIVE REASONING • PILLAR 4 OF 5",
       title: "Geometry: Triangles, Circles, Polygons & 3D Solids",
@@ -1067,16 +1115,32 @@
       pace: "1.65 mins / Question",
       scoring: "+1 / 0 (Figures Not Necessarily Drawn to Scale)",
       strategy: "Special Right Triangles & Scale Audit",
-      overview: "Unlike GMAT Focus, the GRE tests Euclidean Geometry: special right triangles (30-60-90, 45-45-90, 3-4-5, 5-12-13), inscribed angles, sector arcs, and cylinder/sphere volume scaling.",
-      bridge: "Never assume a GRE diagram is drawn to scale unless explicitly stated; test extreme angle deformations on QC geometry figures.",
+      overview: "Unlike GMAT Focus, which removed Euclidean Geometry, the GRE General Test actively tests triangles, parallel-line angle chasing, inscribed/central circle theorems, regular polygons, coordinate slopes, and 3D solids (cylinders, rectangular prisms, spheres). A classic ETS Quantitative Comparison trap presents an unlabeled triangle or chord diagram without stating 'drawn to scale'—requiring you to flex angles between acute and obtuse extremes.",
+      bridge: "Never trust visual proportions on a GRE figure unless 'drawn to scale' is explicitly printed. Instead, lock in your invariant ratios: 30°–60°–90° triangles (x : x*sqrt(3) : 2x), 45°–45°–90° triangles (x : x : x*sqrt(2)), Pythagorean triples (3–4–5, 5–12–13, 8–15–17), and dimensional scaling (linear k -> area k^2 -> volume k^3).",
       rules: [
-        { name: "Law 1: Triangle Inequality", desc: "For any triangle with sides a, b, c: |a - b| < c < a + b." },
-        { name: "Law 2: Area & Volume Scaling", desc: "Scaling linear dimensions by factor k scales Area by k^2 and Volume by k^3." }
+        { name: "Law 1: Triangle Inequality & Obtuse/Acute Hinge", desc: "For sides a <= b <= c: |a − b| < c < a + b. Furthermore, if c^2 > a^2 + b^2 the angle opposite c is obtuse (> 90°); if c^2 < a^2 + b^2 it is acute (< 90°)." },
+        { name: "Law 2: Dimensional Scaling (k -> k^2 -> k^3)", desc: "Scaling all linear dimensions of a 2D or 3D figure by factor k multiplies Perimeter/Circumference by k, Surface Area by k^2, and Volume by k^3." },
+        { name: "Law 3: Inscribed Angle & Thales' Semicircle Theorem", desc: "An inscribed angle subtending an arc measures half the central angle; any triangle inscribed in a circle with the diameter as one side is a 90° right triangle." },
+        { name: "Law 4: Polygon Interior Angle Sum", desc: "An n-sided polygon has interior angle sum (n − 2) * 180°, and every exterior angle sum equals 360° regardless of n." }
       ],
       worked: [
-        { tier: "GRE 155+ Foundation", p: "A circle is inscribed inside a square of side 10. Find the shaded area outside the circle.", s: "1. Square area = 100. Circle radius = 5 => Circle area = 25*pi.\n2. Shaded area = 100 - 25*pi." },
-        { tier: "GRE 165+ Contender", p: "Cylinder radius rises 20% and height drops 25%. Percent change in volume?", s: "1. V_new / V_old = (1.20)^2 * (0.75) = 1.44 * 0.75 = 1.08.\n2. Volume increases by 8%." },
-        { tier: "GRE 170 Perfection", p: "Two triangle sides are 7 and 13. Which cannot be the perimeter?", s: "1. 6 < s < 20 => 26 < Perimeter < 40.\n2. Perimeter cannot equal 40." }
+        { tier: "GRE 155+ Foundation", p: "A circle is inscribed inside a square of side 10. Find the shaded area inside the square but outside the circle.", s: "1. Square area = 10^2 = 100.
+2. The inscribed circle has diameter = side = 10 => radius r = 5 => Circle area = pi * 5^2 = 25*pi.
+3. Shaded region = 100 − 25*pi." },
+        { tier: "GRE 155+ Foundation", p: "Find the area of an equilateral triangle with side length 8.", s: "1. Split into two 30°–60°–90° right triangles with base 4 and hypotenuse 8 => height h = 4*sqrt(3).
+2. Area = (1/2) * base * height = (1/2) * 8 * 4*sqrt(3) = 16*sqrt(3)." },
+        { tier: "GRE 165+ Contender", p: "A right circular cylinder's radius increases by 20% and its height decreases by 25%. Find the percent change in volume.", s: "1. Volume V = pi * r^2 * h.
+2. New volume ratio: V_new / V_old = (1.20)^2 * (0.75) = 1.44 * 0.75 = 1.08.
+3. Volume increases by 8%." },
+        { tier: "GRE 165+ Contender", p: "A chord of length 16 is at perpendicular distance 6 from the center of a circle. Find the circle's circumference.", s: "1. The perpendicular from the center bisects the chord into two segments of length 8.
+2. By the 6–8–10 right triangle, radius r = sqrt(6^2 + 8^2) = 10.
+3. Circumference = 2 * pi * r = 20*pi." },
+        { tier: "GRE 170 Perfection", p: "Two sides of a triangle have lengths 7 and 13. Which value CANNOT be the perimeter of the triangle?", s: "1. By the Triangle Inequality, third side s satisfies (13 − 7) < s < (13 + 7) => 6 < s < 20.
+2. Add 20 to all parts for Perimeter P = 20 + s: 26 < P < 40.
+3. Since P must be strictly less than 40, a perimeter of 40 is impossible." },
+        { tier: "GRE 170 Perfection", p: "Compare Quantity A: Area of a triangle with sides 6, 8, and angle 80° between them vs. Quantity B: 24.", s: "1. Area = (1/2) * 6 * 8 * sin(80°) = 24 * sin(80°).
+2. Since 0 < sin(80°) < 1, 24 * sin(80°) < 24.
+3. Quantity B is strictly greater (Choice B)." }
       ],
       drills: [
         { tag: "GRE 155+ Foundation • Circles", q: "A circle is inscribed in a square of side length 10. What is the area inside the square but outside the circle?", opts: ["A. 100 - 10*pi", "B. 100 - 25*pi", "C. 100 - 50*pi", "D. 40 - 25*pi", "E. 25*pi - 50"], ans: 1, exp: "100 - pi*(5^2) = 100 - 25*pi." },
@@ -1084,7 +1148,7 @@
         { tag: "GRE 170 Perfection • Triangles", q: "Two sides of a triangle have lengths 7 and 13. Which CANNOT be the perimeter of the triangle?", opts: ["A. 27", "B. 30", "C. 35", "D. 39", "E. 40"], ans: 4, exp: "Third side < 20 => Perimeter < 40." }
       ]
     },
-    {
+        {
       id: "gre_q5",
       kicker: "ETS QUANTITATIVE REASONING • PILLAR 5 OF 5",
       title: "Data Analysis: Normal Distributions, Quartiles, Boxplots & Percentiles",
@@ -1093,16 +1157,31 @@
       pace: "1.60 mins / Question",
       scoring: "+1 / 0 (Zero Guessing Penalty)",
       strategy: "34%–14%–2% Bell Curve Map",
-      overview: "GRE Data Analysis focuses on Standard Deviation spread, Normal Distribution intervals (68% within 1 SD, 95% within 2 SDs), Box-and-Whisker quartiles (Q1, Median, Q3, IQR), and multi-chart Data Interpretation.",
-      bridge: "Adding a constant c to every value shifts Mean and Median by +c, while Standard Deviation and Interquartile Range (IQR) remain completely unchanged.",
+      overview: "GRE Data Analysis evaluates statistical reasoning rather than tedious hand computation: standard deviation dispersion, Normal Distribution empirical intervals (68% within 1 SD, 95% within 2 SDs), Box-and-Whisker quartiles (Minimum, Q1, Median Q2, Q3, Maximum, IQR = Q3 − Q1), percentile rankings, and multi-chart Data Interpretation sets. Notice that ETS frequently pairs normal distribution z-scores with Quantitative Comparison items where exact SD multipliers unlock the answer immediately.",
+      bridge: "Adding a constant c to every data point shifts location measures (Mean, Median, Q1, Q3) by +c while leaving spread measures (Range, IQR, Standard Deviation) completely unchanged. Conversely, multiplying every data point by a positive constant k scales both location and spread measures by factor k.",
       rules: [
-        { name: "Law 1: Empirical Normal Curve Split", desc: "Between Mean and +1 SD = 34%; +1 SD to +2 SD = 13.5% (~14%); above +2 SD = 2.5% (~2%)." },
-        { name: "Law 2: Mean vs. Median Skewness", desc: "In a right-skewed distribution (long upper tail), Mean > Median." }
+        { name: "Law 1: Empirical Normal Curve Split (34%–13.5%–2.5%)", desc: "In any normal distribution: Mean to +1 SD holds 34%; +1 SD to +2 SD holds 13.5% (~14%); above +2 SD holds 2.5% (~2%). By symmetry, the same percentages apply below the Mean." },
+        { name: "Law 2: Location vs. Spread Transformation Rules", desc: "Adding constant c shifts Mean/Median by +c with zero effect on SD or IQR; multiplying by k > 0 multiplies Mean, Median, SD, and IQR all by k." },
+        { name: "Law 3: Weighted Average Lever Principle", desc: "When combining groups of sizes n1 and n2 with means m1 and m2, the combined mean lies closer to the larger group in inverse ratio n2 : n1." },
+        { name: "Law 4: Quartiles & Interquartile Range (IQR)", desc: "Q1 is the median of the lower half, Q3 is the median of the upper half, and IQR = Q3 − Q1 measures the middle 50% spread immune to extreme outliers." }
       ],
       worked: [
-        { tier: "GRE 155+ Foundation", p: "Normal distribution with mean 60 and SD 8. Percent of values between 52 and 76?", s: "1. 52 is -1 SD (34% below mean); 76 is +2 SD (34% + 13.5% = 47.5% above mean).\n2. Total = 34% + 47.5% = 81.5%." },
-        { tier: "GRE 165+ Contender", p: "Dataset {10, 12, 14, 16, 18} vs {110, 112, 114, 116, 118}. Compare SDs.", s: "1. Adding 100 shifts every point equally without changing spread.\n2. Standard deviations are identical." },
-        { tier: "GRE 170 Perfection", p: "In a normal distribution, 16% of scores exceed 78 and 2.5% exceed 86. Find the mean.", s: "1. 16% above 78 => 78 = Mean + 1 SD. 2.5% above 86 => 86 = Mean + 2 SD.\n2. SD = 86 - 78 = 8 => Mean = 70." }
+        { tier: "GRE 155+ Foundation", p: "A normal distribution has mean 60 and SD 8. What percentage of data lies between 52 and 76?", s: "1. 52 = 60 − 1(8) is 1 SD below the mean -> captures 34% below the mean.
+2. 76 = 60 + 2(8) is 2 SDs above the mean -> captures 34% + 13.5% = 47.5% above the mean.
+3. Total percentage between 52 and 76 = 34% + 47.5% = 81.5%." },
+        { tier: "GRE 155+ Foundation", p: "A class of 20 students averages 78, and a class of 30 students averages 88. Find the combined average.", s: "1. Group ratio is 20 : 30 = 2 : 3.
+2. Combined mean = (2 * 78 + 3 * 88) / (2 + 3) = (156 + 264) / 5 = 420 / 5 = 84." },
+        { tier: "GRE 165+ Contender", p: "Compare SD of Set A = {10, 12, 14, 16, 18} vs. Set B = {110, 112, 114, 116, 118}.", s: "1. Every element of Set B equals the corresponding element of Set A plus 100.
+2. Adding a constant shifts the mean from 14 to 114 without changing distances from the mean.
+3. Standard deviations are equal (Choice C)." },
+        { tier: "GRE 165+ Contender", p: "Find the Interquartile Range (IQR) of the 8 sorted scores: {42, 48, 51, 55, 60, 64, 72, 85}.", s: "1. Lower half (4 values): {42, 48, 51, 55} => Q1 = (48 + 51)/2 = 49.5.
+2. Upper half (4 values): {60, 64, 72, 85} => Q3 = (64 + 72)/2 = 68.0.
+3. IQR = Q3 − Q1 = 68.0 − 49.5 = 18.5." },
+        { tier: "GRE 170 Perfection", p: "In a normal distribution, 16% of scores exceed 78 and 2.5% exceed 86. Find the arithmetic mean.", s: "1. Since 50% − 34% = 16% lie above Mean + 1 SD, 78 = Mean + 1 SD.
+2. Since 50% − 47.5% = 2.5% lie above Mean + 2 SD, 86 = Mean + 2 SD.
+3. Subtracting gives SD = 86 − 78 = 8 => Mean = 78 − 8 = 70." },
+        { tier: "GRE 170 Perfection", p: "Set X has 10 numbers with mean 50 and SD 6. If 50 is added twice to form a 12-number set, how does SD change?", s: "1. Adding values equal to the mean keeps the mean fixed at 50 and adds 0 to sum of squared deviations.
+2. Dividing the same numerator by n = 12 instead of n = 10 strictly reduces the standard deviation." }
       ],
       drills: [
         { tag: "GRE 155+ Foundation • Normal Dist.", q: "In a normal distribution with mean 60 and SD 8, approximately what percent of data lies between 52 and 76?", opts: ["A. 68.0%", "B. 81.5%", "C. 84.0%", "D. 95.0%", "E. 97.5%"], ans: 1, exp: "34% (-1 SD to Mean) + 47.5% (Mean to +2 SD) = 81.5%." },
@@ -1193,7 +1272,7 @@
 
           ${window._GRE_T1_SUB === "THEORY" ? `
             <div class="p-4 rounded-2xl bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 space-y-2 text-xs leading-relaxed text-slate-700 dark:text-slate-300">
-              <div class="font-extrabold uppercase text-[11px] text-indigo-600">ETS GRE Concept Overview &amp; Bridge</div>
+              <div class="flex items-center justify-between"><span class="font-extrabold uppercase text-[11px] text-indigo-600">COMPREHENSIVE CHAPTER OVERVIEW &amp; CONCEPT BRIDGE</span><span class="px-2.5 py-0.5 rounded-full bg-indigo-100 text-indigo-800 text-[10px] font-extrabold">Master Study Guide</span></div>
               <p>${m.overview}</p>
               <p><strong>Concept Bridge:</strong> ${m.bridge}</p>
             </div>
