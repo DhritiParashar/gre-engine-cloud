@@ -716,3 +716,84 @@ document.addEventListener("click", function (e) {
     if (emailInput) setTimeout(() => emailInput.focus(), 50);
   }
 }, true);
+
+
+// ============================================================================
+// UNIFIED POSTGRAD AUTH GATE + STEP-1 REGISTRATION + PROFILE HYDRATION
+// ============================================================================
+window.openPostgradAuthGate = function (mode) {
+  ["pg-boot-auth-gate-style", "pg-hide-gate-style"].forEach(id => {
+    const s = document.getElementById(id);
+    if (s) s.remove();
+  });
+  const el = document.getElementById("login-dashboard-gate");
+  if (!el) return;
+  el.classList.remove("hidden");
+  el.removeAttribute("hidden");
+  el.style.setProperty("display", "flex", "important");
+  el.style.setProperty("opacity", "1", "important");
+  el.style.setProperty("visibility", "visible", "important");
+  el.style.setProperty("pointer-events", "auto", "important");
+  el.style.setProperty("z-index", "99999", "important");
+
+  if (mode === "REGISTER" && typeof window.switchDashboardView === "function") {
+    window.switchDashboardView("register");
+  } else if (typeof window.switchDashboardView === "function") {
+    window.switchDashboardView("login");
+  }
+  const emailInput = el.querySelector('#login-email, #reg-name, input[type="email"]');
+  if (emailInput) setTimeout(() => emailInput.focus(), 50);
+};
+window.openAuthModal = window.openPostgradAuthGate;
+
+window.handleRegStep1 = async function () {
+  const msg = document.getElementById("dash-msg");
+  if (msg) {
+    msg.className = "text-xs text-indigo-400 font-semibold";
+    msg.textContent = "Sending Email Verification OTP...";
+  }
+  const full_name = (document.getElementById("reg-name")?.value || "").trim();
+  const class10_pct = parseFloat(document.getElementById("reg-c10")?.value || "90");
+  const class12_pct = parseFloat(document.getElementById("reg-c12")?.value || "90");
+  const phone = (document.getElementById("reg-phone")?.value || "").trim();
+  const email = (document.getElementById("reg-email")?.value || "").trim().toLowerCase();
+  const password = document.getElementById("reg-pass")?.value || "";
+
+  if (!full_name || !email || password.length < 4) {
+    if (msg) {
+      msg.className = "text-xs text-rose-400 font-semibold";
+      msg.textContent = "Please enter your full name, valid email, and password (min 4 chars).";
+    }
+    return;
+  }
+  window._PENDING_REG_EMAIL = email;
+  try {
+    const r = await fetch("/api/auth/register-otp/init", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ full_name, email, phone, password, class10_pct, class12_pct })
+    });
+    const data = await r.json();
+    if (!r.ok || !data.ok) {
+      if (msg) {
+        msg.className = "text-xs text-rose-400 font-semibold";
+        msg.textContent = window._formatApiError ? window._formatApiError(data, "Could not send OTP.") : (data.error || "Could not send OTP.");
+      }
+      return;
+    }
+    window.IPM_OTP_CHALLENGE_ID = data.challenge_id;
+    document.getElementById("reg-step1")?.classList.add("hidden");
+    document.getElementById("reg-step2")?.classList.remove("hidden");
+    const banner = document.getElementById("reg-otp-banner");
+    if (banner) {
+      banner.innerHTML = `6-digit verification OTP sent to <u>${email}</u> (Ref #${data.ref_id || data.challenge_id}).` +
+        (data.demo_email_otp ? ` <span class="text-amber-300">Sandbox OTP: <strong>${data.demo_email_otp}</strong></span>` : "");
+    }
+    if (msg) msg.textContent = "";
+  } catch (err) {
+    if (msg) {
+      msg.className = "text-xs text-rose-400 font-semibold";
+      msg.textContent = "Network error: " + (err.message || err);
+    }
+  }
+};
