@@ -654,9 +654,8 @@ window.handleRegStep2Verify = async function () {
   }
 };
 
-
 // ============================================================================
-// RESTORED AUTH MODAL / LOGIN GATE OPENER
+// RESTORED AUTH MODAL / LOGIN GATE OPENER (OVERRIDES pg-boot-auth-gate)
 // ============================================================================
 window.openAuthModal = function () {
   const bootStyle = document.getElementById("pg-boot-auth-gate");
@@ -680,7 +679,7 @@ window.closeAuthModal = function () {
     const el = document.getElementById(id);
     if (el) {
       el.classList.add("hidden");
-      el.style.display = "none";
+      el.style.setProperty("display", "none", "important");
     }
   });
 };
