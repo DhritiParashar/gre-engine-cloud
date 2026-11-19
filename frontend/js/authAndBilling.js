@@ -653,3 +653,33 @@ window.handleRegStep2Verify = async function () {
     msg.textContent = "Verification network error: " + (err && err.message ? err.message : err);
   }
 };
+
+
+// ============================================================================
+// RESTORED AUTH MODAL / LOGIN GATE OPENER
+// ============================================================================
+window.openAuthModal = function () {
+  const targets = [
+    document.getElementById("auth-modal"),
+    document.getElementById("login-modal"),
+    document.getElementById("login-dashboard-gate")
+  ].filter(Boolean);
+
+  if (targets.length > 0) {
+    const el = targets[0];
+    el.classList.remove("hidden");
+    el.style.display = "flex";
+    const emailInput = el.querySelector('input[type="email"], input[id*="email"]');
+    if (emailInput) setTimeout(() => emailInput.focus(), 50);
+  }
+};
+
+window.closeAuthModal = function () {
+  ["auth-modal", "login-modal", "login-dashboard-gate"].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) {
+      el.classList.add("hidden");
+      el.style.display = "none";
+    }
+  });
+};
