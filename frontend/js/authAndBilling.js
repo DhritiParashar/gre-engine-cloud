@@ -684,31 +684,35 @@ window.closeAuthModal = function () {
   });
 };
 
-
 // ============================================================================
-// CAPTURE-PHASE CLICK INTERCEPTOR (IMMUNE TO POST-LOAD SCRIPT OVERWRITES)
+// CAPTURE-PHASE CLICK INTERCEPTOR (CATCHES BOTH #auth-header-btn AND pg-boot BUTTON)
 // ============================================================================
 document.addEventListener("click", function (e) {
-  const btn = e.target && e.target.closest("#auth-header-btn");
+  const btn = e.target && e.target.closest("button, a");
   if (!btn) return;
+  const label = (btn.textContent || "").trim();
+  const isLoginBtn = btn.id === "auth-header-btn" || /Login\s*\/\s*Register/i.test(label) || (btn.getAttribute("onclick") || "").includes("openAuthModal");
+  if (!isLoginBtn) return;
+
   const user = window.IPM_USER || JSON.parse(localStorage.getItem("ipm_user_profile") || localStorage.getItem("ipm_user") || "{}");
-  if (user && user.full_name) {
+  if (user && user.full_name && /Logout|Exit/i.test(label)) {
     if (typeof window.logoutStudent === "function") window.logoutStudent(e);
-  } else {
-    e.preventDefault();
-    e.stopImmediatePropagation();
-    const bootStyle = document.getElementById("pg-boot-auth-gate");
-    if (bootStyle) bootStyle.remove();
-    const el = document.getElementById("login-dashboard-gate") || document.getElementById("auth-modal");
-    if (el) {
-      el.classList.remove("hidden");
-      el.style.setProperty("display", "flex", "important");
-      el.style.setProperty("opacity", "1", "important");
-      el.style.setProperty("visibility", "visible", "important");
-      el.style.setProperty("pointer-events", "auto", "important");
-      el.style.setProperty("z-index", "99999", "important");
-      const emailInput = el.querySelector('#login-email, input[type="email"]');
-      if (emailInput) setTimeout(() => emailInput.focus(), 50);
-    }
+    return;
+  }
+
+  e.preventDefault();
+  e.stopImmediatePropagation();
+  const bootStyle = document.getElementById("pg-boot-auth-gate");
+  if (bootStyle) bootStyle.remove();
+  const el = document.getElementById("login-dashboard-gate") || document.getElementById("auth-modal");
+  if (el) {
+    el.classList.remove("hidden");
+    el.style.setProperty("display", "flex", "important");
+    el.style.setProperty("opacity", "1", "important");
+    el.style.setProperty("visibility", "visible", "important");
+    el.style.setProperty("pointer-events", "auto", "important");
+    el.style.setProperty("z-index", "99999", "important");
+    const emailInput = el.querySelector('#login-email, input[type="email"]');
+    if (emailInput) setTimeout(() => emailInput.focus(), 50);
   }
 }, true);
