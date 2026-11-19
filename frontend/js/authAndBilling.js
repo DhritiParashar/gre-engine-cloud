@@ -530,9 +530,9 @@ window.syncHeaderLogoutUI = function () {
       const walker = document.createTreeWalker(header, NodeFilter.SHOW_TEXT, null);
       let node;
       while ((node = walker.nextNode())) {
-        if (node.nodeValue && node.nodeValue.includes("Dina Shah")) {
+        if (node.nodeValue && (node.nodeValue.includes("Dina Shah") || node.nodeValue.includes("Guest Aspirant"))) {
           const targetName = (user && user.full_name) ? user.full_name : "Guest Aspirant";
-          node.nodeValue = node.nodeValue.replace(/Dina Shah/g, targetName);
+          node.nodeValue = node.nodeValue.replace(/Dina Shah|Guest Aspirant/g, targetName);
         }
       }
     }
