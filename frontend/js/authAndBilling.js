@@ -659,17 +659,18 @@ window.handleRegStep2Verify = async function () {
 // RESTORED AUTH MODAL / LOGIN GATE OPENER
 // ============================================================================
 window.openAuthModal = function () {
-  const targets = [
-    document.getElementById("auth-modal"),
-    document.getElementById("login-modal"),
-    document.getElementById("login-dashboard-gate")
-  ].filter(Boolean);
+  const bootStyle = document.getElementById("pg-boot-auth-gate");
+  if (bootStyle) bootStyle.remove();
 
-  if (targets.length > 0) {
-    const el = targets[0];
+  const el = document.getElementById("login-dashboard-gate") || document.getElementById("auth-modal");
+  if (el) {
     el.classList.remove("hidden");
-    el.style.display = "flex";
-    const emailInput = el.querySelector('input[type="email"], input[id*="email"]');
+    el.style.setProperty("display", "flex", "important");
+    el.style.setProperty("opacity", "1", "important");
+    el.style.setProperty("visibility", "visible", "important");
+    el.style.setProperty("pointer-events", "auto", "important");
+    el.style.setProperty("z-index", "9999", "important");
+    const emailInput = el.querySelector('#login-email, input[type="email"]');
     if (emailInput) setTimeout(() => emailInput.focus(), 50);
   }
 };
