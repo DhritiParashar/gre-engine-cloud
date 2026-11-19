@@ -32,7 +32,7 @@ window.syncLoginGateVisibility = function () {
   }
 };
 
-window.renderHeaderAccountBar = function () { const user = window.IPM_USER || JSON.parse(localStorage.getItem("goalisb_postgrad_profile_v1") || localStorage.getItem("ipm_user") || "{}");
+window.renderHeaderAccountBar = function () { const user = window.IPM_USER || JSON.parse(localStorage.getItem("ipm_user_profile") || localStorage.getItem("goalisb_postgrad_profile_v1") || localStorage.getItem("ipm_user") || "{}");
   window.syncLoginGateVisibility();
   const pill = document.getElementById("header-profile-summary");
   const authBtn = document.getElementById("auth-header-btn");
@@ -495,7 +495,7 @@ window.syncHeaderLogoutUI = function () {
   if (window._syncingHeader) return;
   window._syncingHeader = true;
   try {
-    const user = window.IPM_USER;
+    const user = window.IPM_USER || JSON.parse(localStorage.getItem("ipm_user_profile") || localStorage.getItem("ipm_user") || "{}");
     const header = document.querySelector("header");
     if (header) {
       const pill = document.getElementById("header-profile-summary");
