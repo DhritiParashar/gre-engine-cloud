@@ -745,6 +745,9 @@ def seed_full_pyq_archive_to_postgres():
 
     with engine.begin() as conn:
         for q_code, tags, sec, qtype, topic, prompt, opts, ans, exp, yr, ex_name in pyq_records:
+            conn.execute(text("ALTER TABLE ipm_questions ADD COLUMN IF NOT EXISTS pyq_exam VARCHAR(120)"))
+            conn.execute(text("ALTER TABLE ipm_questions ADD COLUMN IF NOT EXISTS is_pyq BOOLEAN DEFAULT FALSE"))
+            conn.execute(text("ALTER TABLE ipm_questions ADD COLUMN IF NOT EXISTS q_code VARCHAR(120)"))
             conn.execute(text("""
                 INSERT INTO ipm_questions (q_code, source_tag, section, topic, exam_tags, q_type, difficulty, prompt, options_json, answer, explanation, is_pyq, pyq_year, pyq_exam)
                 VALUES (:qc, 'PYQ_2022_2026', :sec, :top, :tags, :qt, 'Medium-Hard', :pr, :opts, :ans, :exp, TRUE, :yr, :ex)
@@ -795,8 +798,6 @@ def get_pyq_questions_from_db(exam: str = "ALL", year: str = "ALL") -> list:
 
 with engine.begin() as conn:
     conn.execute(text("""
-        conn.execute(text("ALTER TABLE ipm_questions ADD COLUMN IF NOT EXISTS pyq_exam VARCHAR(120)"))
-        conn.execute(text("ALTER TABLE ipm_questions ADD COLUMN IF NOT EXISTS q_code VARCHAR(120)"))
         UPDATE ipm_questions
         SET pyq_exam = CASE
             WHEN q_code LIKE '%IIMB%' OR pyq_exam LIKE '%Bangalore%' OR pyq_exam LIKE '%IIMB%' THEN 'IIM Bangalore'
