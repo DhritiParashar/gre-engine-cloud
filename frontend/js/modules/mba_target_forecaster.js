@@ -1,7 +1,7 @@
 // ==============================================================================
-// GOALisB UNIFIED 7-TAB STREAMLINED ARCHITECTURE (GRE | GMAT | CAT & OMETs)
-// - Tab 4: Full-Length Proctored Mock ONLY (correlated to active Top Mode Pill)
-// - Tab 5: Sectional & Sprint Practice Mocks (excluded from Tab 7 Forecaster)
+// GOALisB UNIFIED 7-TAB STREAMLINED ARCHITECTURE (v3 - Persistent 7-Tab & Mode-Reactive Tab 4)
+// - Tab 4: Mode-Reactive Proctored Mock (adapts Q count, timer & pool to active Top Mode Pill)
+// - Tab 5: Sectional & Sprint Practice Mocks (always visible in header bar)
 // - Tab 6: Trap Doctor & AI Doubts
 // - Tab 7: Mode-Isolated Target Lock, Sync Mock & Achievement vs. Deficiency
 // ==============================================================================
@@ -32,14 +32,15 @@
           title: "Section-Adaptive Score & Target Forecaster",
           unit: "GRE Pts",
           fullMinQs: 54,
+          bpIndex: 0,
           fullBpTitle: "Full GRE General Section-Adaptive Simulation (54 Qs • 118 Mins)",
           fullBpDesc: "Quant Stage 1 + Hard Stage 2 (27 Qs • 47m) + Verbal Stage 1 + Hard Stage 2 (27 Qs • 41m) + AWA (30m) on the 260–340 scale.",
           fullMins: 118,
           sprints: [
-            { id: "GRE_Q", count: 27, mins: 47, sec: "QUANT", tag: "QUANT SECTIONAL • 47 MINS", title: "Quantitative Reasoning QC & PS Sectional (27 Qs • 47m)", desc: "Quantitative Comparison (Choices A–D), 5-Option Problem Solving (A–E) & Data Interpretation (130–170 Scale)." },
-            { id: "GRE_V", count: 27, mins: 41, sec: "VERBAL", tag: "VERBAL SECTIONAL • 41 MINS", title: "Verbal Reasoning TC, SE & RC Sectional (27 Qs • 41m)", desc: "1/2/3-Blank Text Completion, 6-Choice Sentence Equivalence pairs & Academic Reading Comp (130–170 Scale)." },
-            { id: "GRE_Q170", count: 20, mins: 30, sec: "QUANT", tag: "170 CEILING HARD POOL", title: "Quant 170 Perfection Hard-Stage Sprint (20 Qs • 30m)", desc: "Upper-quartile Hard Stage 2 items: FROZEN QC boundary traps, 3D geometry & normal distributions." },
-            { id: "GRE_V165", count: 20, mins: 30, sec: "VERBAL", tag: "165+ VERBAL HARD POOL", title: "Verbal 165+ Contrast & Inference Sprint (20 Qs • 30m)", desc: "Multi-clause logic hinges, subtle SE semantic pairs & dense humanities/science inference passages." }
+            { id: "GRE_Q", bpIdx: 1, count: 27, mins: 47, sec: "QUANT", tag: "QUANT SECTIONAL • 47 MINS", title: "Quantitative Reasoning QC & PS Sectional (27 Qs • 47m)", desc: "Quantitative Comparison (Choices A–D), 5-Option Problem Solving (A–E) & Data Interpretation (130–170 Scale)." },
+            { id: "GRE_V", bpIdx: 2, count: 27, mins: 41, sec: "VERBAL", tag: "VERBAL SECTIONAL • 41 MINS", title: "Verbal Reasoning TC, SE & RC Sectional (27 Qs • 41m)", desc: "1/2/3-Blank Text Completion, 6-Choice Sentence Equivalence pairs & Academic Reading Comp (130–170 Scale)." },
+            { id: "GRE_Q170", bpIdx: 3, count: 20, mins: 30, sec: "QUANT", tag: "170 CEILING HARD POOL", title: "Quant 170 Perfection Hard-Stage Sprint (20 Qs • 30m)", desc: "Upper-quartile Hard Stage 2 items: FROZEN QC boundary traps, 3D geometry & normal distributions." },
+            { id: "GRE_V165", bpIdx: 4, count: 20, mins: 30, sec: "VERBAL", tag: "165+ VERBAL HARD POOL", title: "Verbal 165+ Contrast & Inference Sprint (20 Qs • 30m)", desc: "Multi-clause logic hinges, subtle SE semantic pairs & dense humanities/science inference passages." }
           ],
           sections: [
             { id: "s1", label: "Quantitative Reasoning (27 Qs • 47m)", min: 130, max: 170, step: 1, def: 167 },
@@ -50,17 +51,18 @@
         Q170: {
           key: "goalisb_gre_target_Q170_v1",
           badge: "QUANT 170 PERFECTION SPRINT",
-          kicker: "GRE QUANT 170 CEILING ENGINE (260–340 SCALE)",
+          kicker: "GRE QUANT 170 CEILING ENGINE (130–170 Q)",
           title: "Quant 170 Perfection Target & Routing Forecaster",
           unit: "GRE Pts",
-          fullMinQs: 54,
-          fullBpTitle: "Full GRE General Simulation — Quant 170 Hard-Stage Track (54 Qs • 118 Mins)",
-          fullBpDesc: "Calibrated for STEM / CS / Engineering applicants targeting Q169–170 with Hard Stage-2 Quant routing unlocked.",
-          fullMins: 118,
+          fullMinQs: 27,
+          bpIndex: 1,
+          fullBpTitle: "Quant 170 Perfection Adaptive Simulation (27 Qs • 47 Mins)",
+          fullBpDesc: "Stage 1 (12 Qs • 21m) + Hard Stage 2 (15 Qs • 26m) calibrated for 170 Quant ceiling with zero guessing penalty.",
+          fullMins: 47,
           sprints: [
-            { id: "GRE_Q170", count: 20, mins: 30, sec: "QUANT", tag: "PRIMARY MODE DRILL • 170 POOL", title: "Quant 170 Perfection Hard-Stage Sprint (20 Qs • 30m)", desc: "Upper-quartile Hard Stage 2 items: FROZEN QC boundary traps, 3D geometry & normal distributions." },
-            { id: "GRE_Q", count: 27, mins: 47, sec: "QUANT", tag: "QUANT SECTIONAL • 47 MINS", title: "Quantitative Reasoning QC & PS Sectional (27 Qs • 47m)", desc: "Full 27-question timed Quant simulation on the 130–170 scale." },
-            { id: "GRE_V", count: 27, mins: 41, sec: "VERBAL", tag: "VERBAL SECTIONAL • 41 MINS", title: "Verbal Reasoning TC, SE & RC Sectional (27 Qs • 41m)", desc: "Full 27-question timed Verbal simulation on the 130–170 scale." }
+            { id: "GRE_Q170", bpIdx: 3, count: 20, mins: 30, sec: "QUANT", tag: "170 HARD POOL • 30 MINS", title: "Quant 170 Perfection Hard-Stage Sprint (20 Qs • 30m)", desc: "Upper-quartile Hard Stage 2 items: FROZEN QC boundary traps, 3D geometry & normal distributions." },
+            { id: "GRE_Q", bpIdx: 1, count: 27, mins: 47, sec: "QUANT", tag: "QUANT SECTIONAL • 47 MINS", title: "Quantitative Reasoning QC & PS Sectional (27 Qs • 47m)", desc: "Full 27-question timed Quant simulation on the 130–170 scale." },
+            { id: "GRE_V", bpIdx: 2, count: 27, mins: 41, sec: "VERBAL", tag: "VERBAL SECTIONAL • 41 MINS", title: "Verbal Reasoning TC, SE & RC Sectional (27 Qs • 41m)", desc: "Full 27-question timed Verbal simulation on the 130–170 scale." }
           ],
           sections: [
             { id: "s1", label: "Quantitative Reasoning (27 Qs • 47m)", min: 130, max: 170, step: 1, def: 170 },
@@ -71,17 +73,18 @@
         V165: {
           key: "goalisb_gre_target_V165_v1",
           badge: "VERBAL 165+ & AWA 5.5 STUDIO",
-          kicker: "GRE VERBAL 165+ & AWA 5.5 ENGINE (260–340 SCALE)",
+          kicker: "GRE VERBAL 165+ & AWA 5.5 ENGINE (130–170 V)",
           title: "Verbal 165+ & AWA 5.5 Target Forecaster",
           unit: "GRE Pts",
-          fullMinQs: 54,
-          fullBpTitle: "Full GRE General Simulation — Verbal 165+ & AWA Track (54 Qs • 118 Mins)",
-          fullBpDesc: "Calibrated for Humanities, Policy, Economics & MBA applicants targeting V165+ and AWA 5.5.",
-          fullMins: 118,
+          fullMinQs: 27,
+          bpIndex: 2,
+          fullBpTitle: "Verbal 165+ Adaptive Simulation (27 Qs • 41 Mins)",
+          fullBpDesc: "Text Completion, Sentence Equivalence & Reading Comp Stage 1 + Hard Stage 2 calibrated for V165+.",
+          fullMins: 41,
           sprints: [
-            { id: "GRE_V165", count: 20, mins: 30, sec: "VERBAL", tag: "PRIMARY MODE DRILL • 165+ POOL", title: "Verbal 165+ Contrast & Inference Sprint (20 Qs • 30m)", desc: "Multi-clause logic hinges, subtle SE semantic pairs & dense humanities/science inference passages." },
-            { id: "GRE_V", count: 27, mins: 41, sec: "VERBAL", tag: "VERBAL SECTIONAL • 41 MINS", title: "Verbal Reasoning TC, SE & RC Sectional (27 Qs • 41m)", desc: "Full 27-question timed Verbal simulation on the 130–170 scale." },
-            { id: "GRE_Q", count: 27, mins: 47, sec: "QUANT", tag: "QUANT SECTIONAL • 47 MINS", title: "Quantitative Reasoning QC & PS Sectional (27 Qs • 47m)", desc: "Full 27-question timed Quant simulation on the 130–170 scale." }
+            { id: "GRE_V165", bpIdx: 4, count: 20, mins: 30, sec: "VERBAL", tag: "165+ HARD POOL • 30 MINS", title: "Verbal 165+ Contrast & Inference Sprint (20 Qs • 30m)", desc: "Multi-clause logic hinges, subtle SE semantic pairs & dense humanities/science inference passages." },
+            { id: "GRE_V", bpIdx: 2, count: 27, mins: 41, sec: "VERBAL", tag: "VERBAL SECTIONAL • 41 MINS", title: "Verbal Reasoning TC, SE & RC Sectional (27 Qs • 41m)", desc: "Full 27-question timed Verbal simulation on the 130–170 scale." },
+            { id: "GRE_Q", bpIdx: 1, count: 27, mins: 47, sec: "QUANT", tag: "QUANT SECTIONAL • 47 MINS", title: "Quantitative Reasoning QC & PS Sectional (27 Qs • 47m)", desc: "Full 27-question timed Quant simulation on the 130–170 scale." }
           ],
           sections: [
             { id: "s1", label: "Quantitative Reasoning (27 Qs • 47m)", min: 130, max: 170, step: 1, def: 163 },
@@ -136,14 +139,15 @@
           title: "Score, Percentile & Adaptive Forecaster",
           unit: "Focus Pts",
           fullMinQs: 64,
+          bpIndex: 0,
           fullBpTitle: "Full GMAT Focus Official Simulation (64 Qs • 135 Mins)",
           fullBpDesc: "QR (21 Qs • 45m) + VR (23 Qs • 45m) + DI (20 Qs • 45m) on the 205–805 scale with 5 choices (A–E) & up to 3 Review Edits/section.",
           fullMins: 135,
           sprints: [
-            { id: "GMAT_QR", count: 21, mins: 45, sec: "QR", tag: "QUANT SECTIONAL • 45 MINS", title: "Quantitative Reasoning (Zero Geometry • 21 Qs • 45m)", desc: "Problem Solving (Choices A–E) across Algebra, Arithmetic, Number Properties & Word Problems (60–90 Scale)." },
-            { id: "GMAT_VR", count: 23, mins: 45, sec: "VR", tag: "VERBAL SECTIONAL • 45 MINS", title: "Verbal Reasoning CR & RC Clinic (23 Qs • 45m)", desc: "Zero-Sentence-Correction Critical Reasoning & Analytical Reading Comprehension simulation (60–90 Scale)." },
-            { id: "GMAT_DI", count: 20, mins: 45, sec: "DI", tag: "DATA INSIGHTS • 45 MINS", title: "Data Insights Deep Clinic (20 Qs • 45m)", desc: "Data Sufficiency (AD/BCE), Multi-Source Reasoning, Two-Part Analysis & Graphics Interpretation (60–90 Scale)." },
-            { id: "GMAT_705", count: 30, mins: 60, sec: "ALL", tag: "99TH %ILE HARD POOL", title: "Target 705+ Elite (99th %ile) Adaptive Sprint (30 Qs • 60m)", desc: "Upper-quartile 705–805 discriminator items engineered to protect early Q1–Q6 adaptive trajectory." }
+            { id: "GMAT_QR", bpIdx: 1, count: 21, mins: 45, sec: "QR", tag: "QUANT SECTIONAL • 45 MINS", title: "Quantitative Reasoning (Zero Geometry • 21 Qs • 45m)", desc: "Problem Solving (Choices A–E) across Algebra, Arithmetic, Number Properties & Word Problems (60–90 Scale)." },
+            { id: "GMAT_VR", bpIdx: 2, count: 23, mins: 45, sec: "VR", tag: "VERBAL SECTIONAL • 45 MINS", title: "Verbal Reasoning CR & RC Clinic (23 Qs • 45m)", desc: "Zero-Sentence-Correction Critical Reasoning & Analytical Reading Comprehension simulation (60–90 Scale)." },
+            { id: "GMAT_DI", bpIdx: 3, count: 20, mins: 45, sec: "DI", tag: "DATA INSIGHTS • 45 MINS", title: "Data Insights Deep Clinic (20 Qs • 45m)", desc: "Data Sufficiency (AD/BCE), Multi-Source Reasoning, Two-Part Analysis & Graphics Interpretation (60–90 Scale)." },
+            { id: "GMAT_705", bpIdx: 4, count: 30, mins: 60, sec: "ALL", tag: "99TH %ILE HARD POOL", title: "Target 705+ Elite (99th %ile) Adaptive Sprint (30 Qs • 60m)", desc: "Upper-quartile 705–805 discriminator items engineered to protect early Q1–Q6 adaptive trajectory." }
           ],
           sections: [
             { id: "s1", label: "Quantitative Reasoning (21 Qs • 45m)", min: 60, max: 90, step: 1, def: 85 },
@@ -154,17 +158,18 @@
         DI_CLINIC: {
           key: "goalisb_gmat_target_DI_CLINIC_v1",
           badge: "DATA INSIGHTS DEEP CLINIC",
-          kicker: "GMAT DATA INSIGHTS (60–90) SPECIALIST ENGINE",
+          kicker: "GMAT DATA INSIGHTS (20 Qs • 45 MIN) ENGINE",
           title: "Data Insights & Composite Target Forecaster",
           unit: "Focus Pts",
-          fullMinQs: 64,
-          fullBpTitle: "Full GMAT Focus Simulation — Data Insights Specialist Track (64 Qs • 135 Mins)",
-          fullBpDesc: "Full 64-Question GMAT Focus simulation calibrated for DI 86–90 mastery alongside QR and VR.",
-          fullMins: 135,
+          fullMinQs: 20,
+          bpIndex: 3,
+          fullBpTitle: "Data Insights Deep Clinic Simulation (20 Qs • 45 Mins)",
+          fullBpDesc: "Data Sufficiency (8 Qs) • Multi-Source Reasoning (6 Qs) • Two-Part & Graphics (6 Qs) on the 60–90 DI scale with on-screen calculator.",
+          fullMins: 45,
           sprints: [
-            { id: "GMAT_DI", count: 20, mins: 45, sec: "DI", tag: "PRIMARY MODE DRILL • 45 MINS", title: "Data Insights Deep Clinic (20 Qs • 45m)", desc: "Data Sufficiency (AD/BCE), Multi-Source Reasoning, Two-Part Analysis & Graphics Interpretation (60–90 Scale)." },
-            { id: "GMAT_QR", count: 21, mins: 45, sec: "QR", tag: "QUANT SECTIONAL • 45 MINS", title: "Quantitative Reasoning (Zero Geometry • 21 Qs • 45m)", desc: "Problem Solving (Choices A–E) across Algebra, Arithmetic & Word Problems (60–90 Scale)." },
-            { id: "GMAT_VR", count: 23, mins: 45, sec: "VR", tag: "VERBAL SECTIONAL • 45 MINS", title: "Verbal Reasoning CR & RC Clinic (23 Qs • 45m)", desc: "Critical Reasoning & Analytical Reading Comprehension simulation (60–90 Scale)." }
+            { id: "GMAT_DI", bpIdx: 3, count: 20, mins: 45, sec: "DI", tag: "DATA INSIGHTS • 45 MINS", title: "Data Insights Deep Clinic (20 Qs • 45m)", desc: "Data Sufficiency (AD/BCE), Multi-Source Reasoning, Two-Part Analysis & Graphics Interpretation (60–90 Scale)." },
+            { id: "GMAT_QR", bpIdx: 1, count: 21, mins: 45, sec: "QR", tag: "QUANT SECTIONAL • 45 MINS", title: "Quantitative Reasoning (Zero Geometry • 21 Qs • 45m)", desc: "Problem Solving (Choices A–E) across Algebra, Arithmetic & Word Problems (60–90 Scale)." },
+            { id: "GMAT_VR", bpIdx: 2, count: 23, mins: 45, sec: "VR", tag: "VERBAL SECTIONAL • 45 MINS", title: "Verbal Reasoning CR & RC Clinic (23 Qs • 45m)", desc: "Critical Reasoning & Analytical Reading Comprehension simulation (60–90 Scale)." }
           ],
           sections: [
             { id: "s1", label: "Quantitative Reasoning (21 Qs • 45m)", min: 60, max: 90, step: 1, def: 84 },
@@ -175,17 +180,18 @@
         SPRINT_705: {
           key: "goalisb_gmat_target_SPRINT_705_v1",
           badge: "TARGET 705+ ELITE (99TH %ILE)",
-          kicker: "GMAT 705+ M7 / WHARTON ELITE ENGINE (205–805 SCALE)",
+          kicker: "GMAT 705+ M7 / WHARTON ELITE ENGINE (HARD POOL)",
           title: "705+ Elite (99th %ile) Target & Forecaster",
           unit: "Focus Pts",
-          fullMinQs: 64,
-          fullBpTitle: "Full GMAT Focus Simulation — 705+ Elite M7 Track (64 Qs • 135 Mins)",
-          fullBpDesc: "Full 64-Question GMAT Focus simulation calibrated for Harvard, Stanford GSB, Wharton & MIT Sloan cutoffs.",
-          fullMins: 135,
+          fullMinQs: 30,
+          bpIndex: 4,
+          fullBpTitle: "Target 705+ Elite (99th %ile) Hard-Pool Simulation (30 Qs • 60 Mins)",
+          fullBpDesc: "Upper-quartile 705–805 adaptive items (QR 86+ / VR 85+ / DI 85+ band) with max 2.0 mins/Q pacing & zero unanswered blanks.",
+          fullMins: 60,
           sprints: [
-            { id: "GMAT_705", count: 30, mins: 60, sec: "ALL", tag: "PRIMARY MODE DRILL • 99TH %ILE", title: "Target 705+ Elite (99th %ile) Adaptive Sprint (30 Qs • 60m)", desc: "Upper-quartile 705–805 discriminator items engineered to protect early Q1–Q6 adaptive trajectory." },
-            { id: "GMAT_DI", count: 20, mins: 45, sec: "DI", tag: "DATA INSIGHTS • 45 MINS", title: "Data Insights Deep Clinic (20 Qs • 45m)", desc: "Data Sufficiency (AD/BCE), Multi-Source Reasoning & Two-Part Analysis (60–90 Scale)." },
-            { id: "GMAT_QR", count: 21, mins: 45, sec: "QR", tag: "QUANT SECTIONAL • 45 MINS", title: "Quantitative Reasoning (Zero Geometry • 21 Qs • 45m)", desc: "Problem Solving (Choices A–E) across Algebra, Arithmetic & Word Problems (60–90 Scale)." }
+            { id: "GMAT_705", bpIdx: 4, count: 30, mins: 60, sec: "ALL", tag: "99TH %ILE HARD POOL • 60 MINS", title: "Target 705+ Elite (99th %ile) Adaptive Sprint (30 Qs • 60m)", desc: "Upper-quartile 705–805 discriminator items engineered to protect early Q1–Q6 adaptive trajectory." },
+            { id: "GMAT_DI", bpIdx: 3, count: 20, mins: 45, sec: "DI", tag: "DATA INSIGHTS • 45 MINS", title: "Data Insights Deep Clinic (20 Qs • 45m)", desc: "Data Sufficiency (AD/BCE), Multi-Source Reasoning & Two-Part Analysis (60–90 Scale)." },
+            { id: "GMAT_QR", bpIdx: 1, count: 21, mins: 45, sec: "QR", tag: "QUANT SECTIONAL • 45 MINS", title: "Quantitative Reasoning (Zero Geometry • 21 Qs • 45m)", desc: "Problem Solving (Choices A–E) across Algebra, Arithmetic & Word Problems (60–90 Scale)." }
           ],
           sections: [
             { id: "s1", label: "Quantitative Reasoning (21 Qs • 45m)", min: 60, max: 90, step: 1, def: 87 },
@@ -242,13 +248,14 @@
         title: "CAT Score, Percentile & IIM Call Forecaster",
         unit: "Marks",
         fullMinQs: 66,
+        bpIndex: 0,
         fullBpTitle: "Full CAT Official Simulation (66 Qs • 120 Mins)",
         fullBpDesc: "VARC (24 Qs • 40m) + DILR (20 Qs • 40m) + QA (22 Qs • 40m) on the 198-mark scale with +3/-1 MCQ & zero-penalty TITA.",
         fullMins: 120,
         sprints: [
-          { id: "CAT_VARC", count: 24, mins: 40, sec: "VARC", tag: "VARC SECTIONAL • 40 MINS", title: "CAT VARC Sectional Drill (24 Qs • 40m)", desc: "4 Reading Comprehension passages + 8 Verbal Ability TITA items (+3/-1 MCQ, +3/0 TITA)." },
-          { id: "CAT_DILR", count: 20, mins: 40, sec: "DILR", tag: "DILR SECTIONAL • 40 MINS", title: "CAT DILR 4-Caselet Sectional Drill (20 Qs • 40m)", desc: "4 multi-constraint Data Interpretation & Logical Reasoning sets under strict 40-minute timer." },
-          { id: "CAT_QA", count: 22, mins: 40, sec: "QUANT", tag: "QA SECTIONAL • 40 MINS", title: "CAT Quantitative Aptitude Sectional Drill (22 Qs • 40m)", desc: "Arithmetic, Algebra, Geometry & Number System (+3/-1 MCQ & TITA)." }
+          { id: "CAT_VARC", bpIdx: 1, count: 24, mins: 40, sec: "VARC", tag: "VARC SECTIONAL • 40 MINS", title: "CAT VARC Sectional Drill (24 Qs • 40m)", desc: "4 Reading Comprehension passages + 8 Verbal Ability TITA items (+3/-1 MCQ, +3/0 TITA)." },
+          { id: "CAT_DILR", bpIdx: 2, count: 20, mins: 40, sec: "DILR", tag: "DILR SECTIONAL • 40 MINS", title: "CAT DILR 4-Caselet Sectional Drill (20 Qs • 40m)", desc: "4 multi-constraint Data Interpretation & Logical Reasoning sets under strict 40-minute timer." },
+          { id: "CAT_QA", bpIdx: 3, count: 22, mins: 40, sec: "QUANT", tag: "QA SECTIONAL • 40 MINS", title: "CAT Quantitative Aptitude Sectional Drill (22 Qs • 40m)", desc: "Arithmetic, Algebra, Geometry & Number System (+3/-1 MCQ & TITA)." }
         ],
         sections: [
           { id: "s1", label: "VARC Raw (24 Qs • 40 Mins)", min: 0, max: 72, step: 1, def: 40 },
@@ -304,13 +311,14 @@
         title: "XAT Score, Percentile & XLRI Forecaster",
         unit: "Marks",
         fullMinQs: 75,
+        bpIndex: 0,
         fullBpTitle: "Full XAT Official Simulation (75 Qs • 165 Mins)",
         fullBpDesc: "VALR (26 Qs) + Decision Making (21 Qs) + QADI (28 Qs) with 5 choices (A–E) & +1/-0.25 marking.",
         fullMins: 165,
         sprints: [
-          { id: "XAT_DM", count: 21, mins: 50, sec: "DILR", tag: "DECISION MAKING • 50 MINS", title: "XAT Decision Making Caselet Sprint (21 Qs • 50m)", desc: "Ethical dilemmas, business trade-offs & stakeholder prioritization (5 choices A–E)." },
-          { id: "XAT_VALR", count: 26, mins: 55, sec: "VARC", tag: "VALR SECTIONAL • 55 MINS", title: "XAT Verbal & Logical Reasoning Drill (26 Qs • 55m)", desc: "Abstract RC, Poem comprehension, Critical Reasoning & Grammar (+1/-0.25)." },
-          { id: "XAT_QADI", count: 28, mins: 60, sec: "QUANT", tag: "QADI SECTIONAL • 60 MINS", title: "XAT Quantitative & Data Interpretation Drill (28 Qs • 60m)", desc: "High-difficulty Geometry, Functions, Probability & Multi-chart DI (+1/-0.25)." }
+          { id: "XAT_DM", bpIdx: 1, count: 21, mins: 50, sec: "DILR", tag: "DECISION MAKING • 50 MINS", title: "XAT Decision Making Caselet Sprint (21 Qs • 50m)", desc: "Ethical dilemmas, business trade-offs & stakeholder prioritization (5 choices A–E)." },
+          { id: "XAT_VALR", bpIdx: 2, count: 26, mins: 55, sec: "VARC", tag: "VALR SECTIONAL • 55 MINS", title: "XAT Verbal & Logical Reasoning Drill (26 Qs • 55m)", desc: "Abstract RC, Poem comprehension, Critical Reasoning & Grammar (+1/-0.25)." },
+          { id: "XAT_QADI", bpIdx: 3, count: 28, mins: 60, sec: "QUANT", tag: "QADI SECTIONAL • 60 MINS", title: "XAT Quantitative & Data Interpretation Drill (28 Qs • 60m)", desc: "High-difficulty Geometry, Functions, Probability & Multi-chart DI (+1/-0.25)." }
         ],
         sections: [
           { id: "s1", label: "VALR (26 Qs • +1/-0.25)", min: 0, max: 26, step: 1, def: 14 },
@@ -356,13 +364,14 @@
         title: "NMAT Scaled Score & NMIMS Forecaster",
         unit: "Scaled Pts",
         fullMinQs: 108,
+        bpIndex: 0,
         fullBpTitle: "Full NMAT Adaptive Simulation (108 Qs • 120 Mins)",
         fullBpDesc: "Language Skills (36 Qs • 28m) + Logical Reasoning (36 Qs • 40m) + Quant Skills (36 Qs • 52m) with zero negative marking.",
         fullMins: 120,
         sprints: [
-          { id: "NMAT_LS", count: 36, mins: 28, sec: "VARC", tag: "LANGUAGE SKILLS • 28 MINS", title: "NMAT Language Skills Speed Drill (36 Qs • 28m)", desc: "46 seconds/question vocabulary analogies, grammar & RC sprint (zero negative marking)." },
-          { id: "NMAT_LR", count: 36, mins: 40, sec: "DILR", tag: "LOGICAL REASONING • 40 MINS", title: "NMAT Logical Reasoning Sprint (36 Qs • 40m)", desc: "Critical reasoning, input-output, arrangements & syllogisms under strict 40m timer." },
-          { id: "NMAT_QS", count: 36, mins: 52, sec: "QUANT", tag: "QUANT SKILLS • 52 MINS", title: "NMAT Quantitative Skills Sprint (36 Qs • 52m)", desc: "Arithmetic, Modern Math & Data Sufficiency with 100% completion sweep." }
+          { id: "NMAT_LS", bpIdx: 1, count: 36, mins: 28, sec: "VARC", tag: "LANGUAGE SKILLS • 28 MINS", title: "NMAT Language Skills Speed Drill (36 Qs • 28m)", desc: "46 seconds/question vocabulary analogies, grammar & RC sprint (zero negative marking)." },
+          { id: "NMAT_LR", bpIdx: 2, count: 36, mins: 40, sec: "DILR", tag: "LOGICAL REASONING • 40 MINS", title: "NMAT Logical Reasoning Sprint (36 Qs • 40m)", desc: "Critical reasoning, input-output, arrangements & syllogisms under strict 40m timer." },
+          { id: "NMAT_QS", bpIdx: 3, count: 36, mins: 52, sec: "QUANT", tag: "QUANT SKILLS • 52 MINS", title: "NMAT Quantitative Skills Sprint (36 Qs • 52m)", desc: "Arithmetic, Modern Math & Data Sufficiency with 100% completion sweep." }
         ],
         sections: [
           { id: "s1", label: "Language Skills (36 Qs • 28m)", min: 0, max: 36, step: 1, def: 26 },
@@ -409,13 +418,14 @@
         title: "SNAP Scaled Score & SIBM / SCMHRD Forecaster",
         unit: "Marks",
         fullMinQs: 60,
+        bpIndex: 0,
         fullBpTitle: "Full SNAP Speed Simulation (60 Qs • 60 Mins)",
         fullBpDesc: "General English (15 Qs) + Analytical & LR (25 Qs) + QA, DI & DS (20 Qs) at 1.0 min/question (+1/-0.25).",
         fullMins: 60,
         sprints: [
-          { id: "SNAP_LR", count: 25, mins: 25, sec: "DILR", tag: "HIGH-WEIGHTAGE LR • 25 MINS", title: "SNAP Analytical & Logical Reasoning Sprint (25 Qs • 25m)", desc: "Clocks, Calendars, Coding-Decoding, Blood Relations & Series at 60s/Q." },
-          { id: "SNAP_QA", count: 20, mins: 22, sec: "QUANT", tag: "QA, DI & DS • 22 MINS", title: "SNAP Quant, DI & Data Sufficiency Sprint (20 Qs • 22m)", desc: "Fast ratio arithmetic, percentages & single-chart DI (+1/-0.25)." },
-          { id: "SNAP_GE", count: 15, mins: 13, sec: "VARC", tag: "GENERAL ENGLISH • 13 MINS", title: "SNAP General English & Grammar Sprint (15 Qs • 13m)", desc: "Idioms, prepositions, figures of speech & verbal analogies." }
+          { id: "SNAP_LR", bpIdx: 1, count: 25, mins: 25, sec: "DILR", tag: "HIGH-WEIGHTAGE LR • 25 MINS", title: "SNAP Analytical & Logical Reasoning Sprint (25 Qs • 25m)", desc: "Clocks, Calendars, Coding-Decoding, Blood Relations & Series at 60s/Q." },
+          { id: "SNAP_QA", bpIdx: 2, count: 20, mins: 22, sec: "QUANT", tag: "QA, DI & DS • 22 MINS", title: "SNAP Quant, DI & Data Sufficiency Sprint (20 Qs • 22m)", desc: "Fast ratio arithmetic, percentages & single-chart DI (+1/-0.25)." },
+          { id: "SNAP_GE", bpIdx: 3, count: 15, mins: 13, sec: "VARC", tag: "GENERAL ENGLISH • 13 MINS", title: "SNAP General English & Grammar Sprint (15 Qs • 13m)", desc: "Idioms, prepositions, figures of speech & verbal analogies." }
         ],
         sections: [
           { id: "s1", label: "General English (15 Qs • +1/-0.25)", min: 0, max: 15, step: 1, def: 12 },
@@ -459,7 +469,7 @@
   }
 
   // ----------------------------------------------------------------------------
-  // TAB 4: FULL-LENGTH PROCTORED MOCK ONLY (CORRELATED TO ACTIVE TOP MODE)
+  // TAB 4: MODE-REACTIVE PROCTORED MOCK LAUNCHER (ADAPTS TO TOP MODE PILL)
   // ----------------------------------------------------------------------------
   window.renderStreamlinedTab4 = function (el) {
     const target = el || document.getElementById("main-workspace") || document.getElementById("tab-content");
@@ -477,10 +487,11 @@
       return Number(h.maxScore || 0) >= schema.fullMinQs || String(h.blueprint || "").toLowerCase().includes("full");
     });
 
+    const bpIdx = Number(schema.bpIndex || 0);
     const launchFn = PORTAL === "GRE"
-      ? `window.startGreProctoredMock(0, '${nextSerial}')`
+      ? `window.startGreProctoredMock(${bpIdx}, '${nextSerial}')`
       : (PORTAL === "GMAT"
-        ? `window.startGmatProctoredMock(0, '${nextSerial}')`
+        ? `window.startGmatProctoredMock(${bpIdx}, '${nextSerial}')`
         : `window._SELECTED_MOCK_BP=0; window.fetchNewRandomMock()`);
 
     target.innerHTML = `
@@ -489,7 +500,7 @@
           <div class="flex flex-wrap items-center justify-between gap-4">
             <div class="space-y-1">
               <div class="flex flex-wrap items-center gap-2">
-                <span class="px-2.5 py-0.5 rounded-full bg-indigo-100 text-indigo-700 text-[10px] font-extrabold uppercase">${schema.badge} &bull; OFFICIAL FULL-LENGTH SIMULATION</span>
+                <span class="px-2.5 py-0.5 rounded-full bg-indigo-100 text-indigo-700 text-[10px] font-extrabold uppercase">${schema.badge} &bull; MODE-CORRELATED PROCTORED SIMULATION</span>
                 <span class="text-xs font-mono text-slate-500">Next Serial ID: <strong>${nextSerial}</strong></span>
               </div>
               <h2 class="text-2xl font-extrabold text-slate-900 dark:text-white">${schema.fullBpTitle}</h2>
@@ -498,18 +509,18 @@
             <div class="flex flex-wrap items-center gap-2.5">
               <button type="button" onclick="window.selectUnifiedTab(5)"
                 class="px-4 py-3 rounded-2xl bg-slate-100 hover:bg-slate-200 text-slate-800 text-xs font-extrabold cursor-pointer">
-                Sectional &amp; Sprint Drills (Tab 5) &rarr;
+                Sectional &amp; Sprint Mocks (Tab 5) &rarr;
               </button>
               <button type="button" onclick="${launchFn}"
                 class="px-6 py-3.5 rounded-2xl bg-indigo-600 hover:bg-indigo-500 text-white text-sm font-extrabold shadow-lg cursor-pointer">
-                &#9654; Start Full-Length Mock (${schema.fullMins} Mins)
+                &#9654; Start Proctored Mock (${schema.fullMinQs} Qs &bull; ${schema.fullMins} Mins)
               </button>
             </div>
           </div>
 
           <div class="grid grid-cols-2 lg:grid-cols-4 gap-3">
             <div class="p-4 rounded-xl bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800">
-              <div class="text-[10px] font-extrabold uppercase text-slate-400">FULL EXAM LENGTH</div>
+              <div class="text-[10px] font-extrabold uppercase text-slate-400">QUESTION COUNT</div>
               <div class="text-base font-extrabold text-slate-900 dark:text-white mt-1">${schema.fullMinQs} Questions</div>
             </div>
             <div class="p-4 rounded-xl bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800">
@@ -517,12 +528,12 @@
               <div class="text-base font-extrabold text-amber-600 mt-1">${schema.fullMins}:00 Minutes (Paused)</div>
             </div>
             <div class="p-4 rounded-xl bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800">
-              <div class="text-[10px] font-extrabold uppercase text-slate-400">TAB 7 FORECASTER SYNC</div>
-              <div class="text-base font-extrabold text-emerald-600 mt-1">Direct Ledger Calibration ✓</div>
+              <div class="text-[10px] font-extrabold uppercase text-slate-400">ACTIVE MODE TRACK</div>
+              <div class="text-base font-extrabold text-emerald-600 mt-1">${schema.badge}</div>
             </div>
             <div class="p-4 rounded-xl bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800">
-              <div class="text-[10px] font-extrabold uppercase text-slate-400">LOGGED FULL MOCKS</div>
-              <div class="text-base font-extrabold text-indigo-600 mt-1">${modeLogs.length} Full Mock(s)</div>
+              <div class="text-[10px] font-extrabold uppercase text-slate-400">LOGGED MOCKS (${modeKey})</div>
+              <div class="text-base font-extrabold text-indigo-600 mt-1">${modeLogs.length} Mock(s)</div>
             </div>
           </div>
         </div>
@@ -530,8 +541,8 @@
         <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-6 shadow-sm space-y-3">
           <div class="flex flex-wrap items-center justify-between gap-2">
             <div>
-              <h3 class="text-sm font-extrabold text-slate-900 dark:text-white">${schema.badge} Full-Length Mock Ledger (${modeLogs.length} Full Mocks Logged)</h3>
-              <p class="text-[11px] text-slate-500">Only Full-Length ${schema.fullMinQs}-Question simulations appear here and calibrate Tab 7&#39;s Target &amp; Deficiency Forecaster. Use <strong>Tab 5</strong> for sectional &amp; sprint drills.</p>
+              <h3 class="text-sm font-extrabold text-slate-900 dark:text-white">${schema.badge} Official Mock Ledger (${modeLogs.length} Logged)</h3>
+              <p class="text-[11px] text-slate-500">Synchronized with <strong>Tab 7 Target &amp; Deficiency Forecaster</strong> for ${schema.badge}.</p>
             </div>
             <button type="button" onclick="window.selectUnifiedTab(7)" class="px-3.5 py-1.5 rounded-xl bg-indigo-50 text-indigo-700 text-xs font-extrabold cursor-pointer">Open Tab 7 Target Forecaster &rarr;</button>
           </div>
@@ -541,7 +552,7 @@
                 <tr class="text-[10px] font-extrabold uppercase text-slate-400 bg-slate-50 dark:bg-slate-950">
                   <th class="py-2 px-3">Serial Mock ID</th>
                   <th class="py-2 px-3">Date &amp; Time</th>
-                  <th class="py-2 px-3">Full-Length Blueprint</th>
+                  <th class="py-2 px-3">Simulation Blueprint</th>
                   <th class="py-2 px-3">Score</th>
                   <th class="py-2 px-3">Accuracy</th>
                 </tr>
@@ -555,7 +566,7 @@
                     <td class="py-2.5 px-3 font-extrabold text-emerald-600">${h.score} / ${h.maxScore}</td>
                     <td class="py-2.5 px-3 font-bold">${h.accuracy}%</td>
                   </tr>
-                `).join("") : `<tr><td colspan="5" class="py-5 text-center text-xs text-slate-400">No Full-Length ${schema.fullMinQs}-Question mocks logged yet for <strong>${schema.badge}</strong>. Click <strong>Start Full-Length Mock</strong> above to generate your official scorecard.</td></tr>`}
+                `).join("") : `<tr><td colspan="5" class="py-5 text-center text-xs text-slate-400">No ${schema.fullMinQs}-Question simulations logged yet for <strong>${schema.badge}</strong>. Click <strong>Start Proctored Mock</strong> above to launch.</td></tr>`}
               </tbody>
             </table>
           </div>
@@ -565,7 +576,7 @@
   };
 
   // ----------------------------------------------------------------------------
-  // TAB 5: SECTIONAL & SPRINT PRACTICE MOCKS (EXCLUDED FROM TAB 7 FORECASTER)
+  // TAB 5: SECTIONAL & SPRINT PRACTICE MOCKS (VISIBLE IN HEADER NAV)
   // ----------------------------------------------------------------------------
   window._PRACTICE_SPRINT_IDX = 0;
   window.renderPracticeMocksTab5 = function (el) {
@@ -579,9 +590,9 @@
     const serialId = `PRAC-${modeKey}-${Math.floor(1000 + Math.random() * 9000)}`;
 
     const startPracticeFn = PORTAL === "GRE"
-      ? `window.startGreProctoredMock(${idx + 1}, '${serialId}')`
+      ? `window.startGreProctoredMock(${sp.bpIdx || 1}, '${serialId}')`
       : (PORTAL === "GMAT"
-        ? `window.startGmatProctoredMock(${idx + 1}, '${serialId}')`
+        ? `window.startGmatProctoredMock(${sp.bpIdx || 1}, '${serialId}')`
         : `window.MOCK_PAPER_TYPE='${sp.sec === "VARC" ? "VARC_SPRINT" : (sp.sec === "DILR" ? "DILR_SPRINT" : "QUANT_SPRINT")}'; window.fetchNewRandomMock()`);
 
     target.innerHTML = `
@@ -589,11 +600,11 @@
         <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-5 flex flex-wrap items-center justify-between gap-3 shadow-sm">
           <div>
             <span class="px-2.5 py-0.5 rounded-full bg-amber-100 text-amber-800 text-[10px] font-extrabold uppercase">${schema.badge} &bull; SECTIONAL &amp; SPRINT PRACTICE LAB</span>
-            <h2 class="text-xl font-extrabold text-slate-900 dark:text-white mt-1">Timed Sectional &amp; Speed Sprints (Excluded from Tab 7 Composite Forecast)</h2>
-            <p class="text-xs text-slate-500">Drill individual sections or high-difficulty pools under real timers with instant scorecards &amp; PDF solutions without skewing your Tab 7 full-mock baseline.</p>
+            <h2 class="text-xl font-extrabold text-slate-900 dark:text-white mt-1">Timed Sectional &amp; Speed Sprints (Excluded from Tab 7 Forecaster)</h2>
+            <p class="text-xs text-slate-500">Drill individual sections or high-difficulty pools under real timers with instant scorecards &amp; PDF solutions without skewing your Tab 7 baseline.</p>
           </div>
           <button type="button" onclick="window.selectUnifiedTab(4)" class="px-4 py-2.5 rounded-xl bg-indigo-50 text-indigo-700 text-xs font-extrabold cursor-pointer">
-            &larr; Go to Full-Length Official Mock (Tab 4)
+            &larr; Go to Proctored Mock (Tab 4)
           </button>
         </div>
 
@@ -720,7 +731,7 @@
     const schema = getSchema(modeKey);
     const mocks = getFullMocksForMode(modeKey, schema);
     if (!mocks.length) {
-      alert(`No completed Full-Length ${schema.badge} Mock found in Tab 4 yet. Complete a Full ${schema.fullMinQs}-Q Mock first.`);
+      alert(`No completed ${schema.badge} Mock found in Tab 4 yet. Complete a Tab 4 Mock first.`);
       return;
     }
     const vals = extractMockSectionValues(mocks[0], schema);
@@ -812,13 +823,13 @@
             <div style="font-size:11px;font-weight:800;color:#4338ca;text-transform:uppercase;">ACHIEVEMENT VS. DEFICIENCY REMAINING MATRIX (${schema.badge})</div>
             <div style="font-size:11px;color:#475569;">${latestMock
               ? `Locked Target (<strong>${lockedComp.rawDisplay}</strong>) vs. Verified Tab 4 Mock <strong>${latestMock.serialId || modeKey}</strong> (<strong>${actualComp.rawDisplay}</strong>)`
-              : `Locked Target: <strong>${lockedComp.rawDisplay}</strong> &bull; Complete a Full ${schema.fullMinQs}-Q Mock in Tab 4 to populate Actual Achievement`}</div>
+              : `Locked Target: <strong>${lockedComp.rawDisplay}</strong> &bull; Complete a Tab 4 Mock for ${schema.badge} to populate Actual Achievement`}</div>
           </div>
           ${totalDeficiency !== null ? `
             <span style="padding:4px 10px;border-radius:999px;font-size:11px;font-weight:800;background:${totalDeficiency <= 0 ? "#d1fae5" : "#fef3c7"};color:${totalDeficiency <= 0 ? "#065f46" : "#92400e"};">
               ${totalDeficiency <= 0 ? `Target Surpassed (+${Math.abs(totalDeficiency)} ${schema.unit})` : `Total Deficiency: ${totalDeficiency} ${schema.unit}`}
             </span>
-          ` : `<span style="padding:4px 10px;border-radius:999px;font-size:11px;font-weight:700;background:#e2e8f0;color:#334155;">0 Full Mocks Logged</span>`}
+          ` : `<span style="padding:4px 10px;border-radius:999px;font-size:11px;font-weight:700;background:#e2e8f0;color:#334155;">0 Mocks Logged</span>`}
         </div>
 
         <div style="overflow-x:auto;background:#ffffff;border:1px solid #cbd5e1;border-radius:12px;">
@@ -958,7 +969,7 @@
 
             <div style="padding:12px 14px;border-radius:12px;background:${isTargetMode ? "#eef2ff" : "#ecfdf5"};border:1px solid ${isTargetMode ? "#c7d2fe" : "#6ee7b7"};font-size:11px;color:#0f172a;">
               ${isTargetMode
-                ? `<strong>&#127919; Mode-Isolated Target (${schema.badge}):</strong> ${mocks.length ? `Verified Full ${schema.badge} Mocks Logged: <strong>${mocks.length}</strong>.` : `0 Full ${schema.fullMinQs}-Q ${schema.badge} Mocks submitted yet — complete one in Tab 4.`}`
+                ? `<strong>&#127919; Mode-Isolated Target (${schema.badge}):</strong> ${mocks.length ? `Verified ${schema.badge} Mocks Logged: <strong>${mocks.length}</strong>.` : `0 ${schema.fullMinQs}-Q ${schema.badge} Mocks submitted yet — complete one in Tab 4.`}`
                 : `<strong>&#10003; Synced Actual Strength:</strong> Showing verified marks from <strong>${window._MBA_T7_SYNCED_ID}</strong>. Click <strong>Reset Target</strong> to return to your locked target.`}
             </div>
           </div>
@@ -995,22 +1006,22 @@
   };
 
   // ----------------------------------------------------------------------------
-  // UNIFIED 7-TAB ROUTING & TOP MODE CORRELATION
+  // PERSISTENT 7-TAB HEADER BAR (IMMUNE TO renderCleanHeader OVERWRITES)
   // ----------------------------------------------------------------------------
   const TAB7_LABELS = PORTAL === "GRE"
-    ? ["1. Quantitative Reasoning (QC & PS)", "2. Data Interpretation & AWA Lab", "3. Verbal Studio (TC, SE & RC)", "4. Full-Length GRE Mock", "5. Sectional & Sprint Mocks", "6. Trap Doctor & AI Doubts", "7. GRE Score & Target Forecaster"]
+    ? ["1. Quantitative Reasoning (QC & PS)", "2. Data Interpretation & AWA Lab", "3. Verbal Studio (TC, SE & RC)", "4. Proctored GRE Mock", "5. Sectional & Sprint Mocks", "6. Trap Doctor & AI Doubts", "7. GRE Score & Target Forecaster"]
     : (PORTAL === "GMAT"
-      ? ["1. Quantitative Reasoning (Zero Geo)", "2. Data Insights (DS & TPA)", "3. Verbal Studio (CR & RC)", "4. Full-Length GMAT Mock", "5. Sectional & Sprint Mocks", "6. Trap Doctor & AI Doubts", "7. Score & Target Forecaster"]
-      : ["1. Quantitative Aptitude (QA)", "2. DILR Caselet Lab", "3. VARC Studio (RC & TITA)", "4. Full-Length Mock Simulator", "5. Sectional & Sprint Mocks", "6. Trap Doctor & AI Doubts", "7. Score & Target Forecaster"]);
+      ? ["1. Quantitative Reasoning (Zero Geo)", "2. Data Insights (DS & TPA)", "3. Verbal Studio (CR & RC)", "4. Proctored GMAT Mock", "5. Sectional & Sprint Mocks", "6. Trap Doctor & AI Doubts", "7. Score & Target Forecaster"]
+      : ["1. Quantitative Aptitude (QA)", "2. DILR Caselet Lab", "3. VARC Studio (RC & TITA)", "4. Proctored Mock Simulator", "5. Sectional & Sprint Mocks", "6. Trap Doctor & AI Doubts", "7. Score & Target Forecaster"]);
 
-  function ensureSevenTabBar() {
+  window.ensureSevenTabBar = function () {
     const curNum = Number(window._ACTIVE_TAB_NUM || 1);
     const navButtons = Array.from(document.querySelectorAll("header button")).filter(b => /^[1-7]\./.test((b.textContent || "").trim()));
     if (!navButtons.length) return;
     const container = navButtons[0].parentElement;
     if (!container) return;
 
-    container.innerHTML = TAB7_LABELS.map((lbl, idx) => {
+    const desiredHtml = TAB7_LABELS.map((lbl, idx) => {
       const n = idx + 1;
       const active = n === curNum;
       return `<button type="button" onclick="window.selectUnifiedTab(${n})"
@@ -1018,6 +1029,20 @@
         ${lbl}
       </button>`;
     }).join("");
+
+    if (container.dataset.sevenTabActive !== `${curNum}_${PORTAL}`) {
+      container.innerHTML = desiredHtml;
+      container.dataset.sevenTabActive = `${curNum}_${PORTAL}`;
+    }
+  };
+
+  // Wrap renderCleanHeader so it ALWAYS preserves the 7-tab navigation bar
+  const origRenderCleanHeader = window.renderCleanHeader;
+  if (typeof origRenderCleanHeader === "function") {
+    window.renderCleanHeader = function () {
+      origRenderCleanHeader.apply(this, arguments);
+      window.ensureSevenTabBar();
+    };
   }
 
   window.selectUnifiedTab = function (tabNum) {
@@ -1031,7 +1056,7 @@
     if (oldPgMount && n >= 3) oldPgMount.remove();
 
     if (typeof window.renderCleanHeader === "function") window.renderCleanHeader();
-    ensureSevenTabBar();
+    window.ensureSevenTabBar();
 
     const el = document.getElementById("main-workspace") || document.querySelector("main") || document.getElementById("tab-content");
     if (!el) return;
@@ -1056,21 +1081,18 @@
     }
   };
 
-  // Keep user on current tab when switching Top Mode Pills and refresh Tab 4 / Tab 5 / Tab 7 immediately
   const origSelectMode = window.selectExamMode;
   window.selectExamMode = function (idx) {
     window._ACTIVE_MODE_IDX = Number(idx);
+    const savedTab = Number(window._ACTIVE_TAB_NUM || 1);
     if (typeof origSelectMode === "function") {
-      // Prevent origSelectMode from forcing a tab jump if it sets targetTab
-      const savedTab = Number(window._ACTIVE_TAB_NUM || 1);
       origSelectMode(idx);
-      window._ACTIVE_TAB_NUM = savedTab;
     }
-    ensureSevenTabBar();
-    const cur = Number(window._ACTIVE_TAB_NUM || 1);
-    if (cur === 4) window.renderStreamlinedTab4();
-    else if (cur === 5) { window._PRACTICE_SPRINT_IDX = 0; window.renderPracticeMocksTab5(); }
-    else if (cur === 7) { window._MBA_T7_MODE = "TARGET"; window.renderStreamlinedTab7(); }
+    window._ACTIVE_TAB_NUM = savedTab;
+    window.ensureSevenTabBar();
+    if (savedTab === 4) window.renderStreamlinedTab4();
+    else if (savedTab === 5) { window._PRACTICE_SPRINT_IDX = 0; window.renderPracticeMocksTab5(); }
+    else if (savedTab === 7) { window._MBA_T7_MODE = "TARGET"; window.renderStreamlinedTab7(); }
   };
 
   document.addEventListener("click", function (ev) {
@@ -1080,7 +1102,7 @@
     const txt = (btn.textContent || "").trim();
     if (id.startsWith("mode-pill-") || txt.includes("CAT Standard") || txt.includes("XAT & Decision") || txt.startsWith("NMAT Adaptive") || txt.startsWith("SNAP Speed")) {
       setTimeout(() => {
-        ensureSevenTabBar();
+        window.ensureSevenTabBar();
         const cur = Number(window._ACTIVE_TAB_NUM || 1);
         if (cur === 4) window.renderStreamlinedTab4();
         else if (cur === 5) { window._PRACTICE_SPRINT_IDX = 0; window.renderPracticeMocksTab5(); }
@@ -1091,6 +1113,7 @@
 
   window.renderTab6 = window.renderStreamlinedTab7;
   window.renderTab7 = window.renderStreamlinedTab7;
-  window.addEventListener("DOMContentLoaded", () => setTimeout(ensureSevenTabBar, 120));
-  setTimeout(ensureSevenTabBar, 300);
+  window.addEventListener("DOMContentLoaded", () => setTimeout(window.ensureSevenTabBar, 100));
+  setTimeout(window.ensureSevenTabBar, 250);
+  setTimeout(window.ensureSevenTabBar, 900);
 })();
