@@ -795,6 +795,8 @@ def get_pyq_questions_from_db(exam: str = "ALL", year: str = "ALL") -> list:
 
 with engine.begin() as conn:
     conn.execute(text("""
+        conn.execute(text("ALTER TABLE ipm_questions ADD COLUMN IF NOT EXISTS pyq_exam VARCHAR(120)"))
+        conn.execute(text("ALTER TABLE ipm_questions ADD COLUMN IF NOT EXISTS q_code VARCHAR(120)"))
         UPDATE ipm_questions
         SET pyq_exam = CASE
             WHEN q_code LIKE '%IIMB%' OR pyq_exam LIKE '%Bangalore%' OR pyq_exam LIKE '%IIMB%' THEN 'IIM Bangalore'
