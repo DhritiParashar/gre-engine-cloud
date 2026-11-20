@@ -1,6 +1,9 @@
 // ==============================================================================
-// GOALisB UNIFIED TARGET-LOCK & DEFICIENCY FORECASTER (GRE | GMAT | CAT/OMETs)
-// Inducts Tab 7 Set Target, Reset Target, Sync Mock & Achievement vs. Deficiency
+// GOALisB UNIFIED 7-TAB STREAMLINED ARCHITECTURE (GRE | GMAT | CAT & OMETs)
+// - Tab 4: Full-Length Proctored Mock ONLY (correlated to active Top Mode Pill)
+// - Tab 5: Sectional & Sprint Practice Mocks (excluded from Tab 7 Forecaster)
+// - Tab 6: Trap Doctor & AI Doubts
+// - Tab 7: Mode-Isolated Target Lock, Sync Mock & Achievement vs. Deficiency
 // ==============================================================================
 (function () {
   const HOST = (window.location.hostname || "").toLowerCase();
@@ -9,25 +12,87 @@
     ? "GMAT"
     : (HOST.includes("gre") || TITLE.includes("GRE") ? "GRE" : "CAT");
 
-  function getSubMode() {
-    if (PORTAL !== "CAT") return PORTAL;
-    if (typeof window.detectActiveCatPortalMode === "function") return window.detectActiveCatPortalMode();
-    return window._ACTIVE_CAT_MODE || "CAT";
+  function getActiveModeKey() {
+    if (PORTAL === "CAT") {
+      if (typeof window.detectActiveCatPortalMode === "function") return window.detectActiveCatPortalMode();
+      return window._ACTIVE_CAT_MODE || "CAT";
+    }
+    const idx = Number(window._ACTIVE_MODE_IDX || 0);
+    if (PORTAL === "GMAT") return idx === 1 ? "DI_CLINIC" : (idx === 2 ? "SPRINT_705" : "STANDARD");
+    return idx === 1 ? "Q170" : (idx === 2 ? "V165" : "STANDARD");
   }
 
-  function getSchema(subMode) {
-    if (subMode === "GRE") {
+  function getSchema(modeKey) {
+    if (PORTAL === "GRE") {
+      const configs = {
+        STANDARD: {
+          key: "goalisb_gre_target_STANDARD_v1",
+          badge: "GRE GENERAL STANDARD",
+          kicker: "GRE GENERAL 260–340 DIAGNOSTIC ENGINE",
+          title: "Section-Adaptive Score & Target Forecaster",
+          unit: "GRE Pts",
+          fullMinQs: 54,
+          fullBpTitle: "Full GRE General Section-Adaptive Simulation (54 Qs • 118 Mins)",
+          fullBpDesc: "Quant Stage 1 + Hard Stage 2 (27 Qs • 47m) + Verbal Stage 1 + Hard Stage 2 (27 Qs • 41m) + AWA (30m) on the 260–340 scale.",
+          fullMins: 118,
+          sprints: [
+            { id: "GRE_Q", count: 27, mins: 47, sec: "QUANT", tag: "QUANT SECTIONAL • 47 MINS", title: "Quantitative Reasoning QC & PS Sectional (27 Qs • 47m)", desc: "Quantitative Comparison (Choices A–D), 5-Option Problem Solving (A–E) & Data Interpretation (130–170 Scale)." },
+            { id: "GRE_V", count: 27, mins: 41, sec: "VERBAL", tag: "VERBAL SECTIONAL • 41 MINS", title: "Verbal Reasoning TC, SE & RC Sectional (27 Qs • 41m)", desc: "1/2/3-Blank Text Completion, 6-Choice Sentence Equivalence pairs & Academic Reading Comp (130–170 Scale)." },
+            { id: "GRE_Q170", count: 20, mins: 30, sec: "QUANT", tag: "170 CEILING HARD POOL", title: "Quant 170 Perfection Hard-Stage Sprint (20 Qs • 30m)", desc: "Upper-quartile Hard Stage 2 items: FROZEN QC boundary traps, 3D geometry & normal distributions." },
+            { id: "GRE_V165", count: 20, mins: 30, sec: "VERBAL", tag: "165+ VERBAL HARD POOL", title: "Verbal 165+ Contrast & Inference Sprint (20 Qs • 30m)", desc: "Multi-clause logic hinges, subtle SE semantic pairs & dense humanities/science inference passages." }
+          ],
+          sections: [
+            { id: "s1", label: "Quantitative Reasoning (27 Qs • 47m)", min: 130, max: 170, step: 1, def: 167 },
+            { id: "s2", label: "Verbal Reasoning (27 Qs • 41m)", min: 130, max: 170, step: 1, def: 163 },
+            { id: "s3", label: "Analytical Writing (AWA • 30m)", min: 0, max: 6, step: 0.5, def: 5.0 }
+          ]
+        },
+        Q170: {
+          key: "goalisb_gre_target_Q170_v1",
+          badge: "QUANT 170 PERFECTION SPRINT",
+          kicker: "GRE QUANT 170 CEILING ENGINE (260–340 SCALE)",
+          title: "Quant 170 Perfection Target & Routing Forecaster",
+          unit: "GRE Pts",
+          fullMinQs: 54,
+          fullBpTitle: "Full GRE General Simulation — Quant 170 Hard-Stage Track (54 Qs • 118 Mins)",
+          fullBpDesc: "Calibrated for STEM / CS / Engineering applicants targeting Q169–170 with Hard Stage-2 Quant routing unlocked.",
+          fullMins: 118,
+          sprints: [
+            { id: "GRE_Q170", count: 20, mins: 30, sec: "QUANT", tag: "PRIMARY MODE DRILL • 170 POOL", title: "Quant 170 Perfection Hard-Stage Sprint (20 Qs • 30m)", desc: "Upper-quartile Hard Stage 2 items: FROZEN QC boundary traps, 3D geometry & normal distributions." },
+            { id: "GRE_Q", count: 27, mins: 47, sec: "QUANT", tag: "QUANT SECTIONAL • 47 MINS", title: "Quantitative Reasoning QC & PS Sectional (27 Qs • 47m)", desc: "Full 27-question timed Quant simulation on the 130–170 scale." },
+            { id: "GRE_V", count: 27, mins: 41, sec: "VERBAL", tag: "VERBAL SECTIONAL • 41 MINS", title: "Verbal Reasoning TC, SE & RC Sectional (27 Qs • 41m)", desc: "Full 27-question timed Verbal simulation on the 130–170 scale." }
+          ],
+          sections: [
+            { id: "s1", label: "Quantitative Reasoning (27 Qs • 47m)", min: 130, max: 170, step: 1, def: 170 },
+            { id: "s2", label: "Verbal Reasoning (27 Qs • 41m)", min: 130, max: 170, step: 1, def: 161 },
+            { id: "s3", label: "Analytical Writing (AWA • 30m)", min: 0, max: 6, step: 0.5, def: 4.5 }
+          ]
+        },
+        V165: {
+          key: "goalisb_gre_target_V165_v1",
+          badge: "VERBAL 165+ & AWA 5.5 STUDIO",
+          kicker: "GRE VERBAL 165+ & AWA 5.5 ENGINE (260–340 SCALE)",
+          title: "Verbal 165+ & AWA 5.5 Target Forecaster",
+          unit: "GRE Pts",
+          fullMinQs: 54,
+          fullBpTitle: "Full GRE General Simulation — Verbal 165+ & AWA Track (54 Qs • 118 Mins)",
+          fullBpDesc: "Calibrated for Humanities, Policy, Economics & MBA applicants targeting V165+ and AWA 5.5.",
+          fullMins: 118,
+          sprints: [
+            { id: "GRE_V165", count: 20, mins: 30, sec: "VERBAL", tag: "PRIMARY MODE DRILL • 165+ POOL", title: "Verbal 165+ Contrast & Inference Sprint (20 Qs • 30m)", desc: "Multi-clause logic hinges, subtle SE semantic pairs & dense humanities/science inference passages." },
+            { id: "GRE_V", count: 27, mins: 41, sec: "VERBAL", tag: "VERBAL SECTIONAL • 41 MINS", title: "Verbal Reasoning TC, SE & RC Sectional (27 Qs • 41m)", desc: "Full 27-question timed Verbal simulation on the 130–170 scale." },
+            { id: "GRE_Q", count: 27, mins: 47, sec: "QUANT", tag: "QUANT SECTIONAL • 47 MINS", title: "Quantitative Reasoning QC & PS Sectional (27 Qs • 47m)", desc: "Full 27-question timed Quant simulation on the 130–170 scale." }
+          ],
+          sections: [
+            { id: "s1", label: "Quantitative Reasoning (27 Qs • 47m)", min: 130, max: 170, step: 1, def: 163 },
+            { id: "s2", label: "Verbal Reasoning (27 Qs • 41m)", min: 130, max: 170, step: 1, def: 166 },
+            { id: "s3", label: "Analytical Writing (AWA • 30m)", min: 0, max: 6, step: 0.5, def: 5.5 }
+          ]
+        }
+      }[modeKey] || {};
+
       return {
-        key: "goalisb_gre_self_target_v1",
-        kicker: "GRE GENERAL 260–340 DIAGNOSTIC ENGINE",
-        title: "Section-Adaptive Score & Target Forecaster",
-        unit: "GRE Pts",
-        fullMinQs: 54,
-        sections: [
-          { id: "s1", label: "Quantitative Reasoning (27 Qs • 47m)", min: 130, max: 170, step: 1, def: 167 },
-          { id: "s2", label: "Verbal Reasoning (27 Qs • 41m)", min: 130, max: 170, step: 1, def: 163 },
-          { id: "s3", label: "Analytical Writing (AWA • 30m)", min: 0, max: 6, step: 0.5, def: 5.0, excludeFromSum: true }
-        ],
+        ...configs,
         diffLabel: "Stage-2 Adaptive Routing",
         diffs: [
           { val: "TOUGH", label: "Hard Stage-2 Unlocked (+4 Eq.)", adj: 4 },
@@ -62,18 +127,76 @@
       };
     }
 
-    if (subMode === "GMAT") {
+    if (PORTAL === "GMAT") {
+      const configs = {
+        STANDARD: {
+          key: "goalisb_gmat_target_STANDARD_v1",
+          badge: "GMAT FOCUS STANDARD",
+          kicker: "GMAT FOCUS READINESS ENGINE (205–805 SCALE)",
+          title: "Score, Percentile & Adaptive Forecaster",
+          unit: "Focus Pts",
+          fullMinQs: 64,
+          fullBpTitle: "Full GMAT Focus Official Simulation (64 Qs • 135 Mins)",
+          fullBpDesc: "QR (21 Qs • 45m) + VR (23 Qs • 45m) + DI (20 Qs • 45m) on the 205–805 scale with 5 choices (A–E) & up to 3 Review Edits/section.",
+          fullMins: 135,
+          sprints: [
+            { id: "GMAT_QR", count: 21, mins: 45, sec: "QR", tag: "QUANT SECTIONAL • 45 MINS", title: "Quantitative Reasoning (Zero Geometry • 21 Qs • 45m)", desc: "Problem Solving (Choices A–E) across Algebra, Arithmetic, Number Properties & Word Problems (60–90 Scale)." },
+            { id: "GMAT_VR", count: 23, mins: 45, sec: "VR", tag: "VERBAL SECTIONAL • 45 MINS", title: "Verbal Reasoning CR & RC Clinic (23 Qs • 45m)", desc: "Zero-Sentence-Correction Critical Reasoning & Analytical Reading Comprehension simulation (60–90 Scale)." },
+            { id: "GMAT_DI", count: 20, mins: 45, sec: "DI", tag: "DATA INSIGHTS • 45 MINS", title: "Data Insights Deep Clinic (20 Qs • 45m)", desc: "Data Sufficiency (AD/BCE), Multi-Source Reasoning, Two-Part Analysis & Graphics Interpretation (60–90 Scale)." },
+            { id: "GMAT_705", count: 30, mins: 60, sec: "ALL", tag: "99TH %ILE HARD POOL", title: "Target 705+ Elite (99th %ile) Adaptive Sprint (30 Qs • 60m)", desc: "Upper-quartile 705–805 discriminator items engineered to protect early Q1–Q6 adaptive trajectory." }
+          ],
+          sections: [
+            { id: "s1", label: "Quantitative Reasoning (21 Qs • 45m)", min: 60, max: 90, step: 1, def: 85 },
+            { id: "s2", label: "Verbal Reasoning (23 Qs • 45m)", min: 60, max: 90, step: 1, def: 84 },
+            { id: "s3", label: "Data Insights (20 Qs • 45m)", min: 60, max: 90, step: 1, def: 83 }
+          ]
+        },
+        DI_CLINIC: {
+          key: "goalisb_gmat_target_DI_CLINIC_v1",
+          badge: "DATA INSIGHTS DEEP CLINIC",
+          kicker: "GMAT DATA INSIGHTS (60–90) SPECIALIST ENGINE",
+          title: "Data Insights & Composite Target Forecaster",
+          unit: "Focus Pts",
+          fullMinQs: 64,
+          fullBpTitle: "Full GMAT Focus Simulation — Data Insights Specialist Track (64 Qs • 135 Mins)",
+          fullBpDesc: "Full 64-Question GMAT Focus simulation calibrated for DI 86–90 mastery alongside QR and VR.",
+          fullMins: 135,
+          sprints: [
+            { id: "GMAT_DI", count: 20, mins: 45, sec: "DI", tag: "PRIMARY MODE DRILL • 45 MINS", title: "Data Insights Deep Clinic (20 Qs • 45m)", desc: "Data Sufficiency (AD/BCE), Multi-Source Reasoning, Two-Part Analysis & Graphics Interpretation (60–90 Scale)." },
+            { id: "GMAT_QR", count: 21, mins: 45, sec: "QR", tag: "QUANT SECTIONAL • 45 MINS", title: "Quantitative Reasoning (Zero Geometry • 21 Qs • 45m)", desc: "Problem Solving (Choices A–E) across Algebra, Arithmetic & Word Problems (60–90 Scale)." },
+            { id: "GMAT_VR", count: 23, mins: 45, sec: "VR", tag: "VERBAL SECTIONAL • 45 MINS", title: "Verbal Reasoning CR & RC Clinic (23 Qs • 45m)", desc: "Critical Reasoning & Analytical Reading Comprehension simulation (60–90 Scale)." }
+          ],
+          sections: [
+            { id: "s1", label: "Quantitative Reasoning (21 Qs • 45m)", min: 60, max: 90, step: 1, def: 84 },
+            { id: "s2", label: "Verbal Reasoning (23 Qs • 45m)", min: 60, max: 90, step: 1, def: 83 },
+            { id: "s3", label: "Data Insights (20 Qs • 45m)", min: 60, max: 90, step: 1, def: 87 }
+          ]
+        },
+        SPRINT_705: {
+          key: "goalisb_gmat_target_SPRINT_705_v1",
+          badge: "TARGET 705+ ELITE (99TH %ILE)",
+          kicker: "GMAT 705+ M7 / WHARTON ELITE ENGINE (205–805 SCALE)",
+          title: "705+ Elite (99th %ile) Target & Forecaster",
+          unit: "Focus Pts",
+          fullMinQs: 64,
+          fullBpTitle: "Full GMAT Focus Simulation — 705+ Elite M7 Track (64 Qs • 135 Mins)",
+          fullBpDesc: "Full 64-Question GMAT Focus simulation calibrated for Harvard, Stanford GSB, Wharton & MIT Sloan cutoffs.",
+          fullMins: 135,
+          sprints: [
+            { id: "GMAT_705", count: 30, mins: 60, sec: "ALL", tag: "PRIMARY MODE DRILL • 99TH %ILE", title: "Target 705+ Elite (99th %ile) Adaptive Sprint (30 Qs • 60m)", desc: "Upper-quartile 705–805 discriminator items engineered to protect early Q1–Q6 adaptive trajectory." },
+            { id: "GMAT_DI", count: 20, mins: 45, sec: "DI", tag: "DATA INSIGHTS • 45 MINS", title: "Data Insights Deep Clinic (20 Qs • 45m)", desc: "Data Sufficiency (AD/BCE), Multi-Source Reasoning & Two-Part Analysis (60–90 Scale)." },
+            { id: "GMAT_QR", count: 21, mins: 45, sec: "QR", tag: "QUANT SECTIONAL • 45 MINS", title: "Quantitative Reasoning (Zero Geometry • 21 Qs • 45m)", desc: "Problem Solving (Choices A–E) across Algebra, Arithmetic & Word Problems (60–90 Scale)." }
+          ],
+          sections: [
+            { id: "s1", label: "Quantitative Reasoning (21 Qs • 45m)", min: 60, max: 90, step: 1, def: 87 },
+            { id: "s2", label: "Verbal Reasoning (23 Qs • 45m)", min: 60, max: 90, step: 1, def: 86 },
+            { id: "s3", label: "Data Insights (20 Qs • 45m)", min: 60, max: 90, step: 1, def: 85 }
+          ]
+        }
+      }[modeKey] || {};
+
       return {
-        key: "goalisb_gmat_self_target_v1",
-        kicker: "GMAT FOCUS READINESS ENGINE (205–805 SCALE)",
-        title: "Score, Percentile & Adaptive Forecaster",
-        unit: "Focus Pts",
-        fullMinQs: 64,
-        sections: [
-          { id: "s1", label: "Quantitative Reasoning (21 Qs • 45m)", min: 60, max: 90, step: 1, def: 85 },
-          { id: "s2", label: "Verbal Reasoning (23 Qs • 45m)", min: 60, max: 90, step: 1, def: 84 },
-          { id: "s3", label: "Data Insights (20 Qs • 45m)", min: 60, max: 90, step: 1, def: 83 }
-        ],
+        ...configs,
         diffLabel: "Adaptive Pool Calibration",
         diffs: [
           { val: "TOUGH", label: "705+ Hard Adaptive (+15 Eq.)", adj: 15 },
@@ -110,13 +233,85 @@
       };
     }
 
-    if (subMode === "XAT") {
-      return {
+    // CAT & OMETs (CAT | XAT | NMAT | SNAP)
+    const catConfigs = {
+      CAT: {
+        key: "goalisb_cat_self_target_v1",
+        badge: "CAT STANDARD (66 Qs)",
+        kicker: "CAT EXAM READINESS ENGINE (198 MARKS SCALE)",
+        title: "CAT Score, Percentile & IIM Call Forecaster",
+        unit: "Marks",
+        fullMinQs: 66,
+        fullBpTitle: "Full CAT Official Simulation (66 Qs • 120 Mins)",
+        fullBpDesc: "VARC (24 Qs • 40m) + DILR (20 Qs • 40m) + QA (22 Qs • 40m) on the 198-mark scale with +3/-1 MCQ & zero-penalty TITA.",
+        fullMins: 120,
+        sprints: [
+          { id: "CAT_VARC", count: 24, mins: 40, sec: "VARC", tag: "VARC SECTIONAL • 40 MINS", title: "CAT VARC Sectional Drill (24 Qs • 40m)", desc: "4 Reading Comprehension passages + 8 Verbal Ability TITA items (+3/-1 MCQ, +3/0 TITA)." },
+          { id: "CAT_DILR", count: 20, mins: 40, sec: "DILR", tag: "DILR SECTIONAL • 40 MINS", title: "CAT DILR 4-Caselet Sectional Drill (20 Qs • 40m)", desc: "4 multi-constraint Data Interpretation & Logical Reasoning sets under strict 40-minute timer." },
+          { id: "CAT_QA", count: 22, mins: 40, sec: "QUANT", tag: "QA SECTIONAL • 40 MINS", title: "CAT Quantitative Aptitude Sectional Drill (22 Qs • 40m)", desc: "Arithmetic, Algebra, Geometry & Number System (+3/-1 MCQ & TITA)." }
+        ],
+        sections: [
+          { id: "s1", label: "VARC Raw (24 Qs • 40 Mins)", min: 0, max: 72, step: 1, def: 40 },
+          { id: "s2", label: "DILR Raw (20 Qs • 40 Mins)", min: 0, max: 60, step: 1, def: 30 },
+          { id: "s3", label: "QA Raw (22 Qs • 40 Mins)", min: 0, max: 66, step: 1, def: 33 }
+        ],
+        diffLabel: "CAT Slot Normalization",
+        diffs: [
+          { val: "TOUGH", label: "Tough Slot (+8 Scaled Eq.)", adj: 8 },
+          { val: "MODERATE", label: "Standard CAT Slot (0 Eq.)", adj: 0 },
+          { val: "EASY", label: "High-Cutoff Slot (-7 Scaled Eq.)", adj: -7 }
+        ],
+        catLabel: "Admission Category",
+        cats: [
+          { val: "GEN", label: "General (OPEN / GEM)", bonus: 0 },
+          { val: "EWS", label: "GEN-EWS", bonus: 6 },
+          { val: "OBC", label: "NC-OBC", bonus: 10 },
+          { val: "SCST", label: "SC / ST", bonus: 22 }
+        ],
+        computeComposite: (vals, diffAdj) => {
+          const raw = Number(vals.s1 || 0) + Number(vals.s2 || 0) + Number(vals.s3 || 0);
+          const eff = Math.min(198, Math.max(0, raw + diffAdj));
+          let pct = "0.00 %ile";
+          if (eff > 0) {
+            if (eff >= 112) pct = "99.85 %ile";
+            else if (eff >= 103) pct = "99.50 %ile";
+            else if (eff >= 95) pct = "99.00 %ile";
+            else if (eff >= 82) pct = "97.50 %ile";
+            else if (eff >= 68) pct = "94.50 %ile";
+            else if (eff >= 50) pct = "87.00 %ile";
+            else pct = (eff * 1.65).toFixed(2) + " %ile";
+          }
+          const tier = eff >= 105 ? "IIM Ahmedabad / Bangalore / Calcutta Tier" : (eff >= 90 ? "IIM Lucknow / Kozhikode / Indore / FMS Delhi Tier" : (eff >= 72 ? "New & Baby IIMs / MDI Gurgaon / IIFT Tier" : "Foundation Rebuild — Target 95+ Raw"));
+          return { rawDisplay: `${raw} / 198`, eff, effDisplay: `${eff}/198`, pct, subMeta: `VARC ${vals.s1}/72 • DILR ${vals.s2}/60 • QA ${vals.s3}/66`, tier };
+        },
+        outcomes: [
+          { name: "IIM Ahmedabad / Bangalore / Calcutta", sub: "BLACKI Flagship • Target 105+ Scaled", req: 105 },
+          { name: "IIM Lucknow / Kozhikode / Indore / FMS Delhi", sub: "Tier-1 Calls • Target 92+ Scaled", req: 92 },
+          { name: "IIM Mumbai / Shillong / MDI / IIFT Delhi", sub: "Premier MBA • Target 82+ Scaled", req: 82 },
+          { name: "CAP IIMs (Udaipur, Trichy, Ranchi, Raipur)", sub: "IIM Admission Zone • Target 70+ Scaled", req: 70 }
+        ],
+        ladder: [
+          ["112+ / 198", "99.8+ %ile", "IIM A / B / C Elite Zone"],
+          ["103 – 111", "99.5 %ile", "IIM A / B / C / FMS Delhi"],
+          ["95 – 102", "99.0 %ile", "IIM L / K / I / Mumbai / MDI"],
+          ["72 – 94", "95.0 – 98.9 %ile", "New IIMs / IIFT / SIBM"]
+        ]
+      },
+      XAT: {
         key: "goalisb_xat_self_target_v1",
+        badge: "XAT & DECISION MAKING",
         kicker: "XAT & DECISION MAKING ENGINE (75 MARKS SCALE)",
         title: "XAT Score, Percentile & XLRI Forecaster",
         unit: "Marks",
         fullMinQs: 75,
+        fullBpTitle: "Full XAT Official Simulation (75 Qs • 165 Mins)",
+        fullBpDesc: "VALR (26 Qs) + Decision Making (21 Qs) + QADI (28 Qs) with 5 choices (A–E) & +1/-0.25 marking.",
+        fullMins: 165,
+        sprints: [
+          { id: "XAT_DM", count: 21, mins: 50, sec: "DILR", tag: "DECISION MAKING • 50 MINS", title: "XAT Decision Making Caselet Sprint (21 Qs • 50m)", desc: "Ethical dilemmas, business trade-offs & stakeholder prioritization (5 choices A–E)." },
+          { id: "XAT_VALR", count: 26, mins: 55, sec: "VARC", tag: "VALR SECTIONAL • 55 MINS", title: "XAT Verbal & Logical Reasoning Drill (26 Qs • 55m)", desc: "Abstract RC, Poem comprehension, Critical Reasoning & Grammar (+1/-0.25)." },
+          { id: "XAT_QADI", count: 28, mins: 60, sec: "QUANT", tag: "QADI SECTIONAL • 60 MINS", title: "XAT Quantitative & Data Interpretation Drill (28 Qs • 60m)", desc: "High-difficulty Geometry, Functions, Probability & Multi-chart DI (+1/-0.25)." }
+        ],
         sections: [
           { id: "s1", label: "VALR (26 Qs • +1/-0.25)", min: 0, max: 26, step: 1, def: 14 },
           { id: "s2", label: "Decision Making (21 Qs • +1/-0.25)", min: 0, max: 21, step: 1, def: 12 },
@@ -153,16 +348,22 @@
           ["30 – 34", "92.0 – 96.4 %ile", "XIMB / IMT Ghaziabad / IMI"],
           ["25 – 29", "85.0 – 91.9 %ile", "TAPMI / GIM / Great Lakes"]
         ]
-      };
-    }
-
-    if (subMode === "NMAT") {
-      return {
+      },
+      NMAT: {
         key: "goalisb_nmat_self_target_v1",
+        badge: "NMAT ADAPTIVE",
         kicker: "NMAT ADAPTIVE ENGINE (120–360 SCALE)",
         title: "NMAT Scaled Score & NMIMS Forecaster",
         unit: "Scaled Pts",
         fullMinQs: 108,
+        fullBpTitle: "Full NMAT Adaptive Simulation (108 Qs • 120 Mins)",
+        fullBpDesc: "Language Skills (36 Qs • 28m) + Logical Reasoning (36 Qs • 40m) + Quant Skills (36 Qs • 52m) with zero negative marking.",
+        fullMins: 120,
+        sprints: [
+          { id: "NMAT_LS", count: 36, mins: 28, sec: "VARC", tag: "LANGUAGE SKILLS • 28 MINS", title: "NMAT Language Skills Speed Drill (36 Qs • 28m)", desc: "46 seconds/question vocabulary analogies, grammar & RC sprint (zero negative marking)." },
+          { id: "NMAT_LR", count: 36, mins: 40, sec: "DILR", tag: "LOGICAL REASONING • 40 MINS", title: "NMAT Logical Reasoning Sprint (36 Qs • 40m)", desc: "Critical reasoning, input-output, arrangements & syllogisms under strict 40m timer." },
+          { id: "NMAT_QS", count: 36, mins: 52, sec: "QUANT", tag: "QUANT SKILLS • 52 MINS", title: "NMAT Quantitative Skills Sprint (36 Qs • 52m)", desc: "Arithmetic, Modern Math & Data Sufficiency with 100% completion sweep." }
+        ],
         sections: [
           { id: "s1", label: "Language Skills (36 Qs • 28m)", min: 0, max: 36, step: 1, def: 26 },
           { id: "s2", label: "Logical Reasoning (36 Qs • 40m)", min: 0, max: 36, step: 1, def: 25 },
@@ -200,16 +401,22 @@
           ["220 – 234", "90.0 – 95.9 %ile", "NMIMS Bangalore / Hyderabad"],
           ["205 – 219", "82.0 – 89.9 %ile", "KJ Somaiya / TAPMI / XIMB-HR"]
         ]
-      };
-    }
-
-    if (subMode === "SNAP") {
-      return {
+      },
+      SNAP: {
         key: "goalisb_snap_self_target_v1",
+        badge: "SNAP SPEED SPRINT",
         kicker: "SNAP SPEED SPRINT ENGINE (60 MARKS SCALE)",
         title: "SNAP Scaled Score & SIBM / SCMHRD Forecaster",
         unit: "Marks",
         fullMinQs: 60,
+        fullBpTitle: "Full SNAP Speed Simulation (60 Qs • 60 Mins)",
+        fullBpDesc: "General English (15 Qs) + Analytical & LR (25 Qs) + QA, DI & DS (20 Qs) at 1.0 min/question (+1/-0.25).",
+        fullMins: 60,
+        sprints: [
+          { id: "SNAP_LR", count: 25, mins: 25, sec: "DILR", tag: "HIGH-WEIGHTAGE LR • 25 MINS", title: "SNAP Analytical & Logical Reasoning Sprint (25 Qs • 25m)", desc: "Clocks, Calendars, Coding-Decoding, Blood Relations & Series at 60s/Q." },
+          { id: "SNAP_QA", count: 20, mins: 22, sec: "QUANT", tag: "QA, DI & DS • 22 MINS", title: "SNAP Quant, DI & Data Sufficiency Sprint (20 Qs • 22m)", desc: "Fast ratio arithmetic, percentages & single-chart DI (+1/-0.25)." },
+          { id: "SNAP_GE", count: 15, mins: 13, sec: "VARC", tag: "GENERAL ENGLISH • 13 MINS", title: "SNAP General English & Grammar Sprint (15 Qs • 13m)", desc: "Idioms, prepositions, figures of speech & verbal analogies." }
+        ],
         sections: [
           { id: "s1", label: "General English (15 Qs • +1/-0.25)", min: 0, max: 15, step: 1, def: 12 },
           { id: "s2", label: "Analytical & LR (25 Qs • +1/-0.25)", min: 0, max: 25, step: 1, def: 20 },
@@ -246,65 +453,187 @@
           ["38.0 – 41.5", "94.0 – 97.9 %ile", "SIIB Pune & SIBM Bangalore"],
           ["34.0 – 37.5", "88.0 – 93.9 %ile", "SIOM Nashik / SIDTM Pune"]
         ]
-      };
-    }
-
-    // Default: CAT (198 Marks Scale)
-    return {
-      key: "goalisb_cat_self_target_v1",
-      kicker: "CAT EXAM READINESS ENGINE (198 MARKS SCALE)",
-      title: "CAT Score, Percentile & IIM Call Forecaster",
-      unit: "Marks",
-      fullMinQs: 66,
-      sections: [
-        { id: "s1", label: "VARC Raw (24 Qs • 40 Mins)", min: 0, max: 72, step: 1, def: 40 },
-        { id: "s2", label: "DILR Raw (20 Qs • 40 Mins)", min: 0, max: 60, step: 1, def: 30 },
-        { id: "s3", label: "QA Raw (22 Qs • 40 Mins)", min: 0, max: 66, step: 1, def: 33 }
-      ],
-      diffLabel: "CAT Slot Normalization",
-      diffs: [
-        { val: "TOUGH", label: "Tough Slot (+8 Scaled Eq.)", adj: 8 },
-        { val: "MODERATE", label: "Standard CAT Slot (0 Eq.)", adj: 0 },
-        { val: "EASY", label: "High-Cutoff Slot (-7 Scaled Eq.)", adj: -7 }
-      ],
-      catLabel: "Admission Category",
-      cats: [
-        { val: "GEN", label: "General (OPEN / GEM)", bonus: 0 },
-        { val: "EWS", label: "GEN-EWS", bonus: 6 },
-        { val: "OBC", label: "NC-OBC", bonus: 10 },
-        { val: "SCST", label: "SC / ST", bonus: 22 }
-      ],
-      computeComposite: (vals, diffAdj) => {
-        const raw = Number(vals.s1 || 0) + Number(vals.s2 || 0) + Number(vals.s3 || 0);
-        const eff = Math.min(198, Math.max(0, raw + diffAdj));
-        let pct = "0.00 %ile";
-        if (eff > 0) {
-          if (eff >= 112) pct = "99.85 %ile";
-          else if (eff >= 103) pct = "99.50 %ile";
-          else if (eff >= 95) pct = "99.00 %ile";
-          else if (eff >= 82) pct = "97.50 %ile";
-          else if (eff >= 68) pct = "94.50 %ile";
-          else if (eff >= 50) pct = "87.00 %ile";
-          else pct = (eff * 1.65).toFixed(2) + " %ile";
-        }
-        const tier = eff >= 105 ? "IIM Ahmedabad / Bangalore / Calcutta Tier" : (eff >= 90 ? "IIM Lucknow / Kozhikode / Indore / FMS Delhi Tier" : (eff >= 72 ? "New & Baby IIMs / MDI Gurgaon / IIFT Tier" : "Foundation Rebuild — Target 95+ Raw"));
-        return { rawDisplay: `${raw} / 198`, eff, effDisplay: `${eff}/198`, pct, subMeta: `VARC ${vals.s1}/72 • DILR ${vals.s2}/60 • QA ${vals.s3}/66`, tier };
-      },
-      outcomes: [
-        { name: "IIM Ahmedabad / Bangalore / Calcutta", sub: "BLACKI Flagship • Target 105+ Scaled", req: 105 },
-        { name: "IIM Lucknow / Kozhikode / Indore / FMS Delhi", sub: "Tier-1 Calls • Target 92+ Scaled", req: 92 },
-        { name: "IIM Mumbai / Shillong / MDI / IIFT Delhi", sub: "Premier MBA • Target 82+ Scaled", req: 82 },
-        { name: "CAP IIMs (Udaipur, Trichy, Ranchi, Raipur)", sub: "IIM Admission Zone • Target 70+ Scaled", req: 70 }
-      ],
-      ladder: [
-        ["112+ / 198", "99.8+ %ile", "IIM A / B / C Elite Zone"],
-        ["103 – 111", "99.5 %ile", "IIM A / B / C / FMS Delhi"],
-        ["95 – 102", "99.0 %ile", "IIM L / K / I / Mumbai / MDI"],
-        ["72 – 94", "95.0 – 98.9 %ile", "New IIMs / IIFT / SIBM"]
-      ]
+      }
     };
+    return catConfigs[modeKey] || catConfigs.CAT;
   }
 
+  // ----------------------------------------------------------------------------
+  // TAB 4: FULL-LENGTH PROCTORED MOCK ONLY (CORRELATED TO ACTIVE TOP MODE)
+  // ----------------------------------------------------------------------------
+  window.renderStreamlinedTab4 = function (el) {
+    const target = el || document.getElementById("main-workspace") || document.getElementById("tab-content");
+    if (!target) return;
+    const modeKey = getActiveModeKey();
+    const schema = getSchema(modeKey);
+    const nextSerial = `${modeKey === "STANDARD" ? PORTAL : modeKey}-2026-${Math.floor(1000 + Math.random() * 9000)}`;
+
+    const rawHist = JSON.parse(localStorage.getItem("ipm_mock_history_v1") || "[]");
+    const modeLogs = rawHist.filter(h => {
+      if (!h || Number(h.score || 0) <= 0) return false;
+      if (PORTAL === "CAT" && typeof window.classifyMockEntryMode === "function") {
+        return window.classifyMockEntryMode(h) === modeKey && (Number(h.maxScore || 0) >= schema.fullMinQs || String(h.blueprint || "").toLowerCase().includes("full"));
+      }
+      return Number(h.maxScore || 0) >= schema.fullMinQs || String(h.blueprint || "").toLowerCase().includes("full");
+    });
+
+    const launchFn = PORTAL === "GRE"
+      ? `window.startGreProctoredMock(0, '${nextSerial}')`
+      : (PORTAL === "GMAT"
+        ? `window.startGmatProctoredMock(0, '${nextSerial}')`
+        : `window._SELECTED_MOCK_BP=0; window.fetchNewRandomMock()`);
+
+    target.innerHTML = `
+      <div class="max-w-7xl mx-auto pt-4 pb-8 space-y-5">
+        <div id="${PORTAL === "GRE" ? "gre-mock-stage" : (PORTAL === "GMAT" ? "gmat-mock-stage" : "cat-mock-stage")}" class="bg-white dark:bg-slate-900 border-2 border-indigo-500/30 rounded-2xl p-6 shadow-sm space-y-5">
+          <div class="flex flex-wrap items-center justify-between gap-4">
+            <div class="space-y-1">
+              <div class="flex flex-wrap items-center gap-2">
+                <span class="px-2.5 py-0.5 rounded-full bg-indigo-100 text-indigo-700 text-[10px] font-extrabold uppercase">${schema.badge} &bull; OFFICIAL FULL-LENGTH SIMULATION</span>
+                <span class="text-xs font-mono text-slate-500">Next Serial ID: <strong>${nextSerial}</strong></span>
+              </div>
+              <h2 class="text-2xl font-extrabold text-slate-900 dark:text-white">${schema.fullBpTitle}</h2>
+              <p class="text-xs text-slate-500">${schema.fullBpDesc}</p>
+            </div>
+            <div class="flex flex-wrap items-center gap-2.5">
+              <button type="button" onclick="window.selectUnifiedTab(5)"
+                class="px-4 py-3 rounded-2xl bg-slate-100 hover:bg-slate-200 text-slate-800 text-xs font-extrabold cursor-pointer">
+                Sectional &amp; Sprint Drills (Tab 5) &rarr;
+              </button>
+              <button type="button" onclick="${launchFn}"
+                class="px-6 py-3.5 rounded-2xl bg-indigo-600 hover:bg-indigo-500 text-white text-sm font-extrabold shadow-lg cursor-pointer">
+                &#9654; Start Full-Length Mock (${schema.fullMins} Mins)
+              </button>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-2 lg:grid-cols-4 gap-3">
+            <div class="p-4 rounded-xl bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800">
+              <div class="text-[10px] font-extrabold uppercase text-slate-400">FULL EXAM LENGTH</div>
+              <div class="text-base font-extrabold text-slate-900 dark:text-white mt-1">${schema.fullMinQs} Questions</div>
+            </div>
+            <div class="p-4 rounded-xl bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800">
+              <div class="text-[10px] font-extrabold uppercase text-slate-400">PROCTORED CLOCK</div>
+              <div class="text-base font-extrabold text-amber-600 mt-1">${schema.fullMins}:00 Minutes (Paused)</div>
+            </div>
+            <div class="p-4 rounded-xl bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800">
+              <div class="text-[10px] font-extrabold uppercase text-slate-400">TAB 7 FORECASTER SYNC</div>
+              <div class="text-base font-extrabold text-emerald-600 mt-1">Direct Ledger Calibration ✓</div>
+            </div>
+            <div class="p-4 rounded-xl bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800">
+              <div class="text-[10px] font-extrabold uppercase text-slate-400">LOGGED FULL MOCKS</div>
+              <div class="text-base font-extrabold text-indigo-600 mt-1">${modeLogs.length} Full Mock(s)</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-6 shadow-sm space-y-3">
+          <div class="flex flex-wrap items-center justify-between gap-2">
+            <div>
+              <h3 class="text-sm font-extrabold text-slate-900 dark:text-white">${schema.badge} Full-Length Mock Ledger (${modeLogs.length} Full Mocks Logged)</h3>
+              <p class="text-[11px] text-slate-500">Only Full-Length ${schema.fullMinQs}-Question simulations appear here and calibrate Tab 7&#39;s Target &amp; Deficiency Forecaster. Use <strong>Tab 5</strong> for sectional &amp; sprint drills.</p>
+            </div>
+            <button type="button" onclick="window.selectUnifiedTab(7)" class="px-3.5 py-1.5 rounded-xl bg-indigo-50 text-indigo-700 text-xs font-extrabold cursor-pointer">Open Tab 7 Target Forecaster &rarr;</button>
+          </div>
+          <div class="overflow-x-auto">
+            <table class="w-full text-left border-collapse">
+              <thead>
+                <tr class="text-[10px] font-extrabold uppercase text-slate-400 bg-slate-50 dark:bg-slate-950">
+                  <th class="py-2 px-3">Serial Mock ID</th>
+                  <th class="py-2 px-3">Date &amp; Time</th>
+                  <th class="py-2 px-3">Full-Length Blueprint</th>
+                  <th class="py-2 px-3">Score</th>
+                  <th class="py-2 px-3">Accuracy</th>
+                </tr>
+              </thead>
+              <tbody>
+                ${modeLogs.length ? modeLogs.map(h => `
+                  <tr class="border-t border-slate-200 dark:border-slate-800 text-xs">
+                    <td class="py-2.5 px-3 font-mono font-extrabold text-indigo-600">${h.serialId}</td>
+                    <td class="py-2.5 px-3 text-slate-500">${h.date || ""} ${h.time || ""}</td>
+                    <td class="py-2.5 px-3 font-bold">${h.blueprint}</td>
+                    <td class="py-2.5 px-3 font-extrabold text-emerald-600">${h.score} / ${h.maxScore}</td>
+                    <td class="py-2.5 px-3 font-bold">${h.accuracy}%</td>
+                  </tr>
+                `).join("") : `<tr><td colspan="5" class="py-5 text-center text-xs text-slate-400">No Full-Length ${schema.fullMinQs}-Question mocks logged yet for <strong>${schema.badge}</strong>. Click <strong>Start Full-Length Mock</strong> above to generate your official scorecard.</td></tr>`}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    `;
+  };
+
+  // ----------------------------------------------------------------------------
+  // TAB 5: SECTIONAL & SPRINT PRACTICE MOCKS (EXCLUDED FROM TAB 7 FORECASTER)
+  // ----------------------------------------------------------------------------
+  window._PRACTICE_SPRINT_IDX = 0;
+  window.renderPracticeMocksTab5 = function (el) {
+    const target = el || document.getElementById("main-workspace") || document.getElementById("tab-content");
+    if (!target) return;
+    const modeKey = getActiveModeKey();
+    const schema = getSchema(modeKey);
+    const sprints = schema.sprints || [];
+    const idx = Math.min(sprints.length - 1, Math.max(0, Number(window._PRACTICE_SPRINT_IDX || 0)));
+    const sp = sprints[idx];
+    const serialId = `PRAC-${modeKey}-${Math.floor(1000 + Math.random() * 9000)}`;
+
+    const startPracticeFn = PORTAL === "GRE"
+      ? `window.startGreProctoredMock(${idx + 1}, '${serialId}')`
+      : (PORTAL === "GMAT"
+        ? `window.startGmatProctoredMock(${idx + 1}, '${serialId}')`
+        : `window.MOCK_PAPER_TYPE='${sp.sec === "VARC" ? "VARC_SPRINT" : (sp.sec === "DILR" ? "DILR_SPRINT" : "QUANT_SPRINT")}'; window.fetchNewRandomMock()`);
+
+    target.innerHTML = `
+      <div class="max-w-7xl mx-auto pt-4 pb-8 space-y-5">
+        <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-5 flex flex-wrap items-center justify-between gap-3 shadow-sm">
+          <div>
+            <span class="px-2.5 py-0.5 rounded-full bg-amber-100 text-amber-800 text-[10px] font-extrabold uppercase">${schema.badge} &bull; SECTIONAL &amp; SPRINT PRACTICE LAB</span>
+            <h2 class="text-xl font-extrabold text-slate-900 dark:text-white mt-1">Timed Sectional &amp; Speed Sprints (Excluded from Tab 7 Composite Forecast)</h2>
+            <p class="text-xs text-slate-500">Drill individual sections or high-difficulty pools under real timers with instant scorecards &amp; PDF solutions without skewing your Tab 7 full-mock baseline.</p>
+          </div>
+          <button type="button" onclick="window.selectUnifiedTab(4)" class="px-4 py-2.5 rounded-xl bg-indigo-50 text-indigo-700 text-xs font-extrabold cursor-pointer">
+            &larr; Go to Full-Length Official Mock (Tab 4)
+          </button>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-${Math.min(4, sprints.length)} gap-3">
+          ${sprints.map((item, i) => `
+            <button type="button" onclick="window._PRACTICE_SPRINT_IDX=${i}; window.renderPracticeMocksTab5();"
+              class="text-left p-4 rounded-2xl border transition cursor-pointer flex flex-col justify-between ${i === idx
+                ? "bg-indigo-50/90 dark:bg-indigo-950/60 border-indigo-500 ring-2 ring-indigo-500/20 shadow-sm"
+                : "bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-800 hover:border-indigo-300"}">
+              <div>
+                <div class="text-[10px] font-extrabold uppercase text-indigo-600">${item.tag}</div>
+                <div class="text-sm font-extrabold text-slate-900 dark:text-white mt-1">${item.title}</div>
+                <p class="text-[11px] text-slate-500 mt-1.5">${item.desc}</p>
+              </div>
+              <div class="mt-3 pt-2 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between text-[11px] font-bold text-indigo-600">
+                <span>${item.count} Qs &bull; ${item.mins}m</span>
+                <span>${i === idx ? "Selected ✓" : "Select →"}</span>
+              </div>
+            </button>
+          `).join("")}
+        </div>
+
+        <div id="${PORTAL === "GRE" ? "gre-mock-stage" : (PORTAL === "GMAT" ? "gmat-mock-stage" : "cat-practice-stage")}" class="bg-white dark:bg-slate-900 border-2 border-amber-500/30 rounded-2xl p-6 shadow-sm flex flex-wrap items-center justify-between gap-4">
+          <div class="space-y-1">
+            <div class="text-[10px] font-extrabold uppercase text-amber-600">${sp.tag} &bull; PRACTICE SESSION ID: ${serialId}</div>
+            <h3 class="text-xl font-extrabold text-slate-900 dark:text-white">${sp.title}</h3>
+            <p class="text-xs text-slate-500">${sp.desc}</p>
+          </div>
+          <button type="button" onclick="${startPracticeFn}"
+            class="px-6 py-3.5 rounded-2xl bg-amber-500 hover:bg-amber-400 text-slate-950 text-sm font-extrabold shadow-lg cursor-pointer">
+            &#9654; Start Practice Sprint (${sp.count} Qs &bull; ${sp.mins} Mins)
+          </button>
+        </div>
+      </div>
+    `;
+  };
+
+  // ----------------------------------------------------------------------------
+  // TAB 7: MODE-ISOLATED TARGET LOCK & ACHIEVEMENT VS. DEFICIENCY FORECASTER
+  // ----------------------------------------------------------------------------
   function loadTarget(schema) {
     const def = { s1: schema.sections[0].def, s2: schema.sections[1].def, s3: schema.sections[2].def, diff: "MODERATE", cat: "GEN" };
     try {
@@ -318,23 +647,23 @@
     try { localStorage.setItem(schema.key, JSON.stringify(obj)); } catch (_) {}
   }
 
-  function getFullMocksForSubMode(subMode, schema) {
+  function getFullMocksForMode(modeKey, schema) {
     try {
       const raw = JSON.parse(localStorage.getItem("ipm_mock_history_v1") || "[]");
       if (!Array.isArray(raw)) return [];
       return raw.filter(h => {
         if (!h || Number(h.score || 0) <= 0) return false;
         if (PORTAL === "CAT" && typeof window.classifyMockEntryMode === "function") {
-          return window.classifyMockEntryMode(h) === subMode && (Number(h.maxScore || 0) >= schema.fullMinQs || String(h.blueprint || "").toLowerCase().includes("full"));
+          return window.classifyMockEntryMode(h) === modeKey && (Number(h.maxScore || 0) >= schema.fullMinQs || String(h.blueprint || "").toLowerCase().includes("full"));
         }
         return Number(h.maxScore || 0) >= schema.fullMinQs || String(h.blueprint || "").toLowerCase().includes("full");
       });
     } catch (_) { return []; }
   }
 
-  function extractMockSectionValues(rec, subMode, schema) {
+  function extractMockSectionValues(rec, schema) {
     if (!rec) return null;
-    if (subMode === "GRE") {
+    if (PORTAL === "GRE") {
       const ratio = Math.max(0, Math.min(1, Number(rec.score || 0) / Math.max(1, Number(rec.maxScore || 54))));
       const savedAwa = JSON.parse(localStorage.getItem("gre_awa_latest_v1") || "null");
       return {
@@ -343,7 +672,7 @@
         s3: savedAwa ? Number(savedAwa.score) : Number(rec.awaScore || 4.5)
       };
     }
-    if (subMode === "GMAT") {
+    if (PORTAL === "GMAT") {
       const ratio = Math.max(0, Math.min(1, Number(rec.score || 0) / Math.max(1, Number(rec.maxScore || 64))));
       const sec = Math.min(90, Math.max(60, Math.round(60 + ratio * 30)));
       return { s1: sec, s2: sec, s3: Math.max(60, sec - 1) };
@@ -356,70 +685,66 @@
     };
   }
 
-  window._MBA_T6_MODE = "TARGET";
-  window._MBA_T6_STATE = {};
-  window._MBA_T6_MSG = "";
-  window._MBA_T6_SYNCED_ID = null;
+  window._MBA_T7_MODE = "TARGET";
+  window._MBA_T7_STATE = {};
+  window._MBA_T7_MSG = "";
+  window._MBA_T7_SYNCED_ID = null;
 
-  function getActiveState(subMode, schema) {
-    if (!window._MBA_T6_STATE[subMode]) {
-      window._MBA_T6_STATE[subMode] = loadTarget(schema);
+  function getActiveState(modeKey, schema) {
+    if (!window._MBA_T7_STATE[modeKey]) {
+      window._MBA_T7_STATE[modeKey] = loadTarget(schema);
     }
-    return window._MBA_T6_STATE[subMode];
+    return window._MBA_T7_STATE[modeKey];
   }
 
   window.mbaCommitTarget = function () {
-    const subMode = getSubMode();
-    const schema = getSchema(subMode);
-    const st = getActiveState(subMode, schema);
-    saveTarget(schema, { ...st });
-    window._MBA_T6_MODE = "TARGET";
-    window._MBA_T6_MSG = "Target Locked (" + new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }) + ")";
-    window.renderUnifiedMbaForecaster6();
+    const modeKey = getActiveModeKey();
+    const schema = getSchema(modeKey);
+    saveTarget(schema, { ...getActiveState(modeKey, schema) });
+    window._MBA_T7_MODE = "TARGET";
+    window._MBA_T7_MSG = "Target Locked for " + schema.badge + " (" + new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }) + ")";
+    window.renderStreamlinedTab7();
   };
 
   window.mbaResetTarget = function () {
-    const subMode = getSubMode();
-    const schema = getSchema(subMode);
-    const saved = loadTarget(schema);
-    window._MBA_T6_STATE[subMode] = { ...saved };
-    window._MBA_T6_MODE = "TARGET";
-    window._MBA_T6_MSG = "Restored Last Locked Target";
-    window.renderUnifiedMbaForecaster6();
+    const modeKey = getActiveModeKey();
+    const schema = getSchema(modeKey);
+    window._MBA_T7_STATE[modeKey] = { ...loadTarget(schema) };
+    window._MBA_T7_MODE = "TARGET";
+    window._MBA_T7_MSG = "Restored Locked Target (" + schema.badge + ")";
+    window.renderStreamlinedTab7();
   };
 
   window.mbaSyncMock = function () {
-    const subMode = getSubMode();
-    const schema = getSchema(subMode);
-    const mocks = getFullMocksForSubMode(subMode, schema);
+    const modeKey = getActiveModeKey();
+    const schema = getSchema(modeKey);
+    const mocks = getFullMocksForMode(modeKey, schema);
     if (!mocks.length) {
-      alert(`No completed Full-Length ${subMode} Mock found in Tab 4 ledger yet. Complete a Full ${subMode} Mock first.`);
+      alert(`No completed Full-Length ${schema.badge} Mock found in Tab 4 yet. Complete a Full ${schema.fullMinQs}-Q Mock first.`);
       return;
     }
-    const vals = extractMockSectionValues(mocks[0], subMode, schema);
-    const st = getActiveState(subMode, schema);
-    st.s1 = vals.s1;
-    st.s2 = vals.s2;
-    st.s3 = vals.s3;
-    window._MBA_T6_SYNCED_ID = mocks[0].serialId || `${subMode}-MOCK`;
-    window._MBA_T6_MODE = "VERIFIED";
-    window._MBA_T6_MSG = "";
-    window.renderUnifiedMbaForecaster6();
+    const vals = extractMockSectionValues(mocks[0], schema);
+    const st = getActiveState(modeKey, schema);
+    st.s1 = vals.s1; st.s2 = vals.s2; st.s3 = vals.s3;
+    window._MBA_T7_SYNCED_ID = mocks[0].serialId || modeKey;
+    window._MBA_T7_MODE = "VERIFIED";
+    window._MBA_T7_MSG = "";
+    window.renderStreamlinedTab7();
   };
 
   window.mbaSliderInput = function (secId, rawVal) {
-    const subMode = getSubMode();
-    const schema = getSchema(subMode);
+    const modeKey = getActiveModeKey();
+    const schema = getSchema(modeKey);
     const sec = schema.sections.find(x => x.id === secId);
     if (!sec) return;
     const v = Math.min(sec.max, Math.max(sec.min, Number(rawVal) || sec.min));
-    const st = getActiveState(subMode, schema);
+    const st = getActiveState(modeKey, schema);
     st[secId] = v;
-    if (window._MBA_T6_MODE === "VERIFIED") {
-      window._MBA_T6_MODE = "TARGET";
+    if (window._MBA_T7_MODE === "VERIFIED") {
+      window._MBA_T7_MODE = "TARGET";
       const b = document.getElementById("mba-mode-badge");
       if (b) {
-        b.textContent = "MODE: DESIRED SELF-TARGET (CLICK SET TARGET TO LOCK)";
+        b.textContent = "MODE: DESIRED SELF-TARGET (" + schema.badge + ")";
         b.style.background = "#e0e7ff";
         b.style.color = "#3730a3";
       }
@@ -428,20 +753,32 @@
     const nEl = document.getElementById("mba-num-" + secId);
     if (rEl && Number(rEl.value) !== v) rEl.value = v;
     if (nEl && Number(nEl.value) !== v) nEl.value = v;
-    window.updateUnifiedMbaReadout();
+    window.updateStreamlinedTab7Readout();
   };
 
-  window.updateUnifiedMbaReadout = function () {
-    const out = document.getElementById("mba-t6-results");
+  window.mbaSelectDiff = function (v) {
+    const modeKey = getActiveModeKey();
+    getActiveState(modeKey, getSchema(modeKey)).diff = v;
+    window.updateStreamlinedTab7Readout();
+  };
+
+  window.mbaSelectCat = function (v) {
+    const modeKey = getActiveModeKey();
+    getActiveState(modeKey, getSchema(modeKey)).cat = v;
+    window.updateStreamlinedTab7Readout();
+  };
+
+  window.updateStreamlinedTab7Readout = function () {
+    const out = document.getElementById("mba-t7-results");
     if (!out) return;
-    const subMode = getSubMode();
-    const schema = getSchema(subMode);
-    const st = getActiveState(subMode, schema);
+    const modeKey = getActiveModeKey();
+    const schema = getSchema(modeKey);
+    const st = getActiveState(modeKey, schema);
     const locked = loadTarget(schema);
-    const mocks = getFullMocksForSubMode(subMode, schema);
+    const mocks = getFullMocksForMode(modeKey, schema);
     const latestMock = mocks[0] || null;
-    const actualVals = extractMockSectionValues(latestMock, subMode, schema);
-    const isTargetMode = (window._MBA_T6_MODE !== "VERIFIED");
+    const actualVals = extractMockSectionValues(latestMock, schema);
+    const isTargetMode = (window._MBA_T7_MODE !== "VERIFIED");
 
     const diffObj = schema.diffs.find(d => d.val === st.diff) || schema.diffs[1];
     const catObj = schema.cats.find(c => c.val === st.cat) || schema.cats[0];
@@ -449,17 +786,33 @@
     const lockedComp = schema.computeComposite(locked, 0);
     const actualComp = actualVals ? schema.computeComposite(actualVals, 0) : null;
     const quotaEff = curComp.eff + catObj.bonus;
-
     const totalDeficiency = actualComp ? (lockedComp.eff - actualComp.eff) : null;
 
-    const matrixHtml = `
+    out.innerHTML = `
+      <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+        <div style="padding:16px;border-radius:16px;background:${isTargetMode ? "#eef2ff" : "#ecfdf5"};border:1px solid ${isTargetMode ? "#c7d2fe" : "#a7f3d0"};">
+          <div style="font-size:10px;font-weight:800;text-transform:uppercase;color:${isTargetMode ? "#4338ca" : "#047857"};">${isTargetMode ? "Target Preview (" + schema.badge + ")" : "Actual Verified Score"}</div>
+          <div style="font-size:22px;font-weight:900;color:#0f172a;margin-top:2px;">${curComp.rawDisplay}</div>
+          <div style="font-size:11px;font-weight:700;color:${isTargetMode ? "#4338ca" : "#047857"};margin-top:2px;">Calibrated: ${curComp.effDisplay}</div>
+        </div>
+        <div style="padding:16px;border-radius:16px;background:#ecfdf5;border:1px solid #a7f3d0;">
+          <div style="font-size:10px;font-weight:800;text-transform:uppercase;color:#047857;">${isTargetMode ? "Tentative Expected Percentile" : "Actual Projected Percentile"}</div>
+          <div style="font-size:22px;font-weight:900;color:#064e3b;margin-top:2px;">${curComp.pct}</div>
+          <div style="font-size:11px;font-weight:700;color:#047857;margin-top:2px;">${curComp.subMeta}</div>
+        </div>
+        <div style="padding:16px;border-radius:16px;background:#f8fafc;border:1px solid #cbd5e1;">
+          <div style="font-size:10px;font-weight:800;text-transform:uppercase;color:#475569;">${isTargetMode ? "Expected Admit Tier" : "Actual Admit Tier"} (${catObj.val})</div>
+          <div style="font-size:12px;font-weight:800;color:#0f172a;margin-top:4px;line-height:1.35;">${curComp.tier}</div>
+        </div>
+      </div>
+
       <div style="background:#f8fafc;border:1px solid #cbd5e1;border-radius:16px;padding:16px;">
         <div style="display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:8px;margin-bottom:10px;">
           <div>
-            <div style="font-size:11px;font-weight:800;color:#4338ca;text-transform:uppercase;">ACHIEVEMENT VS. DEFICIENCY REMAINING MATRIX</div>
+            <div style="font-size:11px;font-weight:800;color:#4338ca;text-transform:uppercase;">ACHIEVEMENT VS. DEFICIENCY REMAINING MATRIX (${schema.badge})</div>
             <div style="font-size:11px;color:#475569;">${latestMock
-              ? `Comparing Locked Target (<strong>${lockedComp.rawDisplay}</strong>) against Verified Mock <strong>${latestMock.serialId || subMode}</strong> (<strong>${actualComp.rawDisplay}</strong>)`
-              : `Locked Target: <strong>${lockedComp.rawDisplay}</strong> &bull; Complete a Full ${subMode} Mock in Tab 4 to populate Actual Achievement`}</div>
+              ? `Locked Target (<strong>${lockedComp.rawDisplay}</strong>) vs. Verified Tab 4 Mock <strong>${latestMock.serialId || modeKey}</strong> (<strong>${actualComp.rawDisplay}</strong>)`
+              : `Locked Target: <strong>${lockedComp.rawDisplay}</strong> &bull; Complete a Full ${schema.fullMinQs}-Q Mock in Tab 4 to populate Actual Achievement`}</div>
           </div>
           ${totalDeficiency !== null ? `
             <span style="padding:4px 10px;border-radius:999px;font-size:11px;font-weight:800;background:${totalDeficiency <= 0 ? "#d1fae5" : "#fef3c7"};color:${totalDeficiency <= 0 ? "#065f46" : "#92400e"};">
@@ -474,7 +827,7 @@
               <tr style="background:#f1f5f9;border-bottom:1px solid #cbd5e1;font-size:10px;font-weight:800;color:#475569;text-transform:uppercase;">
                 <th style="padding:8px 12px;">Section</th>
                 <th style="padding:8px 12px;">Locked Target</th>
-                <th style="padding:8px 12px;">Achieved (Mock)</th>
+                <th style="padding:8px 12px;">Achieved (Tab 4 Mock)</th>
                 <th style="padding:8px 12px;">Deficiency / Surplus</th>
                 <th style="padding:8px 12px;width:110px;">Completion</th>
               </tr>
@@ -514,27 +867,6 @@
           </table>
         </div>
       </div>
-    `;
-
-    out.innerHTML = `
-      <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
-        <div style="padding:16px;border-radius:16px;background:${isTargetMode ? "#eef2ff" : "#ecfdf5"};border:1px solid ${isTargetMode ? "#c7d2fe" : "#a7f3d0"};">
-          <div style="font-size:10px;font-weight:800;text-transform:uppercase;color:${isTargetMode ? "#4338ca" : "#047857"};">${isTargetMode ? "Target Preview Score" : "Actual Verified Score"}</div>
-          <div style="font-size:22px;font-weight:900;color:#0f172a;margin-top:2px;">${curComp.rawDisplay}</div>
-          <div style="font-size:11px;font-weight:700;color:${isTargetMode ? "#4338ca" : "#047857"};margin-top:2px;">Calibrated: ${curComp.effDisplay}</div>
-        </div>
-        <div style="padding:16px;border-radius:16px;background:#ecfdf5;border:1px solid #a7f3d0;">
-          <div style="font-size:10px;font-weight:800;text-transform:uppercase;color:#047857;">${isTargetMode ? "Tentative Expected Percentile" : "Actual Projected Percentile"}</div>
-          <div style="font-size:22px;font-weight:900;color:#064e3b;margin-top:2px;">${curComp.pct}</div>
-          <div style="font-size:11px;font-weight:700;color:#047857;margin-top:2px;">${curComp.subMeta}</div>
-        </div>
-        <div style="padding:16px;border-radius:16px;background:#f8fafc;border:1px solid #cbd5e1;">
-          <div style="font-size:10px;font-weight:800;text-transform:uppercase;color:#475569;">${isTargetMode ? "Expected Admit Tier" : "Actual Admit Tier"} (${catObj.val}${catObj.bonus !== 0 ? (catObj.bonus > 0 ? " +" + catObj.bonus : " " + catObj.bonus) + " Eq." : ""})</div>
-          <div style="font-size:12px;font-weight:800;color:#0f172a;margin-top:4px;line-height:1.35;">${curComp.tier}</div>
-        </div>
-      </div>
-
-      ${matrixHtml}
 
       <div class="space-y-2 pt-1">
         <div class="text-xs font-extrabold uppercase tracking-wider text-slate-700">${isTargetMode ? "Tentative B-School / Program Outcome at Selected Target" : "Actual B-School / Program Readiness from Synced Mock"}</div>
@@ -553,15 +885,15 @@
     `;
   };
 
-  window.renderUnifiedMbaForecaster6 = function (el) {
+  window.renderStreamlinedTab7 = function (el) {
     const target = el || document.getElementById("main-workspace") || document.getElementById("tab-content");
     if (!target) return;
 
-    const subMode = getSubMode();
-    const schema = getSchema(subMode);
-    const st = getActiveState(subMode, schema);
-    const isTargetMode = (window._MBA_T6_MODE !== "VERIFIED");
-    const mocks = getFullMocksForSubMode(subMode, schema);
+    const modeKey = getActiveModeKey();
+    const schema = getSchema(modeKey);
+    const st = getActiveState(modeKey, schema);
+    const isTargetMode = (window._MBA_T7_MODE !== "VERIFIED");
+    const mocks = getFullMocksForMode(modeKey, schema);
 
     target.innerHTML = `
       <div class="max-w-7xl mx-auto pt-4 pb-10 space-y-5">
@@ -570,11 +902,11 @@
             <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:10px;">
               <div class="space-y-1">
                 <span id="mba-mode-badge" style="display:inline-block;padding:3px 10px;border-radius:999px;font-size:10px;font-weight:800;text-transform:uppercase;background:${isTargetMode ? "#e0e7ff" : "#d1fae5"};color:${isTargetMode ? "#3730a3" : "#065f46"};">
-                  ${isTargetMode ? (window._MBA_T6_MSG ? "✓ " + window._MBA_T6_MSG : "MODE: DESIRED SELF-TARGET") : "MODE: SYNCED ACTUAL STRENGTH"}
+                  ${isTargetMode ? (window._MBA_T7_MSG ? "✓ " + window._MBA_T7_MSG : "MODE: DESIRED SELF-TARGET (" + schema.badge + ")") : "MODE: SYNCED ACTUAL STRENGTH"}
                 </span>
                 <div class="text-[10px] font-extrabold uppercase tracking-wider text-indigo-600 pt-1">${schema.kicker}</div>
                 <h2 class="text-xl font-extrabold text-slate-900 dark:text-white">${schema.title}</h2>
-                <div class="text-[11px] text-slate-500">Adjust sliders &amp; click <strong>Set Target</strong> to lock your goal, or click <strong>Sync Mock</strong> to compare against Tab 4 actuals.</div>
+                <div class="text-[11px] text-slate-500">Targets are isolated per exam track (<strong>${schema.badge}</strong>). Adjust sliders &amp; click <strong>Set Target</strong> to lock, or <strong>Sync Mock</strong> for Tab 4 actuals.</div>
               </div>
               <div style="display:flex;flex-direction:column;gap:6px;flex-shrink:0;min-width:116px;">
                 <button type="button" onclick="window.mbaCommitTarget();"
@@ -626,16 +958,16 @@
 
             <div style="padding:12px 14px;border-radius:12px;background:${isTargetMode ? "#eef2ff" : "#ecfdf5"};border:1px solid ${isTargetMode ? "#c7d2fe" : "#6ee7b7"};font-size:11px;color:#0f172a;">
               ${isTargetMode
-                ? `<strong>&#127919; Self-Target Goal Mode:</strong> ${mocks.length ? `Verified Full ${subMode} Mocks Logged: <strong>${mocks.length}</strong> (Latest: <strong>${mocks[0].serialId || subMode}</strong>).` : `0 Full ${subMode} Mocks submitted yet — complete a full mock in Tab 4 to populate Achievement vs. Deficiency.`}`
-                : `<strong>&#10003; Synced Actual Strength:</strong> Showing verified marks from <strong>${window._MBA_T6_SYNCED_ID}</strong>. Click <strong>Reset Target</strong> to return to your locked target.`}
+                ? `<strong>&#127919; Mode-Isolated Target (${schema.badge}):</strong> ${mocks.length ? `Verified Full ${schema.badge} Mocks Logged: <strong>${mocks.length}</strong>.` : `0 Full ${schema.fullMinQs}-Q ${schema.badge} Mocks submitted yet — complete one in Tab 4.`}`
+                : `<strong>&#10003; Synced Actual Strength:</strong> Showing verified marks from <strong>${window._MBA_T7_SYNCED_ID}</strong>. Click <strong>Reset Target</strong> to return to your locked target.`}
             </div>
           </div>
 
           <div class="lg:col-span-7 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-6 space-y-4 shadow-sm">
-            <div id="mba-t6-results" class="space-y-4"></div>
+            <div id="mba-t7-results" class="space-y-4"></div>
 
             <div class="overflow-x-auto pt-2 border-t border-slate-200">
-              <div class="text-xs font-extrabold uppercase tracking-wider text-slate-700 mb-2">${subMode} Score vs. Percentile &amp; Admit Calibration Ladder</div>
+              <div class="text-xs font-extrabold uppercase tracking-wider text-slate-700 mb-2">${schema.badge} Score vs. Percentile &amp; Admit Calibration Ladder</div>
               <table class="w-full text-left border-collapse text-xs">
                 <thead>
                   <tr class="border-b border-slate-200 text-slate-500">
@@ -659,47 +991,87 @@
         </div>
       </div>
     `;
-    window.updateUnifiedMbaReadout();
+    window.updateStreamlinedTab7Readout();
   };
 
-  window.mbaSelectDiff = function (v) {
-    const subMode = getSubMode();
-    const schema = getSchema(subMode);
-    getActiveState(subMode, schema).diff = v;
-    window.updateUnifiedMbaReadout();
-  };
+  // ----------------------------------------------------------------------------
+  // UNIFIED 7-TAB ROUTING & TOP MODE CORRELATION
+  // ----------------------------------------------------------------------------
+  const TAB7_LABELS = PORTAL === "GRE"
+    ? ["1. Quantitative Reasoning (QC & PS)", "2. Data Interpretation & AWA Lab", "3. Verbal Studio (TC, SE & RC)", "4. Full-Length GRE Mock", "5. Sectional & Sprint Mocks", "6. Trap Doctor & AI Doubts", "7. GRE Score & Target Forecaster"]
+    : (PORTAL === "GMAT"
+      ? ["1. Quantitative Reasoning (Zero Geo)", "2. Data Insights (DS & TPA)", "3. Verbal Studio (CR & RC)", "4. Full-Length GMAT Mock", "5. Sectional & Sprint Mocks", "6. Trap Doctor & AI Doubts", "7. Score & Target Forecaster"]
+      : ["1. Quantitative Aptitude (QA)", "2. DILR Caselet Lab", "3. VARC Studio (RC & TITA)", "4. Full-Length Mock Simulator", "5. Sectional & Sprint Mocks", "6. Trap Doctor & AI Doubts", "7. Score & Target Forecaster"]);
 
-  window.mbaSelectCat = function (v) {
-    const subMode = getSubMode();
-    const schema = getSchema(subMode);
-    getActiveState(subMode, schema).cat = v;
-    window.updateUnifiedMbaReadout();
-  };
+  function ensureSevenTabBar() {
+    const curNum = Number(window._ACTIVE_TAB_NUM || 1);
+    const navButtons = Array.from(document.querySelectorAll("header button")).filter(b => /^[1-7]\./.test((b.textContent || "").trim()));
+    if (!navButtons.length) return;
+    const container = navButtons[0].parentElement;
+    if (!container) return;
 
-  const fn = window.renderUnifiedMbaForecaster6;
-  window.renderTab6 = fn;
-  window.renderGreScoreForecaster6 = fn;
-  window.renderAuthoritativeGmatTab6 = fn;
-  window.renderGmatFullMockForecaster6 = fn;
-  window.renderAuthoritativeTab6 = fn;
-  window.renderCatFullMockForecaster6 = fn;
-  window.renderScoreForecaster6 = fn;
-  window.renderCollegePredictor = fn;
-  window.renderCallPredictor = fn;
-  window.renderCallPredictor6 = fn;
-
-  const origSelectUnified = window.selectUnifiedTab;
-  if (typeof origSelectUnified === "function") {
-    window.selectUnifiedTab = function (tabNum) {
-      const n = Number(tabNum);
-      if (n === 6) window._MBA_T6_MODE = "TARGET";
-      origSelectUnified.apply(this, arguments);
-      if (n === 6) {
-        const ws = document.getElementById("main-workspace") || document.getElementById("tab-content");
-        if (ws) fn(ws);
-      }
-    };
+    container.innerHTML = TAB7_LABELS.map((lbl, idx) => {
+      const n = idx + 1;
+      const active = n === curNum;
+      return `<button type="button" onclick="window.selectUnifiedTab(${n})"
+        class="px-3.5 py-2 rounded-full text-xs font-bold transition cursor-pointer ${active ? 'bg-indigo-600 text-white shadow-sm' : 'bg-white dark:bg-slate-900 text-slate-700 dark:text-slate-200 border border-slate-300 dark:border-slate-700 hover:border-indigo-500'}">
+        ${lbl}
+      </button>`;
+    }).join("");
   }
+
+  window.selectUnifiedTab = function (tabNum) {
+    const n = Number(tabNum);
+    window._ACTIVE_TAB_NUM = n;
+    window.ACTIVE_TAB = n;
+    window.IPM_STATE = window.IPM_STATE || {};
+    window.IPM_STATE.activeTab = n === 4 ? "tab8" : (n === 5 ? "tab5_prac" : (n === 6 ? "tab4" : (n === 7 ? "tab6" : "tab" + n)));
+    window.scrollTo(0, 0);
+    const oldPgMount = document.getElementById("pgStudioLiveMount");
+    if (oldPgMount && n >= 3) oldPgMount.remove();
+
+    if (typeof window.renderCleanHeader === "function") window.renderCleanHeader();
+    ensureSevenTabBar();
+
+    const el = document.getElementById("main-workspace") || document.querySelector("main") || document.getElementById("tab-content");
+    if (!el) return;
+    el.id = "main-workspace";
+
+    if (n === 1) {
+      if (typeof window.renderQuantTab === "function") { el.innerHTML = ""; window.renderQuantTab(el); }
+      else if (typeof window.renderTab1 === "function") { el.innerHTML = ""; window.renderTab1(el); }
+    } else if (n === 2) {
+      el.innerHTML = ""; window.renderTab2(el);
+    } else if (n === 3) {
+      el.innerHTML = ""; window.renderVerbalStudio3(el);
+    } else if (n === 4) {
+      el.innerHTML = ""; window.renderStreamlinedTab4(el);
+    } else if (n === 5) {
+      el.innerHTML = ""; window.renderPracticeMocksTab5(el);
+    } else if (n === 6) {
+      el.innerHTML = ""; window.renderTrapClinic5(el);
+    } else if (n === 7) {
+      window._MBA_T7_MODE = "TARGET";
+      el.innerHTML = ""; window.renderStreamlinedTab7(el);
+    }
+  };
+
+  // Keep user on current tab when switching Top Mode Pills and refresh Tab 4 / Tab 5 / Tab 7 immediately
+  const origSelectMode = window.selectExamMode;
+  window.selectExamMode = function (idx) {
+    window._ACTIVE_MODE_IDX = Number(idx);
+    if (typeof origSelectMode === "function") {
+      // Prevent origSelectMode from forcing a tab jump if it sets targetTab
+      const savedTab = Number(window._ACTIVE_TAB_NUM || 1);
+      origSelectMode(idx);
+      window._ACTIVE_TAB_NUM = savedTab;
+    }
+    ensureSevenTabBar();
+    const cur = Number(window._ACTIVE_TAB_NUM || 1);
+    if (cur === 4) window.renderStreamlinedTab4();
+    else if (cur === 5) { window._PRACTICE_SPRINT_IDX = 0; window.renderPracticeMocksTab5(); }
+    else if (cur === 7) { window._MBA_T7_MODE = "TARGET"; window.renderStreamlinedTab7(); }
+  };
 
   document.addEventListener("click", function (ev) {
     const btn = ev.target && ev.target.closest ? ev.target.closest("button") : null;
@@ -708,11 +1080,17 @@
     const txt = (btn.textContent || "").trim();
     if (id.startsWith("mode-pill-") || txt.includes("CAT Standard") || txt.includes("XAT & Decision") || txt.startsWith("NMAT Adaptive") || txt.startsWith("SNAP Speed")) {
       setTimeout(() => {
-        if (Number(window._ACTIVE_TAB_NUM) === 6) {
-          window._MBA_T6_MODE = "TARGET";
-          fn();
-        }
+        ensureSevenTabBar();
+        const cur = Number(window._ACTIVE_TAB_NUM || 1);
+        if (cur === 4) window.renderStreamlinedTab4();
+        else if (cur === 5) { window._PRACTICE_SPRINT_IDX = 0; window.renderPracticeMocksTab5(); }
+        else if (cur === 7) { window._MBA_T7_MODE = "TARGET"; window.renderStreamlinedTab7(); }
       }, 60);
     }
   });
+
+  window.renderTab6 = window.renderStreamlinedTab7;
+  window.renderTab7 = window.renderStreamlinedTab7;
+  window.addEventListener("DOMContentLoaded", () => setTimeout(ensureSevenTabBar, 120));
+  setTimeout(ensureSevenTabBar, 300);
 })();
