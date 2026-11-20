@@ -1125,20 +1125,4 @@
   window.renderTab4 = window.renderMockSimulator4;
   window.renderGreMockSimulator4 = window.renderMockSimulator4;
   window.renderGmatMockSimulator4 = window.renderMockSimulator4;
-
-  // Guard #main-workspace against any async 5-card grid injection while on Tab 4 or Tab 5
-  const _tab45Guard = new MutationObserver(() => {
-    const cur = Number(window._ACTIVE_TAB_NUM || 1);
-    const ws = document.getElementById("main-workspace");
-    if (!ws) return;
-    if (cur === 4 && ws.querySelector("button[onclick*='_SELECTED_MOCK_BP'], button[onclick*='_GRE_MOCK_BP']")) {
-      window.renderStreamlinedTab4(ws);
-    } else if (cur === 5 && !ws.innerHTML.includes("SECTIONAL &amp; SPRINT PRACTICE LAB") && !ws.innerHTML.includes("SECTIONAL & SPRINT PRACTICE LAB")) {
-      window.renderPracticeMocksTab5(ws);
-    }
-  });
-  window.addEventListener("DOMContentLoaded", () => {
-    const ws = document.getElementById("main-workspace") || document.getElementById("tab-content");
-    if (ws) _tab45Guard.observe(ws, { childList: true });
-  });
 })();
