@@ -468,6 +468,56 @@
     return catConfigs[modeKey] || catConfigs.CAT;
   }
 
+
+  // ----------------------------------------------------------------------------
+  // DETERMINISTIC, SELF-DOCUMENTING TEST SERIAL ID GENERATOR
+  // Format: [EXAM]-[TRACK/SECTION]-[YYYYMMDD]-#[ATTEMPT]
+  // ----------------------------------------------------------------------------
+  window.buildSystematicSerialId = function (portal, modeKey, isPractice, practiceCode) {
+    const now = new Date();
+    const ymd = now.getFullYear().toString() +
+      String(now.getMonth() + 1).padStart(2, "0") +
+      String(now.getDate()).padStart(2, "0");
+
+    let examPrefix = portal;
+    let trackCode = "FULL";
+
+    if (portal === "GRE") {
+      examPrefix = "GRE";
+      trackCode = isPractice ? `PRAC-${practiceCode}` : (modeKey === "Q170" ? "Q170-27Q" : (modeKey === "V165" ? "V165-27Q" : "FULL54"));
+    } else if (portal === "GMAT") {
+      examPrefix = "GMAT";
+      trackCode = isPractice ? `PRAC-${practiceCode}` : (modeKey === "DI_CLINIC" ? "DI20" : (modeKey === "SPRINT_705" ? "705SPRINT-30Q" : "FULL64"));
+    } else {
+      examPrefix = modeKey; // CAT | XAT | NMAT | SNAP
+      const fullMap = { CAT: "FULL66", XAT: "FULL75", NMAT: "FULL108", SNAP: "FULL60" };
+      trackCode = isPractice ? `PRAC-${practiceCode}` : (fullMap[modeKey] || "FULL66");
+    }
+
+    const prefixBase = `${examPrefix}-${trackCode}-`;
+    let priorCount = 0;
+    try {
+      const hist = JSON.parse(localStorage.getItem("ipm_mock_history_v1") || "[]");
+      if (Array.isArray(hist)) {
+        priorCount = hist.filter(h => {
+          if (!h) return false;
+          const sid = String(h.serialId || "");
+          if (sid.startsWith(prefixBase)) return true;
+          if (!isPractice && PORTAL === "CAT" && typeof window.classifyMockEntryMode === "function") {
+            return window.classifyMockEntryMode(h) === modeKey && Number(h.score || 0) > 0;
+          }
+          if (!isPractice && PORTAL !== "CAT" && Number(h.score || 0) > 0) {
+            return modeKey === "STANDARD";
+          }
+          return false;
+        }).length;
+      }
+    } catch (_) {}
+
+    const attemptNum = String(priorCount + 1).padStart(2, "0");
+    return `${examPrefix}-${trackCode}-${ymd}-#${attemptNum}`;
+  };
+
   // ----------------------------------------------------------------------------
   // TAB 4: MODE-REACTIVE PROCTORED MOCK LAUNCHER (ADAPTS TO TOP MODE PILL)
   // ----------------------------------------------------------------------------
@@ -476,7 +526,7 @@
     if (!target) return;
     const modeKey = getActiveModeKey();
     const schema = getSchema(modeKey);
-    const nextSerial = `${modeKey === "STANDARD" ? PORTAL : modeKey}-2026-${Math.floor(1000 + Math.random() * 9000)}`;
+    const nextSerial = window.buildSystematicSerialId(PORTAL, modeKey, false, "");
 
     const rawHist = JSON.parse(localStorage.getItem("ipm_mock_history_v1") || "[]");
     const modeLogs = rawHist.filter(h => {
@@ -587,7 +637,7 @@
     const sprints = schema.sprints || [];
     const idx = Math.min(sprints.length - 1, Math.max(0, Number(window._PRACTICE_SPRINT_IDX || 0)));
     const sp = sprints[idx];
-    const serialId = `PRAC-${modeKey}-${Math.floor(1000 + Math.random() * 9000)}`;
+    const serialId = window.buildSystematicSerialId(PORTAL, modeKey, true, `${sp.sec}${sp.count}`);
 
     const startPracticeFn = PORTAL === "GRE"
       ? `window.startGreProctoredMock(${sp.bpIdx || 1}, '${serialId}')`
