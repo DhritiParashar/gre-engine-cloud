@@ -1643,3 +1643,9 @@ def initiate_password_reset_otp(email: str) -> dict:
         return {"ok": False, "error": f"Reset OTP Error: {exc}"}
     finally:
         db.close()
+
+try:
+    from app.seed_1200_postgrad_bank import seed_1200_postgrad_bank
+    seed_1200_postgrad_bank(engine)
+except Exception as _s1200_err:
+    print('1200+ bank seed warning:', _s1200_err)
