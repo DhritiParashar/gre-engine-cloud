@@ -1348,10 +1348,14 @@
         const est = Math.min(805, Math.max(205, Math.round((205 + (latest.score / latest.maxScore) * 600) / 10) * 10 + 5));
         telemetry = `Mocks: ${hist.length} &bull; Latest Scaled: ${est}/805`;
       } else if (host.includes("gre") || window.location.port === "8007" || /GRE/i.test(document.title || "")) {
-        const est = Math.min(340, Math.max(260, Math.round(260 + (latest.score / latest.maxScore) * 80)));
+        const est = Number(latest.score) >= 260
+          ? Math.min(340, Math.max(260, Math.round(Number(latest.score))))
+          : Math.min(340, Math.max(260, Math.round(260 + (latest.score / latest.maxScore) * 80)));
         telemetry = `Mocks: ${hist.length} &bull; Latest Scaled: ${est}/340`;
       } else {
-        const scaled198 = Math.round((latest.score / latest.maxScore) * 198);
+        const scaled198 = Number(latest.maxScore) === 198
+          ? Math.round(Number(latest.score))
+          : Math.round((latest.score / latest.maxScore) * 198);
         telemetry = `Mocks: ${hist.length} &bull; Latest Scaled: ${scaled198}/198`;
       }
     } else if (user && user.targetScore) {
@@ -1474,8 +1478,8 @@
 <style>
   #goalisbGoToTopBtn {
     position: fixed;
-    right: 22px;
-    bottom: 76px;
+    right: 18px;
+    bottom: 18px;
     z-index: 9990;
     display: inline-flex;
     align-items: center;
