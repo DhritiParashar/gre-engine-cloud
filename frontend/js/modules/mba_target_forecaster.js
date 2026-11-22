@@ -1352,14 +1352,30 @@ window.downloadMbaMockMarksheetAndScript = function (serialId) {
   const isGre = /GRE/i.test(rec.serialId || document.title || "");
   const portalTitle = isGre ? "GOALisB GRE MASTER ENGINE" : "GOALisB CAT MASTER ENGINE";
   const candidate = (function () {
-    try {
-      const u = JSON.parse(localStorage.getItem("goalisb_user") || "{}");
-      if (u.full_name || u.name || u.username) return u.full_name || u.name || u.username;
-    } catch (_) {}
-    const pill = document.querySelector("[class*='rounded-full'] span, header");
-    const m = pill ? (pill.textContent || "").match(/\b([a-zA-Z]+(?:\s+[a-zA-Z]+)?)\s*\|/) : null;
-    return m ? m[1].trim() : "Candidate";
-  })();
+      function titleCase(str) {
+        return String(str || "").trim().replace(/\b\w/g, c => c.toUpperCase());
+      }
+      // 1. Live logged-in header pill (e.g., "aarav | Mocks: 1...")
+      const headerBadges = Array.from(document.querySelectorAll("header button, header span, header div, [class*='rounded-full']"));
+      for (const el of headerBadges) {
+        if (el.children.length > 2) continue;
+        const txt = (el.textContent || "").trim();
+        const m = txt.match(/^[^\w]*([a-zA-Z][a-zA-Z0-9_ .-]{1,30}?)\s*\|\s*(?:Target|Mocks|Readiness)/i);
+        if (m && m[1] && !/guest/i.test(m[1])) return titleCase(m[1]);
+      }
+      // 2. Active auth globals / localStorage session keys
+      if (window.currentUser && (window.currentUser.full_name || window.currentUser.name || window.currentUser.username)) {
+        return titleCase(window.currentUser.full_name || window.currentUser.name || window.currentUser.username);
+      }
+      for (const k of ["goalisb_auth_user", "auth_user", "current_user", "goalisb_user"]) {
+        try {
+          const u = JSON.parse(localStorage.getItem(k) || "{}");
+          const nm = u.full_name || u.name || u.username;
+          if (nm && !/guest/i.test(nm)) return titleCase(nm);
+        } catch (_) {}
+      }
+      return "Candidate";
+    })();
 
   const win = window.open("", "_blank", "width=960,height=860");
   if (!win) {
@@ -2003,8 +2019,9 @@ window.resetMbaOfficialMockLogs = function () {
 
     const items = Array.isArray(rec.breakdown) ? rec.breakdown : [];
     const questionsHtml = items.length ? items.map((q, idx) => {
-      const statusCls = q.isUnattempted ? "q-unatt" : (q.isCorrect ? "q-ok" : "q-bad");
-      const badgeText = q.isUnattempted
+      const unatt = q.isUnattempted || !String(q.userChoice || "").trim();
+      const statusCls = unatt ? "q-unatt" : (q.isCorrect ? "q-ok" : "q-bad");
+      const badgeText = unatt
         ? "Unattempted (0 Marks)"
         : q.isCorrect
           ? `✓ Correct (+${q.marksDelta ?? (isGre ? 1 : 3)} Marks)`
