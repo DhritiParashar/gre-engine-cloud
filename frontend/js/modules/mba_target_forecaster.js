@@ -530,11 +530,10 @@
 
     const rawHist = JSON.parse(localStorage.getItem("ipm_mock_history_v1") || "[]");
     const modeLogs = rawHist.filter(h => {
-      if (!h || Number(h.score || 0) <= 0) return false;
-      if (PORTAL === "CAT" && typeof window.classifyMockEntryMode === "function") {
-        return window.classifyMockEntryMode(h) === modeKey && (Number(h.maxScore || 0) >= schema.fullMinQs || String(h.blueprint || "").toLowerCase().includes("full"));
-      }
-      return Number(h.maxScore || 0) >= schema.fullMinQs || String(h.blueprint || "").toLowerCase().includes("full");
+      if (!h || h.isSectional === true || String(h.type || "").toLowerCase() === "sectional") return false;
+      const hMode = String(h.mode || h.modeKey || h.examMode || "").toUpperCase();
+      if (hMode === String(modeKey).toUpperCase() && (h.isProctored === true || Number(h.score || 0) > 0)) return true;
+      return Number(h.score || 0) > 0 && (Number(h.maxScore || 0) >= schema.fullMinQs || String(h.blueprint || "").toLowerCase().includes("full"));
     });
 
     const bpIdx = Number(schema.bpIndex || 0);
@@ -594,7 +593,10 @@
               <h3 class="text-sm font-extrabold text-slate-900 dark:text-white">${schema.badge} Official Mock Ledger (${modeLogs.length} Logged)</h3>
               <p class="text-[11px] text-slate-500">Synchronized with <strong>Tab 7 Target &amp; Deficiency Forecaster</strong> for ${schema.badge}.</p>
             </div>
-            <button type="button" onclick="window.selectUnifiedTab(7)" class="px-3.5 py-1.5 rounded-xl bg-indigo-50 text-indigo-700 text-xs font-extrabold cursor-pointer">Open Tab 7 Target Forecaster &rarr;</button>
+            <div class="flex flex-wrap items-center gap-2">
+              <button type="button" onclick="window.resetMbaOfficialMockLogs()" class="px-3.5 py-1.5 rounded-xl bg-rose-50 hover:bg-rose-100 text-rose-700 border border-rose-200 text-xs font-extrabold cursor-pointer">&#8634; Reset / Clear Logs</button>
+              <button type="button" onclick="window.selectUnifiedTab(7)" class="px-3.5 py-1.5 rounded-xl bg-indigo-50 hover:bg-indigo-100 text-indigo-700 text-xs font-extrabold cursor-pointer">Open Tab 7 Target Forecaster &rarr;</button>
+            </div>
           </div>
           <div class="overflow-x-auto">
             <table class="w-full text-left border-collapse">
@@ -605,6 +607,7 @@
                   <th class="py-2 px-3">Simulation Blueprint</th>
                   <th class="py-2 px-3">Score</th>
                   <th class="py-2 px-3">Accuracy</th>
+                  <th class="py-2 px-3 text-right">Actions</th>
                 </tr>
               </thead>
               <tbody>
@@ -615,8 +618,14 @@
                     <td class="py-2.5 px-3 font-bold">${h.blueprint}</td>
                     <td class="py-2.5 px-3 font-extrabold text-emerald-600">${h.score} / ${h.maxScore}</td>
                     <td class="py-2.5 px-3 font-bold">${h.accuracy}%</td>
+                    <td class="py-2.5 px-3 text-right whitespace-nowrap">
+                      <div class="inline-flex items-center gap-1.5 justify-end">
+                        <button type="button" onclick="window.downloadMbaMockMarksheetAndScript('${h.serialId}')" class="px-2.5 py-1 rounded-lg bg-white hover:bg-slate-50 text-slate-800 border border-slate-300 text-[11px] font-bold cursor-pointer">&#11015; Marksheet &amp; Script</button>
+                        <button type="button" onclick="window.syncSpecificMbaMockToTab7('${h.serialId}')" class="px-2.5 py-1 rounded-lg bg-indigo-600 hover:bg-indigo-500 text-white text-[11px] font-extrabold cursor-pointer">Sync Tab 7 &rarr;</button>
+                      </div>
+                    </td>
                   </tr>
-                `).join("") : `<tr><td colspan="5" class="py-5 text-center text-xs text-slate-400">No ${schema.fullMinQs}-Question simulations logged yet for <strong>${schema.badge}</strong>. Click <strong>Start Proctored Mock</strong> above to launch.</td></tr>`}
+                `).join("") : `<tr><td colspan="6" class="py-5 text-center text-xs text-slate-400">No ${schema.fullMinQs}-Question simulations logged yet for <strong>${schema.badge}</strong>. Click <strong>Start Proctored Mock</strong> above to launch.</td></tr>`}
               </tbody>
             </table>
           </div>
@@ -1184,196 +1193,165 @@
 })();
 
 
-// === TAB 4 -> NATIVE 'ipm_mock_history_v1' LEDGER & TAB 7 SYNC BRIDGE ===
+// ==============================================================================
+// CLEAN GRE PROCTORED EXAM RUNNER, LEDGER ACTIONS & TOP-SUMMARY PDF MARKSHEET
+// ==============================================================================
 (function () {
-  const origRecord = window.recordProctoredMockNative;
-  window.recordProctoredMockNative = function (payload) {
-    const isGre = !!payload.isGre;
-    const modeKey = (typeof getActiveModeKey === "function") ? getActiveModeKey() : (isGre ? "GRE_STD" : "CAT_STD");
-    const schema = (typeof getSchema === "function") ? getSchema(modeKey) : { badge: modeKey, totalMax: payload.maxScale, sections: [{ max: 72 }, { max: 60 }, { max: 66 }] };
-    const ratio = Number(payload.pct || 0) / 100;
-    const s1 = Math.round((schema.sections[0]?.max || 72) * ratio);
-    const s2 = Math.round((schema.sections[1]?.max || 60) * ratio);
-    const s3 = Math.round((schema.sections[2]?.max || 66) * ratio);
-
-    const hist = JSON.parse(localStorage.getItem("ipm_mock_history_v1") || "[]");
-    const modeCount = hist.filter(x => (x.mode === modeKey || x.modeKey === modeKey)).length;
-    const dStr = new Date().toISOString().slice(0, 10).replace(/-/g, "");
-    const seq = String(modeCount + 1).padStart(2, "0");
-    const prefix = isGre ? "GRE-FULL" : "CAT-FULL";
-    const serialId = `${prefix}${payload.totalQs}-${dStr}-#${seq}`;
-
-    const entry = {
-      serialId,
-      mode: modeKey,
-      modeKey,
-      examMode: modeKey,
-      format: `${schema.badge || modeKey} (${payload.totalQs} Qs)`,
-      blueprint: `${schema.badge || modeKey} (${payload.totalQs} Qs)`,
-      score: payload.scaled,
-      maxMarks: payload.maxScale,
-      percentage: payload.pct,
-      s1, s2, s3,
-      sectionScores: { s1, s2, s3 },
-      date: new Date().toLocaleString([], { day: "2-digit", month: "short", hour: "2-digit", minute: "2-digit" })
-    };
-
-    hist.unshift(entry);
-    localStorage.setItem("ipm_mock_history_v1", JSON.stringify(hist));
-
-    if (typeof origRecord === "function") {
-      try { origRecord({ ...payload, serialId }); } catch (_) {}
-    }
-    if (typeof window.renderStreamlinedTab4 === "function") {
-      setTimeout(() => window.renderStreamlinedTab4(), 50);
-    }
-    return entry;
-  };
-})();
-
-
-// === NATIVE PROCTORED LEDGER & TAB 7 SYNC BRIDGE (v_native_sync_final) ===
-window.saveTab4ProctoredToNativeLedger = function (payload) {
-  const isGre = !!payload.isGre;
-  const modeKey = (typeof getActiveModeKey === "function") ? getActiveModeKey() : (isGre ? "GRE_STD" : "CAT_STD");
-  const schema = (typeof getSchema === "function")
-    ? getSchema(modeKey)
-    : { badge: modeKey, totalMax: payload.maxScale, sections: [{ id: "s1", max: 72 }, { id: "s2", max: 60 }, { id: "s3", max: 66 }] };
-
-  const ratio = Number(payload.pct || 0) / 100;
-  const s1 = Math.round(((schema.sections && schema.sections[0]) ? schema.sections[0].max : 72) * ratio);
-  const s2 = Math.round(((schema.sections && schema.sections[1]) ? schema.sections[1].max : 60) * ratio);
-  const s3 = Math.round(((schema.sections && schema.sections[2]) ? schema.sections[2].max : 66) * ratio);
-
-  const hist = JSON.parse(localStorage.getItem("ipm_mock_history_v1") || "[]");
-  const dStr = new Date().toISOString().slice(0, 10).replace(/-/g, "");
-  const modeExisting = hist.filter(m => (m.mode === modeKey || m.modeKey === modeKey || m.examMode === modeKey));
-  const seq = String(modeExisting.length + 1).padStart(2, "0");
-  const serialId = payload.serialId || `${isGre ? "GRE-FULL" : "CAT-FULL"}${payload.totalQs}-${dStr}-#${seq}`;
-
-  const entry = {
-    id: serialId,
-    serialId: serialId,
-    type: "full",
-    mockType: "full",
-    isProctored: true,
-    isSectional: false,
-    mode: modeKey,
-    modeKey: modeKey,
-    examMode: modeKey,
-    track: modeKey,
-    title: `${schema.badge || modeKey} (${payload.totalQs} Qs)`,
-    format: `${schema.badge || modeKey} (${payload.totalQs} Qs)`,
-    blueprint: `${schema.badge || modeKey} (${payload.totalQs} Qs)`,
-    score: Number(payload.scaled || 0),
-    totalScore: Number(payload.scaled || 0),
-    maxMarks: Number(payload.maxScale || schema.totalMax || 198),
-    maxScore: Number(payload.maxScale || schema.totalMax || 198),
-    percentage: Number(payload.pct || 0),
-    accuracy: Number(payload.pct || 0),
-    s1: s1,
-    s2: s2,
-    s3: s3,
-    secScores: [s1, s2, s3],
-    sectionScores: { s1: s1, s2: s2, s3: s3 },
-    breakdown: Array.isArray(payload.breakdown) ? payload.breakdown : [],
-    totalQs: payload.totalQs,
-    correct: payload.correct,
-    wrong: payload.wrong,
-    unattempted: payload.unattempted,
-    timeAllocatedSec: payload.timeAllocatedSec,
-    timeTakenSec: payload.timeTakenSec,
-    timeAllocatedStr: payload.timeAllocatedStr,
-    timeTakenStr: payload.timeTakenStr,
-    pacePerQ: payload.pacePerQ,
-    pacingVerdict: payload.pacingVerdict,
-    sectionSummary: Array.isArray(payload.sectionSummary) ? payload.sectionSummary : [],
-    timestamp: Date.now(),
-    date: new Date().toLocaleString([], { day: "2-digit", month: "short", hour: "2-digit", minute: "2-digit" })
-  };
-
-  if (!hist.some(h => h.serialId === serialId)) {
-    hist.unshift(entry);
-    localStorage.setItem("ipm_mock_history_v1", JSON.stringify(hist));
+  function resolveActiveGreMode() {
+    const idx = Number(window._ACTIVE_MODE_IDX || 0);
+    return idx === 1 ? "Q170" : (idx === 2 ? "V165" : "STANDARD");
   }
 
-  if (typeof window.renderStreamlinedTab4 === "function") window.renderStreamlinedTab4();
-  return entry;
-};
+  function formatDuration(sec) {
+    const s = Math.max(0, Math.round(Number(sec || 0)));
+    return `${Math.floor(s / 60)}m ${String(s % 60).padStart(2, "0")}s`;
+  }
 
-// Auto-migrate any existing cat_proctored_ledger / gre_proctored_ledger entries into ipm_mock_history_v1 on load
-(function () {
-  try {
-    const isGre = /GRE/i.test(document.title || "") || window.location.port === "8007";
-    const legacyKey = isGre ? "gre_proctored_ledger" : "cat_proctored_ledger";
-    const legacy = JSON.parse(localStorage.getItem(legacyKey) || "[]");
-    if (Array.isArray(legacy) && legacy.length) {
-      legacy.forEach(item => {
-        window.saveTab4ProctoredToNativeLedger({
-          isGre,
-          serialId: item.serialId,
-          scaled: item.scaled || item.score || 0,
-          maxScale: item.maxScale || item.maxMarks || (isGre ? 340 : 198),
-          pct: item.pct || item.percentage || 0,
-          totalQs: item.totalQs || (isGre ? 54 : 66)
-        });
+  function harvestGreQuestions() {
+    const pool = [];
+    const seen = new Set();
+    function add(raw, fallbackSec) {
+      if (!raw || typeof raw !== "object") return;
+      const qText = raw.question || raw.prompt || raw.text || raw.stem || raw.q;
+      let opts = raw.options || raw.choices || raw.opts;
+      if (!opts && (raw.option_a || raw.a)) {
+        opts = [raw.option_a || raw.a, raw.option_b || raw.b, raw.option_c || raw.c, raw.option_d || raw.d].filter(Boolean);
+      }
+      if (!qText || !Array.isArray(opts) || opts.length < 2) return;
+      const key = String(qText).trim().slice(0, 100);
+      if (seen.has(key)) return;
+      seen.add(key);
+
+      let ansIdx = 0;
+      if (typeof raw.ans === "number") ansIdx = raw.ans;
+      else if (typeof raw.correct_index === "number") ansIdx = raw.correct_index;
+      else if (typeof raw.answer === "number") ansIdx = raw.answer;
+      else if (typeof raw.answer === "string") {
+        const up = raw.answer.trim().toUpperCase();
+        if (["A", "B", "C", "D", "E"].includes(up)) ansIdx = up.charCodeAt(0) - 65;
+        else {
+          const idx = opts.findIndex(o => String(o).trim().toLowerCase() === raw.answer.trim().toLowerCase());
+          if (idx >= 0) ansIdx = idx;
+        }
+      }
+
+      const secRaw = String(raw.section || raw.subject || raw.category || fallbackSec || "");
+      const bucket = /verbal|varc|rc|reading|tc|text|se|sentence|vocab|para|grammar/i.test(secRaw) ? "VERBAL" : "QUANT";
+      pool.push({
+        bucket,
+        q: String(qText),
+        opts: opts.slice(0, 4).map(String),
+        ans: Math.max(0, Math.min(3, ansIdx)),
+        rationale: String(raw.explanation || raw.solution || raw.rationale || "Verify quantitative boundaries or sentence logic hinges to confirm the keyed option.")
       });
     }
-  } catch (_) {}
-})();
 
-
-// === TAB 4 OFFICIAL MOCK LEDGER INLINE ACTIONS (⬇ Marksheet & Script + Sync Tab 7 →) ===
-window.syncSpecificMbaMockToTab7 = function (serialId) {
-  const hist = JSON.parse(localStorage.getItem("ipm_mock_history_v1") || "[]");
-  const target = hist.find(m => m.serialId === serialId);
-  if (typeof switchMainTab === "function") switchMainTab(7);
-  setTimeout(() => {
-    if (target && typeof getActiveModeKey === "function" && typeof getSchema === "function") {
-      const modeKey = target.modeKey || target.mode || getActiveModeKey();
-      const schema = getSchema(modeKey);
-      const st = (typeof getActiveState === "function") ? getActiveState(modeKey, schema) : null;
-      if (st) {
-        st.s1 = Number(target.s1 || 0);
-        st.s2 = Number(target.s2 || 0);
-        st.s3 = Number(target.s3 || 0);
+    Object.keys(window).forEach(k => {
+      if (!/bank|question|core|varc|dilr|quant|verbal|pyq|drill|module|archive|official/i.test(k)) return;
+      const v = window[k];
+      if (Array.isArray(v)) v.forEach(it => add(it, k));
+      else if (v && typeof v === "object" && !v.nodeType) {
+        Object.entries(v).forEach(([sk, sv]) => { if (Array.isArray(sv)) sv.forEach(it => add(it, sk)); });
       }
-      window._MBA_T7_SYNCED_ID = target.serialId;
-      window._MBA_T7_MODE = "VERIFIED";
-      window._MBA_T7_MSG = "";
-      if (typeof window.renderStreamlinedTab7 === "function") window.renderStreamlinedTab7();
-    } else if (typeof window.mbaSyncMock === "function") {
-      window.mbaSyncMock();
-    }
-  }, 120);
-};
-
-window.downloadMbaMockMarksheetAndScript = function (serialId) {
-  const hist = JSON.parse(localStorage.getItem("ipm_mock_history_v1") || "[]");
-  const rec = hist.find(m => m.serialId === serialId);
-  if (!rec) {
-    alert("Mock record not found in ledger.");
-    return;
+    });
+    return pool;
   }
-  const isGre = /GRE/i.test(rec.serialId || document.title || "");
-  const portalTitle = isGre ? "GOALisB GRE MASTER ENGINE" : "GOALisB CAT MASTER ENGINE";
-  const candidate = (function () {
-      function titleCase(str) {
-        return String(str || "").trim().replace(/\b\w/g, c => c.toUpperCase());
+
+  function buildGrePaper(modeKey, totalQs, pool) {
+    const plan = modeKey === "Q170"
+      ? [
+          { bucket: "QUANT", label: "Quantitative Reasoning • Stage 1 (21 Mins)", count: 12, scheme: "MCQ (+1 / 0)" },
+          { bucket: "QUANT", label: "Quantitative Reasoning • Hard Stage 2 (26 Mins)", count: Math.max(1, totalQs - 12), scheme: "MCQ (+1 / 0)" }
+        ]
+      : modeKey === "V165"
+        ? [
+            { bucket: "VERBAL", label: "Verbal Reasoning • Stage 1 (18 Mins)", count: 12, scheme: "MCQ (+1 / 0)" },
+            { bucket: "VERBAL", label: "Verbal Reasoning • Hard Stage 2 (23 Mins)", count: Math.max(1, totalQs - 12), scheme: "MCQ (+1 / 0)" }
+          ]
+        : [
+            { bucket: "QUANT", label: "Quantitative Reasoning • Stage 1 (21 Mins)", count: 12, scheme: "MCQ (+1 / 0)" },
+            { bucket: "QUANT", label: "Quantitative Reasoning • Stage 2 (26 Mins)", count: 15, scheme: "MCQ (+1 / 0)" },
+            { bucket: "VERBAL", label: "Verbal Reasoning • Stage 1 (18 Mins)", count: 12, scheme: "MCQ (+1 / 0)" },
+            { bucket: "VERBAL", label: "Verbal Reasoning • Stage 2 (23 Mins)", count: Math.max(1, totalQs - 39), scheme: "MCQ (+1 / 0)" }
+          ];
+
+    const buckets = { QUANT: [], VERBAL: [] };
+    pool.forEach(it => { if (buckets[it.bucket]) buckets[it.bucket].push(it); });
+    const cursors = { QUANT: 0, VERBAL: 0 };
+    const paper = [];
+
+    plan.forEach(sec => {
+      const list = buckets[sec.bucket] || [];
+      for (let i = 0; i < sec.count; i++) {
+        if (cursors[sec.bucket] < list.length) {
+          const item = list[cursors[sec.bucket]++];
+          paper.push({ ...item, sec: sec.label, scheme: sec.scheme });
+        } else {
+          const n = paper.length + 1;
+          if (sec.bucket === "VERBAL") {
+            paper.push({ bucket: "VERBAL", sec: sec.label, scheme: sec.scheme, q: `Text Completion (${n}): Far from being ______, the economist's monograph was painstakingly corroborated by longitudinal municipal ledgers.`, opts: ["speculative", "exhaustive", "pedestrian", "orthodox"], ans: 0, rationale: "'Far from being' establishes a contrast with 'painstakingly corroborated', requiring 'speculative'." });
+          } else {
+            const k = 2 + (n % 5);
+            paper.push({ bucket: "QUANT", sec: sec.label, scheme: sec.scheme, q: `Quantitative Reasoning (${n}): If $3x + 2y = ${19 + k * 5}$ and $2x + 3y = ${16 + k * 5}$, what is the value of $x + y$?`, opts: [`$${7 + k * 2}$`, `$${6 + k * 2}$`, `$${8 + k * 2}$`, `$${5 + k * 2}$`], ans: 0, rationale: `Adding both equations gives $5(x + y) = ${35 + k * 10} \\implies x + y = ${7 + k * 2}$.` });
+          }
+        }
       }
-      // 1. Live logged-in header pill (e.g., "aarav | Mocks: 1...")
-      const headerBadges = Array.from(document.querySelectorAll("header button, header span, header div, [class*='rounded-full']"));
-      for (const el of headerBadges) {
+    });
+    return paper.slice(0, totalQs);
+  }
+
+  window.resetMbaOfficialMockLogs = function () {
+    const modeKey = resolveActiveGreMode();
+    if (!confirm(`Clear all logged ${modeKey} GRE mocks from the Official Mock Ledger? Next attempt will restart from #01.`)) return;
+    try {
+      const hist = JSON.parse(localStorage.getItem("ipm_mock_history_v1") || "[]");
+      const kept = Array.isArray(hist) ? hist.filter(m => String(m.mode || m.modeKey || "").toUpperCase() !== String(modeKey).toUpperCase()) : [];
+      localStorage.setItem("ipm_mock_history_v1", JSON.stringify(kept));
+    } catch (_) {}
+    localStorage.removeItem("gre_proctored_ledger");
+    window._MBA_T7_SYNCED_ID = null;
+    window._MBA_T7_MODE = "TARGET";
+    if (typeof window.renderCleanHeader === "function") window.renderCleanHeader();
+    if (typeof window.renderStreamlinedTab4 === "function") window.renderStreamlinedTab4();
+  };
+
+  window.syncSpecificMbaMockToTab7 = function (serialId) {
+    window.selectUnifiedTab(7);
+    setTimeout(() => {
+      const hist = JSON.parse(localStorage.getItem("ipm_mock_history_v1") || "[]");
+      const rec = hist.find(m => m.serialId === serialId);
+      if (rec) {
+        const modeKey = resolveActiveGreMode();
+        window._MBA_T7_STATE[modeKey] = {
+          ...(window._MBA_T7_STATE[modeKey] || {}),
+          s1: Number(rec.s1 || 130),
+          s2: Number(rec.s2 || 130),
+          s3: Number(rec.s3 || 4.5)
+        };
+        window._MBA_T7_SYNCED_ID = rec.serialId;
+        window._MBA_T7_MODE = "VERIFIED";
+        window._MBA_T7_MSG = "";
+        window.renderStreamlinedTab7();
+      } else if (typeof window.mbaSyncMock === "function") {
+        window.mbaSyncMock();
+      }
+    }, 80);
+  };
+
+  window.downloadMbaMockMarksheetAndScript = function (serialId) {
+    const hist = JSON.parse(localStorage.getItem("ipm_mock_history_v1") || "[]");
+    const rec = hist.find(m => m.serialId === serialId);
+    if (!rec) { alert("Mock record not found in ledger."); return; }
+
+    const candidate = (function () {
+      const titleCase = s => String(s || "").trim().replace(/\b\w/g, c => c.toUpperCase());
+      const badges = Array.from(document.querySelectorAll("header button, header span, header div"));
+      for (const el of badges) {
         if (el.children.length > 2) continue;
-        const txt = (el.textContent || "").trim();
-        const m = txt.match(/^[^\w]*([a-zA-Z][a-zA-Z0-9_ .-]{1,30}?)\s*\|\s*(?:Target|Mocks|Readiness)/i);
+        const m = (el.textContent || "").trim().match(/^[^\w]*([a-zA-Z][a-zA-Z0-9_ .-]{1,30}?)\s*\|\s*(?:Target|Mocks|Readiness)/i);
         if (m && m[1] && !/guest/i.test(m[1])) return titleCase(m[1]);
       }
-      // 2. Active auth globals / localStorage session keys
-      if (window.currentUser && (window.currentUser.full_name || window.currentUser.name || window.currentUser.username)) {
-        return titleCase(window.currentUser.full_name || window.currentUser.name || window.currentUser.username);
-      }
-      for (const k of ["goalisb_auth_user", "auth_user", "current_user", "goalisb_user"]) {
+      for (const k of ["ipm_user_profile", "goalisb_exam_prep_profile_v1", "goalisb_auth_user", "goalisb_user"]) {
         try {
           const u = JSON.parse(localStorage.getItem(k) || "{}");
           const nm = u.full_name || u.name || u.username;
@@ -1383,378 +1361,148 @@ window.downloadMbaMockMarksheetAndScript = function (serialId) {
       return "Candidate";
     })();
 
-  const win = window.open("", "_blank", "width=960,height=860");
-  if (!win) {
-    alert("Please allow popups to download the Marksheet & Answer Script PDF.");
-    return;
-  }
+    const win = window.open("", "_blank", "width=980,height=880");
+    if (!win) { alert("Please allow popups to download the Diagnostic Marksheet & Answer Script PDF."); return; }
 
-  const items = Array.isArray(rec.breakdown) ? rec.breakdown : [];
-  const questionsHtml = items.length ? items.map((q, idx) => `
-    <div class="q-card ${q.isCorrect ? "q-ok" : "q-bad"}">
-      <div class="q-head">
-        <strong>Question ${idx + 1}</strong>
-        <span class="pill">${q.sec || "Section"}</span>
-        <span class="pill ${q.isCorrect ? "ok" : "bad"}">${q.isCorrect ? "✓ Correct" : (q.userChoice ? "✕ Incorrect" : "• Unattempted")}</span>
-      </div>
-      <div class="q-text">${q.q}</div>
-      <div class="q-meta">
-        <div><strong>Your Response:</strong> ${q.userChoice || "(No option selected)"}</div>
-        <div><strong>Official Correct Answer:</strong> ${q.correctChoice}</div>
-      </div>
-    </div>
-  `).join("") : `
-    <div class="q-card">
-      <p>Sectional Score Breakdown: <strong>Section 1: ${rec.s1 || 0}</strong> &bull; <strong>Section 2: ${rec.s2 || 0}</strong> &bull; <strong>Section 3: ${rec.s3 || 0}</strong>. Submit a fresh proctored mock in Tab 4 to include question-by-question answer script details.</p>
-    </div>
-  `;
+    const totalQs = rec.totalQs || 54;
+    const cCnt = Number(rec.correct || 0);
+    const wCnt = Number(rec.wrong || 0);
+    const uCnt = typeof rec.unattempted === "number" ? rec.unattempted : Math.max(0, totalQs - cCnt - wCnt);
+    const secRows = Array.isArray(rec.sectionSummary) && rec.sectionSummary.length
+      ? rec.sectionSummary
+      : [
+          { section: "Quantitative Reasoning (130–170)", qs: 27, correct: 0, wrong: 0, unattempted: 27, marks: rec.s1 || 130, maxMarks: 170 },
+          { section: "Verbal Reasoning (130–170)", qs: 27, correct: 0, wrong: 0, unattempted: 27, marks: rec.s2 || 130, maxMarks: 170 }
+        ];
 
-  const ts = new Date().toISOString().replace(/[-:T]/g, "").slice(0, 14);
-  const fname = `${isGre ? "GRE" : "CAT"}_Marksheet_Script_${rec.serialId.replace(/#/g, "")}_${ts}`;
+    const items = Array.isArray(rec.breakdown) ? rec.breakdown : [];
+    const questionsHtml = items.length ? items.map((q, idx) => {
+      const unatt = q.isUnattempted || !String(q.userChoice || "").trim();
+      const cls = unatt ? "q-unatt" : (q.isCorrect ? "q-ok" : "q-bad");
+      const status = unatt ? "Unattempted (0 Marks)" : (q.isCorrect ? "✓ Correct (+1 Mark)" : "✕ Incorrect (0 Marks — Zero Penalty)");
+      return `
+        <div class="q-card ${cls}">
+          <div class="q-head">
+            <div><strong>Question ${q.qNo || (idx + 1)} of ${totalQs} &bull; ${q.sec || "Section"}</strong> <span class="scheme">(${q.scheme || "MCQ +1 / 0"})</span></div>
+            <div class="st">${status}</div>
+          </div>
+          <div class="q-prompt">${q.q}</div>
+          <div class="resp">
+            <div><strong>Your Submitted Response:</strong> ${q.userChoice || "(No response submitted)"}</div>
+            <div style="margin-top:4px;"><strong style="color:#065f46;">Official Answer:</strong> ${q.correctChoice}</div>
+            ${q.rationale ? `<div style="margin-top:4px;color:#334155;"><strong>Solution:</strong> ${q.rationale}</div>` : ""}
+          </div>
+        </div>
+      `;
+    }).join("") : `<div class="q-card"><p>Sectional Scaled Summary: Quant = ${rec.s1 || 130}/170 &bull; Verbal = ${rec.s2 || 130}/170 &bull; AWA = ${rec.s3 || 4.5}/6.0.</p></div>`;
 
-  win.document.open();
-  win.document.write(`<!DOCTYPE html>
+    const ts = new Date().toISOString().replace(/[-:T]/g, "").slice(0, 14);
+    win.document.open();
+    win.document.write(`<!DOCTYPE html>
 <html>
 <head>
   <meta charset="utf-8">
-  <title>${fname}</title>
+  <title>GRE_Marksheet_${rec.serialId.replace(/#/g, "")}_${candidate.replace(/\s+/g, "_")}_${ts}</title>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css">
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"><\/script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/contrib/auto-render.min.js"><\/script>
   <style>
-    @page { size: A4 portrait; margin: 12mm 14mm; }
-    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; color: #0f172a; margin: 0; padding: 14px; font-size: 12.5px; line-height: 1.5; }
-    .header { border-bottom: 2px solid #0f172a; padding-bottom: 8px; margin-bottom: 14px; }
-    .title { font-size: 18px; font-weight: 900; margin: 0; }
-    .sub { font-size: 11px; color: #475569; margin-top: 4px; }
-    .card { border: 1.5px solid #cbd5e1; border-radius: 10px; padding: 14px 16px; background: #f8fafc; margin-bottom: 16px; display: flex; justify-content: space-between; align-items: center; }
-    .big { font-size: 26px; font-weight: 900; color: #059669; text-align: right; }
-    .q-card { border: 1px solid #cbd5e1; border-radius: 8px; padding: 10px 12px; margin-bottom: 10px; page-break-inside: avoid; }
+    @page { size: A4 portrait; margin: 11mm 13mm; }
+    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; color: #0f172a; margin: 0; padding: 12px; font-size: 12px; line-height: 1.48; }
+    .top { display: flex; justify-content: space-between; border-bottom: 2px solid #0f172a; padding-bottom: 10px; margin-bottom: 12px; gap: 12px; }
+    .eng { font-size: 10px; font-weight: 800; color: #4f46e5; text-transform: uppercase; letter-spacing: 0.6px; }
+    .ttl { font-size: 19px; font-weight: 900; margin: 2px 0 4px; }
+    .meta { font-size: 11px; color: #334155; }
+    .right { text-align: right; min-width: 220px; }
+    .big { font-size: 20px; font-weight: 900; }
+    .sub { font-size: 10.5px; color: #475569; margin-top: 2px; }
+    .grid4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-bottom: 12px; }
+    .box { border: 1px solid #cbd5e1; border-radius: 8px; padding: 7px 10px; background: #f8fafc; }
+    .lbl { font-size: 9px; font-weight: 800; color: #64748b; text-transform: uppercase; display: block; }
+    .val { font-size: 12px; font-weight: 800; margin-top: 2px; display: block; }
+    table { width: 100%; border-collapse: collapse; margin-bottom: 14px; font-size: 11px; }
+    th { background: #f1f5f9; text-align: left; padding: 6px 9px; border: 1px solid #cbd5e1; font-size: 10px; text-transform: uppercase; }
+    td { padding: 6px 9px; border: 1px solid #cbd5e1; }
+    .q-card { border: 1px solid #cbd5e1; border-radius: 9px; padding: 10px 12px; margin-bottom: 9px; page-break-inside: avoid; }
     .q-ok { border-left: 4px solid #059669; }
     .q-bad { border-left: 4px solid #e11d48; }
-    .q-head { display: flex; gap: 8px; align-items: center; border-bottom: 1px solid #e2e8f0; padding-bottom: 5px; margin-bottom: 6px; font-size: 11px; }
-    .pill { background: #e2e8f0; padding: 1px 7px; border-radius: 5px; font-weight: 700; }
-    .pill.ok { background: #d1fae5; color: #065f46; }
-    .pill.bad { background: #ffe4e6; color: #9f1239; }
-    .q-text { font-weight: 600; margin-bottom: 6px; }
-    .q-meta { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; font-size: 11px; background: #f8fafc; padding: 7px 9px; border-radius: 6px; border: 1px solid #e2e8f0; }
-    .footer { margin-top: 18px; text-align: center; font-size: 10px; color: #64748b; border-top: 1px solid #cbd5e1; padding-top: 8px; }
+    .q-unatt { border-left: 4px solid #94a3b8; }
+    .q-head { display: flex; justify-content: space-between; font-size: 11px; margin-bottom: 6px; padding-bottom: 5px; border-bottom: 1px solid #e2e8f0; }
+    .scheme { color: #4f46e5; font-weight: 700; }
+    .st { font-weight: 800; }
+    .q-prompt { font-weight: 600; margin-bottom: 7px; }
+    .resp { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 7px; padding: 7px 10px; font-size: 11px; }
+    .katex-mathml { display: none !important; }
   </style>
 </head>
 <body>
-  <div class="header">
-    <h1 class="title">${portalTitle}</h1>
-    <div class="sub">Official Proctored Mock Marksheet &amp; Answer Script | Candidate: <strong>${candidate}</strong> | Serial ID: <strong>${rec.serialId}</strong> | Blueprint: ${rec.blueprint || rec.format} | Date: ${rec.date}</div>
-  </div>
-  <div class="card">
+  <div class="top">
     <div>
-      <div style="font-size:10px;font-weight:800;color:#059669;text-transform:uppercase;">Proctored Simulation Evaluated</div>
-      <div style="font-size:16px;font-weight:900;margin-top:2px;">Official Diagnostic Score Card &amp; Answer Script</div>
-      <div style="font-size:11px;color:#475569;margin-top:3px;">Section Scores: S1 = <strong>${rec.s1 || 0}</strong> &bull; S2 = <strong>${rec.s2 || 0}</strong> &bull; S3 = <strong>${rec.s3 || 0}</strong></div>
+      <div class="eng">GOALisB GRE EVALUATION ENGINE</div>
+      <div class="ttl">OFFICIAL GRE DIAGNOSTIC MARKSHEET</div>
+      <div class="meta"><strong>Candidate:</strong> ${candidate} &nbsp;|&nbsp; <strong>Assessment Serial ID:</strong> ${rec.serialId} &nbsp;|&nbsp; <strong>Date:</strong> ${rec.date}</div>
     </div>
-    <div class="big">${rec.score} <span style="font-size:15px;color:#475569;">/ ${rec.maxMarks}</span><div style="font-size:11px;color:#334155;">${rec.percentage}% Accuracy</div></div>
+    <div class="right">
+      <div class="big">SCORE AWARDED: ${rec.score} / ${rec.maxScore}</div>
+      <div class="sub"><strong>ACCURACY:</strong> ${rec.accuracy}% (${cCnt}C / ${wCnt}W / ${uCnt}U)</div>
+      <div class="sub"><strong>PACE PER Q:</strong> ${rec.pacePerQ || "0.1"}s/Q &nbsp;|&nbsp; <strong>VERDICT:</strong> ${rec.pacingVerdict || "Rushed (High Risk of Operational Slips)"}</div>
+    </div>
   </div>
+  <div class="grid4">
+    <div class="box"><span class="lbl">Time Allocated</span><span class="val">${rec.timeAllocatedStr || "118m 00s"}</span></div>
+    <div class="box"><span class="lbl">Time Taken</span><span class="val">${rec.timeTakenStr || "0m 05s"}</span></div>
+    <div class="box"><span class="lbl">Blueprint / Scale</span><span class="val">${rec.blueprint}</span></div>
+    <div class="box"><span class="lbl">Attempt Distribution</span><span class="val">${cCnt} Correct &bull; ${wCnt} Wrong &bull; ${uCnt} Unattempted</span></div>
+  </div>
+  <table>
+    <thead><tr><th>Section</th><th>Questions</th><th>Correct / Wrong / Unattempted</th><th>Marks / Scaled Score</th></tr></thead>
+    <tbody>${secRows.map(s => `<tr><td><strong>${s.section}</strong></td><td>${s.qs} Qs</td><td>${s.correct}C / ${s.wrong}W / ${s.unattempted}U</td><td><strong>${s.marks} / ${s.maxMarks}</strong></td></tr>`).join("")}</tbody>
+  </table>
+  <div style="font-size:11px;font-weight:900;text-transform:uppercase;margin-bottom:8px;">Evaluated Answer Script &amp; Official Solutions (${totalQs} Questions)</div>
   ${questionsHtml}
-  <div class="footer">Generated by ${portalTitle} &bull; Serial ID: ${rec.serialId}</div>
-  <script>window.onload = function(){ setTimeout(function(){ window.print(); }, 350); };<\/script>
+  <script>
+    window.onload = function () {
+      if (window.renderMathInElement) renderMathInElement(document.body, { delimiters: [{ left: "$$", right: "$$", display: true }, { left: "$", right: "$", display: false }], throwOnError: false });
+      setTimeout(function () { window.print(); }, 400);
+    };
+  <\/script>
 </body>
 </html>`);
-  win.document.close();
-};
+    win.document.close();
+  };
 
-// Inject inline ACTIONS column (⬇ Marksheet & Script + Sync Tab 7 →) into Tab 4 Official Mock Ledger table
-(function () {
-  function injectLedgerInlineActions() {
-    const tables = Array.from(document.querySelectorAll("table"));
-    tables.forEach(tbl => {
-      const headRow = tbl.querySelector("thead tr");
-      if (!headRow || !/SERIAL MOCK ID/i.test(headRow.textContent || "")) return;
-      if (!/ACTIONS/i.test(headRow.textContent || "")) {
-        const th = document.createElement("th");
-        th.className = headRow.lastElementChild ? headRow.lastElementChild.className : "py-2.5 px-3 text-right";
-        th.style.textAlign = "right";
-        th.textContent = "ACTIONS";
-        headRow.appendChild(th);
-      }
-      Array.from(tbl.querySelectorAll("tbody tr")).forEach(tr => {
-        if (tr.dataset.actionsInjected === "1") return;
-        const firstCell = tr.querySelector("td");
-        const serialId = firstCell ? (firstCell.textContent || "").trim() : "";
-        if (!serialId || !/#\d+/.test(serialId)) return;
-        tr.dataset.actionsInjected = "1";
-        const td = document.createElement("td");
-        td.className = "py-2.5 px-3 text-right whitespace-nowrap";
-        td.innerHTML = `
-          <div style="display:inline-flex;align-items:center;gap:6px;justify-content:flex-end;">
-            <button type="button" onclick="window.downloadMbaMockMarksheetAndScript('${serialId}')"
-              style="background:#ffffff;color:#1e293b;border:1px solid #cbd5e1;border-radius:8px;padding:4px 10px;font-size:11px;font-weight:700;cursor:pointer;">
-              &#11015; Marksheet &amp; Script
-            </button>
-            <button type="button" onclick="window.syncSpecificMbaMockToTab7('${serialId}')"
-              style="background:#4f46e5;color:#ffffff;border:none;border-radius:8px;padding:5px 11px;font-size:11px;font-weight:800;cursor:pointer;">
-              Sync Tab 7 &rarr;
-            </button>
-          </div>
-        `;
-        tr.appendChild(td);
-      });
-    });
-  }
+  function launchGreProctoredRunner(triggerBtn) {
+    const modeKey = resolveActiveGreMode();
+    let totalQs = modeKey === "STANDARD" ? 54 : 27;
+    let totalMins = modeKey === "STANDARD" ? 118 : (modeKey === "Q170" ? 47 : 41);
+    const txt = triggerBtn ? triggerBtn.textContent : "";
+    const qm = txt.match(/(\d+)\s*Qs/i);
+    const mm = txt.match(/(\d+)\s*Mins/i);
+    if (qm) totalQs = Number(qm[1]);
+    if (mm) totalMins = Number(mm[1]);
 
-  document.addEventListener("DOMContentLoaded", injectLedgerInlineActions);
-  setInterval(injectLedgerInlineActions, 500);
-})();
-
-
-// === TAB 4 OFFICIAL MOCK LEDGER '↺ Reset / Clear Logs' BUTTON ===
-window.resetMbaOfficialMockLogs = function () {
-  const isGre = /GRE/i.test(document.title || "") || window.location.port === "8007";
-  const modeKey = (typeof getActiveModeKey === "function") ? getActiveModeKey() : (isGre ? "GRE_STD" : "CAT_STD");
-  if (!confirm(`Clear all logged ${modeKey} mocks from the Official Mock Ledger? Next attempt will restart from #01.`)) return;
-
-  try {
-    const hist = JSON.parse(localStorage.getItem("ipm_mock_history_v1") || "[]");
-    const remaining = Array.isArray(hist)
-      ? hist.filter(m => (m.mode !== modeKey && m.modeKey !== modeKey && m.examMode !== modeKey))
-      : [];
-    localStorage.setItem("ipm_mock_history_v1", JSON.stringify(remaining));
-  } catch (_) {}
-
-  try {
-    localStorage.removeItem(isGre ? "gre_proctored_ledger" : "cat_proctored_ledger");
-  } catch (_) {}
-
-  window._MBA_T7_SYNCED_ID = "";
-  window._MBA_T7_MODE = "TARGET";
-  if (typeof window.renderStreamlinedTab4 === "function") window.renderStreamlinedTab4();
-};
-
-(function () {
-  function injectResetLogsButton() {
-    const openT7Btn = Array.from(document.querySelectorAll("button")).find(b =>
-      /Open Tab 7 Target Forecaster/i.test(b.textContent || "")
-    );
-    if (!openT7Btn || !openT7Btn.parentElement) return;
-    if (document.getElementById("mbaResetMockLogsBtn")) return;
-
-    const resetBtn = document.createElement("button");
-    resetBtn.id = "mbaResetMockLogsBtn";
-    resetBtn.type = "button";
-    resetBtn.onclick = function () { window.resetMbaOfficialMockLogs(); };
-    resetBtn.style.cssText = "background:#fff1f2;color:#be123c;border:1px solid #fecdd3;border-radius:9999px;padding:7px 14px;font-size:12px;font-weight:800;cursor:pointer;margin-right:8px;";
-    resetBtn.innerHTML = "&#8634; Reset / Clear Logs";
-    openT7Btn.parentElement.insertBefore(resetBtn, openT7Btn);
-  }
-
-  document.addEventListener("DOMContentLoaded", injectResetLogsButton);
-  setInterval(injectResetLogsButton, 500);
-})();
-
-
-// === UNIFIED REAL-BANK PROCTORED ENGINE & STANDARDIZED TOP-SUMMARY PDF MARKSHEET (v_unified_pdf_v5) ===
-(function () {
-  function deepHarvestQuestions(isGre) {
-    const pool = [];
-    const seen = new Set();
-
-    function normalizeItem(raw, fallbackSec) {
-      if (!raw || typeof raw !== "object") return null;
-      const qText = raw.question || raw.prompt || raw.text || raw.stem || raw.q || raw.problem;
-      let opts = raw.options || raw.choices || raw.opts;
-      if (!opts && (raw.option_a || raw.a)) {
-        opts = [raw.option_a || raw.a, raw.option_b || raw.b, raw.option_c || raw.c, raw.option_d || raw.d].filter(Boolean);
-      }
-      if (!qText || !Array.isArray(opts) || opts.length < 2) return null;
-      const key = String(qText).trim().slice(0, 110);
-      if (seen.has(key)) return null;
-      seen.add(key);
-
-      let ansIdx = 0;
-      if (typeof raw.ans === "number") ansIdx = raw.ans;
-      else if (typeof raw.correct_index === "number") ansIdx = raw.correct_index;
-      else if (typeof raw.correctOption === "number") ansIdx = raw.correctOption;
-      else if (typeof raw.answer === "number") ansIdx = raw.answer;
-      else if (typeof raw.answer === "string" || typeof raw.correct === "string") {
-        const aStr = String(raw.answer ?? raw.correct).trim();
-        const up = aStr.toUpperCase();
-        if (["A", "B", "C", "D", "E"].includes(up)) ansIdx = up.charCodeAt(0) - 65;
-        else {
-          const idx = opts.findIndex(o => String(o).trim().toLowerCase() === aStr.toLowerCase());
-          if (idx >= 0) ansIdx = idx;
-        }
-      }
-
-      const secRaw = String(raw.section || raw.subject || raw.category || raw.module || fallbackSec || "");
-      let bucket = "QA";
-      if (isGre) {
-        bucket = /verbal|rc|reading|tc|text|se|sentence|vocab/i.test(secRaw) ? "VERBAL" : "QUANT";
-      } else {
-        if (/varc|verbal|rc|para|reading|summary|odd/i.test(secRaw)) bucket = "VARC";
-        else if (/dilr|lr|di|data|logic|puzzle|arrangement|caselet/i.test(secRaw)) bucket = "DILR";
-        else bucket = "QA";
-      }
-
-      const isTita = Boolean(raw.isTita || /tita/i.test(secRaw) || /tita/i.test(String(raw.type || "")));
-      return {
-        bucket,
-        sec: secRaw || bucket,
-        q: String(qText),
-        opts: opts.slice(0, 4).map(String),
-        ans: Math.max(0, Math.min(opts.slice(0, 4).length - 1, ansIdx)),
-        isTita,
-        rationale: String(raw.explanation || raw.solution || raw.rationale || raw.stepByStep || "Apply section-specific elimination and core concept verification to confirm the marked key.")
-      };
-    }
-
-    // Scan all window arrays/objects (catOfficialBank, greOfficialBank, ipmQuantCore, etc.)
-    Object.keys(window).forEach(k => {
-      if (!/bank|question|core|varc|dilr|quant|verbal|pyq|drill|module|archive|official/i.test(k)) return;
-      const val = window[k];
-      if (Array.isArray(val)) {
-        val.forEach(item => {
-          const norm = normalizeItem(item, k);
-          if (norm) pool.push(norm);
-        });
-      } else if (val && typeof val === "object" && !val.nodeType) {
-        Object.entries(val).forEach(([subK, subV]) => {
-          if (Array.isArray(subV)) {
-            subV.forEach(item => {
-              const norm = normalizeItem(item, subK);
-              if (norm) pool.push(norm);
-            });
-          }
-        });
-      }
-    });
-
-    return pool;
-  }
-
-  function buildSectionAlignedPaper(isGre, totalQs, pool) {
-    const plan = isGre
-      ? [
-          { bucket: "QUANT", label: "Quantitative Reasoning • Stage 1 (21m)", count: Math.min(12, Math.round(totalQs * 0.22)), scheme: "MCQ (+1 / 0)" },
-          { bucket: "QUANT", label: "Quantitative Reasoning • Stage 2 (26m)", count: Math.min(15, Math.round(totalQs * 0.28)), scheme: "MCQ (+1 / 0)" },
-          { bucket: "VERBAL", label: "Verbal Reasoning • Stage 1 (18m)", count: Math.min(12, Math.round(totalQs * 0.22)), scheme: "MCQ (+1 / 0)" },
-          { bucket: "VERBAL", label: "Verbal Reasoning • Stage 2 (23m)", count: totalQs - (Math.min(12, Math.round(totalQs * 0.22)) * 2 + Math.min(15, Math.round(totalQs * 0.28))), scheme: "MCQ (+1 / 0)" }
-        ]
-      : [
-          { bucket: "VARC", label: "VARC • Section 1 (40 Mins)", count: Math.round(totalQs * (24 / 66)), scheme: "MCQ (+3 / -1)" },
-          { bucket: "DILR", label: "DILR • Section 2 (40 Mins)", count: Math.round(totalQs * (20 / 66)), scheme: "MCQ (+3 / -1)" },
-          { bucket: "QA", label: "Quantitative Aptitude • Section 3 (40 Mins)", count: totalQs - Math.round(totalQs * (24 / 66)) - Math.round(totalQs * (20 / 66)), scheme: "MCQ (+3 / -1)" }
-        ];
-
-    const byBucket = { VARC: [], DILR: [], QA: [], QUANT: [], VERBAL: [] };
-    pool.forEach(item => {
-      if (byBucket[item.bucket]) byBucket[item.bucket].push(item);
-    });
-
-    const paper = [];
-    const cursors = { VARC: 0, DILR: 0, QA: 0, QUANT: 0, VERBAL: 0 };
-
-    plan.forEach(secPlan => {
-      const bList = byBucket[secPlan.bucket] || [];
-      for (let i = 0; i < secPlan.count; i++) {
-        if (cursors[secPlan.bucket] < bList.length) {
-          const picked = bList[cursors[secPlan.bucket]++];
-          paper.push({
-            ...picked,
-            sec: secPlan.label,
-            scheme: picked.isTita ? "TITA (+3 / 0)" : secPlan.scheme
-          });
-        } else {
-          const idx = paper.length + 1;
-          if (secPlan.bucket === "VARC" || secPlan.bucket === "VERBAL") {
-            paper.push({
-              bucket: secPlan.bucket,
-              sec: secPlan.label,
-              scheme: secPlan.scheme,
-              isTita: false,
-              q: `Reading & Critical Inference (${idx}): An empirical policy review notes that decentralized micro-grids reduce transmission losses by 18%, yet require standardized voltage-inverters to prevent grid instability. Which claim is most strongly supported?`,
-              opts: [
-                "Interoperability standards are essential to realize efficiency gains from decentralized grids",
-                "Centralized power plants have lower transmission losses than micro-grids",
-                "Voltage-inverters eliminate the need for regulatory oversight",
-                "Decentralized grids are unsuitable for urban municipalities"
-              ],
-              ans: 0,
-              rationale: "The passage directly links the 18% efficiency gain of micro-grids to the requirement for standardized voltage-inverters."
-            });
-          } else if (secPlan.bucket === "DILR") {
-            const slots = 4 + (idx % 2);
-            paper.push({
-              bucket: "DILR",
-              sec: secPlan.label,
-              scheme: secPlan.scheme,
-              isTita: false,
-              q: `Logical Scheduling Set (${idx}): Four audit teams (A, B, C, D) inspect ${slots} regional hubs in consecutive slots. Team A must precede Team B, and Team D cannot occupy the final slot. How many valid orderings satisfy both constraints?`,
-              opts: ["6", "8", "9", "12"],
-              ans: 2,
-              rationale: "Out of 4! = 24 permutations, A precedes B in 12 cases; excluding the 3 cases where D is in slot 4 leaves 9 valid orderings."
-            });
-          } else {
-            const k = 2 + (idx % 4);
-            const rhs = k * k + 5;
-            paper.push({
-              bucket: secPlan.bucket,
-              sec: secPlan.label,
-              scheme: secPlan.scheme,
-              isTita: false,
-              q: `Quantitative Problem (${idx}): If $\\log_2(x - ${k}) + \\log_2(x + ${k}) = \\log_2(${rhs - k * k})$, find the positive real value of $x$.`,
-              opts: [`$${Math.round(Math.sqrt(rhs))}$`, `$${k + 1}$`, `$${k + 3}$`, `$${rhs - k}$`],
-              ans: 0,
-              rationale: `Combining logarithms gives $x^2 - ${k}^2 = ${rhs - k * k} \\implies x^2 = ${rhs} \\implies x = ${Math.round(Math.sqrt(rhs))}$ (since $x > ${k}$).`
-            });
-          }
-        }
-      }
-    });
-
-    return paper.slice(0, totalQs);
-  }
-
-  function formatDuration(sec) {
-    const s = Math.max(0, Math.round(Number(sec || 0)));
-    const m = Math.floor(s / 60);
-    const rem = s % 60;
-    return `${m}m ${String(rem).padStart(2, "0")}s`;
-  }
-
-  // Override Tab 4 proctored launcher with full bank + accurate elapsed-time & per-question marks tracking
-  window.launchUnifiedProctoredExam = async function (triggerBtn) {
-    const isGre = /GRE/i.test(document.title || "") || window.location.port === "8007";
-    let totalQs = isGre ? 54 : 66;
-    let totalMins = isGre ? 118 : 120;
-    const btnTxt = triggerBtn ? triggerBtn.textContent : "";
-    const qMatch = btnTxt.match(/(\d+)\s*Qs/i);
-    const mMatch = btnTxt.match(/(\d+)\s*Mins/i);
-    if (qMatch) totalQs = Number(qMatch[1]);
-    if (mMatch) totalMins = Number(mMatch[1]);
-
-    const pool = deepHarvestQuestions(isGre);
-    const fullPaper = buildSectionAlignedPaper(isGre, totalQs, pool);
+    const paper = buildGrePaper(modeKey, totalQs, harvestGreQuestions());
     const timeAllocatedSec = totalMins * 60;
-    const examStartedAt = Date.now();
+    const startedAt = Date.now();
 
-    let anchorCard = triggerBtn ? triggerBtn.closest(".rounded-2xl, .rounded-3xl, section, [id^='tab']") : null;
-    if (!anchorCard || anchorCard === document.body) {
-      anchorCard = document.getElementById("tab-content") || document.body;
-    }
-
+    const stage = document.getElementById("gre-mock-stage") || document.getElementById("main-workspace");
+    if (!stage) return;
     let runner = document.getElementById("universalProctoredExamRunner");
     if (!runner) {
       runner = document.createElement("div");
       runner.id = "universalProctoredExamRunner";
     }
-    anchorCard.insertAdjacentElement("afterend", runner);
+    stage.insertAdjacentElement("afterend", runner);
 
     let secsLeft = timeAllocatedSec;
     if (window._univProctoredTimer) clearInterval(window._univProctoredTimer);
 
-    runner.className = "mt-5 p-6 rounded-2xl bg-surface border-2 border-indigo-500 shadow-2xl space-y-5 text-xs";
+    runner.className = "mt-5 p-6 rounded-2xl bg-slate-900 border-2 border-indigo-500 shadow-2xl space-y-5 text-xs";
     runner.innerHTML = `
-      <div class="sticky top-2 z-30 p-3.5 rounded-xl bg-slate-900/95 border border-slate-700 flex flex-wrap items-center justify-between gap-3 shadow-lg">
+      <div class="sticky top-2 z-30 p-3.5 rounded-xl bg-slate-950/95 border border-slate-700 flex flex-wrap items-center justify-between gap-3 shadow-lg">
         <div>
-          <span class="px-2.5 py-0.5 rounded bg-emerald-600 text-white font-extrabold text-[10px] uppercase">ACTIVE PROCTORED EXAM SESSION (${fullPaper.length} QUESTIONS)</span>
-          <h3 class="text-base sm:text-lg font-black text-white mt-1">${isGre ? "GRE" : "CAT"} Proctored Simulation (${fullPaper.length} Qs &bull; ${totalMins} Mins Allocated)</h3>
+          <span class="px-2.5 py-0.5 rounded bg-emerald-600 text-white font-extrabold text-[10px] uppercase">ACTIVE PROCTORED GRE SESSION (${paper.length} QUESTIONS)</span>
+          <h3 class="text-base sm:text-lg font-black text-white mt-1">GRE ${modeKey} Simulation (${paper.length} Qs &bull; ${totalMins} Mins Allocated)</h3>
         </div>
         <div class="flex flex-wrap items-center gap-2">
           <span id="univProctoredClock" class="px-3.5 py-1.5 rounded-xl bg-amber-950 border border-amber-500 text-amber-300 font-mono font-black text-sm">${totalMins}:00</span>
@@ -1766,16 +1514,16 @@ window.resetMbaOfficialMockLogs = function () {
 
       <div class="grid grid-cols-1 lg:grid-cols-12 gap-5 items-start">
         <div class="lg:col-span-9 space-y-4">
-          ${fullPaper.map((item, idx) => `
-            <div id="univ_q_card_${idx}" class="p-4 rounded-xl bg-background border border-slate-700 space-y-2.5 scroll-mt-24">
+          ${paper.map((item, idx) => `
+            <div id="univ_q_card_${idx}" class="p-4 rounded-xl bg-slate-950 border border-slate-800 space-y-2.5 scroll-mt-24">
               <div class="flex flex-wrap justify-between text-[11px] font-bold text-indigo-400">
-                <span>Question ${idx + 1} of ${fullPaper.length} &bull; ${item.scheme}</span>
+                <span>Question ${idx + 1} of ${paper.length} &bull; ${item.scheme}</span>
                 <span>${item.sec}</span>
               </div>
               <div class="text-sm font-semibold text-white">${item.q}</div>
               <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 pt-1">
                 ${item.opts.map((opt, oIdx) => `
-                  <label class="flex items-center gap-2 p-2.5 rounded-lg border border-slate-700 hover:border-indigo-500 cursor-pointer">
+                  <label class="flex items-center gap-2 p-2.5 rounded-lg border border-slate-800 hover:border-indigo-500 cursor-pointer">
                     <input type="radio" name="univ_q_${idx}" value="${oIdx}" data-qidx="${idx}" class="univ-q-radio accent-indigo-600">
                     <span class="text-slate-200">${opt}</span>
                   </label>
@@ -1784,532 +1532,175 @@ window.resetMbaOfficialMockLogs = function () {
             </div>
           `).join("")}
         </div>
-
-        <div class="lg:col-span-3 sticky top-24 p-4 rounded-xl bg-background border border-slate-700 space-y-3">
+        <div class="lg:col-span-3 sticky top-24 p-4 rounded-xl bg-slate-950 border border-slate-800 space-y-3">
           <div class="flex items-center justify-between">
-            <span class="font-extrabold text-white uppercase tracking-wider text-[11px]">Question Palette (${fullPaper.length} Qs)</span>
-            <span id="univAnsweredCounter" class="text-[11px] font-mono font-bold text-emerald-400">0 / ${fullPaper.length}</span>
+            <span class="font-extrabold text-white uppercase tracking-wider text-[11px]">Question Palette (${paper.length} Qs)</span>
+            <span id="univAnsweredCounter" class="text-[11px] font-mono font-bold text-emerald-400">0 / ${paper.length}</span>
           </div>
           <div class="grid grid-cols-6 gap-1.5 max-h-96 overflow-y-auto pr-1">
-            ${fullPaper.map((_, idx) => `
-              <button type="button" id="univ_pal_${idx}" onclick="document.getElementById('univ_q_card_${idx}').scrollIntoView({behavior:'smooth',block:'start'})"
-                class="py-1.5 rounded-lg bg-slate-800 hover:bg-indigo-600 text-slate-200 hover:text-white font-mono text-[11px] font-bold cursor-pointer">
-                ${idx + 1}
-              </button>
-            `).join("")}
+            ${paper.map((_, idx) => `<button type="button" id="univ_pal_${idx}" onclick="document.getElementById('univ_q_card_${idx}').scrollIntoView({behavior:'smooth',block:'start'})" class="py-1.5 rounded-lg bg-slate-800 hover:bg-indigo-600 text-slate-200 font-mono text-[11px] font-bold cursor-pointer">${idx + 1}</button>`).join("")}
           </div>
-          <div class="text-[10px] text-slate-400 pt-1 border-t border-slate-800">Click any question number to jump directly. Green = Answered.</div>
         </div>
       </div>
 
       <div class="flex justify-end pt-2">
-        <button type="button" id="univSubmitPaperBtn" class="px-5 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-extrabold text-sm shadow-lg cursor-pointer">
-          &#9989; Submit Proctored Mock (${fullPaper.length} Qs) &amp; Sync Forecaster
-        </button>
+        <button type="button" id="univSubmitPaperBtn" class="px-5 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-extrabold text-sm shadow-lg cursor-pointer">&#9989; Submit Proctored Mock (${paper.length} Qs) &amp; Sync Forecaster</button>
       </div>
     `;
 
-    if (typeof window.renderMathInElement === "function") {
-      try {
-        window.renderMathInElement(runner, {
-          delimiters: [{ left: "$$", right: "$$", display: true }, { left: "$", right: "$", display: false }],
-          throwOnError: false
-        });
-      } catch (_) {}
-    }
-
-    runner.querySelectorAll(".univ-q-radio").forEach(radio => {
-      radio.addEventListener("change", function () {
-        const qIdx = Number(this.dataset.qidx);
-        const palBtn = document.getElementById(`univ_pal_${qIdx}`);
-        if (palBtn) palBtn.className = "py-1.5 rounded-lg bg-emerald-600 text-white font-mono text-[11px] font-extrabold cursor-pointer";
-        const answeredCount = runner.querySelectorAll(".univ-q-radio:checked").length;
-        const cntEl = document.getElementById("univAnsweredCounter");
-        if (cntEl) cntEl.textContent = `${answeredCount} / ${fullPaper.length}`;
+    runner.querySelectorAll(".univ-q-radio").forEach(r => {
+      r.addEventListener("change", function () {
+        const pal = document.getElementById(`univ_pal_${this.dataset.qidx}`);
+        if (pal) pal.className = "py-1.5 rounded-lg bg-emerald-600 text-white font-mono text-[11px] font-extrabold cursor-pointer";
+        const cnt = document.getElementById("univAnsweredCounter");
+        if (cnt) cnt.textContent = `${runner.querySelectorAll(".univ-q-radio:checked").length} / ${paper.length}`;
       });
     });
 
     window._univProctoredTimer = setInterval(() => {
       secsLeft = Math.max(0, secsLeft - 1);
       const el = document.getElementById("univProctoredClock");
-      if (el) {
-        const m = String(Math.floor(secsLeft / 60)).padStart(2, "0");
-        const s = String(secsLeft % 60).padStart(2, "0");
-        el.textContent = `${m}:${s}`;
-      }
+      if (el) el.textContent = `${String(Math.floor(secsLeft / 60)).padStart(2, "0")}:${String(secsLeft % 60).padStart(2, "0")}`;
     }, 1000);
 
     document.getElementById("univResetPaperBtn").onclick = () => {
       runner.querySelectorAll("input[type='radio']").forEach(r => { r.checked = false; });
-      fullPaper.forEach((_, idx) => {
-        const palBtn = document.getElementById(`univ_pal_${idx}`);
-        if (palBtn) palBtn.className = "py-1.5 rounded-lg bg-slate-800 hover:bg-indigo-600 text-slate-200 hover:text-white font-mono text-[11px] font-bold cursor-pointer";
+      paper.forEach((_, i) => {
+        const pal = document.getElementById(`univ_pal_${i}`);
+        if (pal) pal.className = "py-1.5 rounded-lg bg-slate-800 hover:bg-indigo-600 text-slate-200 font-mono text-[11px] font-bold cursor-pointer";
       });
-      const cntEl = document.getElementById("univAnsweredCounter");
-      if (cntEl) cntEl.textContent = `0 / ${fullPaper.length}`;
+      const cnt = document.getElementById("univAnsweredCounter");
+      if (cnt) cnt.textContent = `0 / ${paper.length}`;
       secsLeft = timeAllocatedSec;
     };
 
-    document.getElementById("univExitPaperBtn").onclick = () => {
+    document.getElementById("univExitPaperBtn").onclick = () => { clearInterval(window._univProctoredTimer); runner.remove(); };
+
+    const handleSubmit = () => {
       clearInterval(window._univProctoredTimer);
-      runner.remove();
-    };
+      const timeTakenSec = Math.max(1, Math.round((Date.now() - startedAt) / 1000));
+      const pacePerQ = (timeTakenSec / paper.length).toFixed(1);
+      const pacingVerdict = Number(pacePerQ) < 15 ? "Rushed (High Risk of Operational Slips)" : "Balanced Exam Pacing";
 
-    const handleUnifiedSubmit = () => {
-      clearInterval(window._univProctoredTimer);
-      const timeTakenSec = Math.max(1, Math.round((Date.now() - examStartedAt) / 1000));
-      const pacePerQ = (timeTakenSec / fullPaper.length).toFixed(1);
-      const pacingVerdict = Number(pacePerQ) < 15
-        ? "Rushed (High Risk of Operational Slips)"
-        : Number(pacePerQ) <= (timeAllocatedSec / fullPaper.length)
-          ? "Balanced Exam Pacing"
-          : "Over-Deliberated (Time Pressure Risk)";
-
-      let correctCount = 0;
-      let wrongCount = 0;
-      let unattemptedCount = 0;
-      let rawMarks = 0;
-
+      let correct = 0, wrong = 0, unattempted = 0, qCorrect = 0, qTotal = 0, vCorrect = 0, vTotal = 0;
       const secStats = {};
-      const breakdown = fullPaper.map((it, idx) => {
+      const breakdown = paper.map((it, idx) => {
         const sel = runner.querySelector(`input[name="univ_q_${idx}"]:checked`);
         const uIdx = sel ? Number(sel.value) : -1;
-        const isCorrect = uIdx === it.ans;
-        const isUnattempted = uIdx < 0;
-        let marksDelta = 0;
+        const isUnatt = uIdx < 0;
+        const isRight = uIdx === it.ans;
+        const delta = (!isUnatt && isRight) ? 1 : 0;
 
-        if (isUnattempted) {
-          unattemptedCount++;
-        } else if (isCorrect) {
-          correctCount++;
-          marksDelta = isGre ? 1 : 3;
-        } else {
-          wrongCount++;
-          marksDelta = (isGre || it.isTita) ? 0 : -1;
-        }
-        rawMarks += marksDelta;
+        if (it.bucket === "QUANT") { qTotal++; if (isRight) qCorrect++; }
+        else { vTotal++; if (isRight) vCorrect++; }
 
-        const secKey = it.sec;
-        if (!secStats[secKey]) secStats[secKey] = { section: secKey, qs: 0, correct: 0, wrong: 0, unattempted: 0, marks: 0, maxMarks: 0 };
-        secStats[secKey].qs++;
-        secStats[secKey].maxMarks += isGre ? 1 : 3;
-        secStats[secKey].marks += marksDelta;
-        if (isUnattempted) secStats[secKey].unattempted++;
-        else if (isCorrect) secStats[secKey].correct++;
-        else secStats[secKey].wrong++;
+        if (isUnatt) unattempted++;
+        else if (isRight) correct++;
+        else wrong++;
+
+        if (!secStats[it.sec]) secStats[it.sec] = { section: it.sec, qs: 0, correct: 0, wrong: 0, unattempted: 0, marks: 0, maxMarks: 0 };
+        secStats[it.sec].qs++;
+        secStats[it.sec].maxMarks += 1;
+        secStats[it.sec].marks += delta;
+        if (isUnatt) secStats[it.sec].unattempted++;
+        else if (isRight) secStats[it.sec].correct++;
+        else secStats[it.sec].wrong++;
 
         return {
           qNo: idx + 1,
           sec: it.sec,
           scheme: it.scheme,
-          q: it.q,
-          userChoice: uIdx >= 0 ? it.opts[uIdx] : "",
-          correctChoice: it.opts[it.ans],
-          isCorrect,
-          isUnattempted,
-          marksDelta,
-          rationale: it.rationale
+          q: String(it.q).slice(0, 260),
+          userChoice: uIdx >= 0 ? String(it.opts[uIdx]).slice(0, 140) : "",
+          correctChoice: String(it.opts[it.ans]).slice(0, 140),
+          isCorrect: isRight,
+          isUnattempted: isUnatt,
+          marksDelta: delta,
+          rationale: String(it.rationale || "").slice(0, 220)
         };
       });
 
-      const maxScale = isGre ? 340 : 198;
-      const minScale = isGre ? 260 : 0;
-      const scaled = isGre
-        ? Math.min(340, Math.max(260, Math.round(260 + (Math.max(0, rawMarks) / fullPaper.length) * 80)))
-        : Math.max(0, rawMarks);
-      const pct = Math.round((correctCount / fullPaper.length) * 100);
+      const quant170 = Math.min(170, Math.max(130, Math.round(130 + (qCorrect / Math.max(1, qTotal)) * 40)));
+      const verbal170 = Math.min(170, Math.max(130, Math.round(130 + (vCorrect / Math.max(1, vTotal)) * 40)));
+      const scaled = quant170 + verbal170;
+      const maxScale = 340;
+      const accuracy = Math.round((correct / paper.length) * 100);
+      const serialId = window.buildSystematicSerialId("GRE", modeKey, false, "");
 
-      const savedEntry = (typeof window.saveTab4ProctoredToNativeLedger === "function")
-        ? window.saveTab4ProctoredToNativeLedger({
-            isGre,
-            scaled,
-            maxScale,
-            pct,
-            correct: correctCount,
-            wrong: wrongCount,
-            unattempted: unattemptedCount,
-            timeAllocatedSec,
-            timeTakenSec,
-            timeAllocatedStr: formatDuration(timeAllocatedSec),
-            timeTakenStr: formatDuration(timeTakenSec),
-            pacePerQ,
-            pacingVerdict,
-            sectionSummary: Object.values(secStats),
-            totalQs: fullPaper.length,
-            breakdown
-          })
-        : { serialId: `${isGre ? "GRE-FULL" : "CAT-FULL"}${fullPaper.length}-${new Date().toISOString().slice(0,10).replace(/-/g,"")}-#01` };
+      let hist = [];
+      try { hist = JSON.parse(localStorage.getItem("ipm_mock_history_v1") || "[]"); } catch (_) { hist = []; }
+      if (!Array.isArray(hist)) hist = [];
 
-      runner.innerHTML = `
-        <div class="p-5 rounded-xl bg-emerald-950/50 border border-emerald-500 space-y-3">
-          <div class="flex flex-wrap items-center justify-between gap-2">
-            <div>
-              <div class="text-xs font-extrabold uppercase text-emerald-400">Proctored Mock Evaluated &amp; Saved &bull; ${savedEntry.serialId}</div>
-              <div class="text-2xl font-black text-white mt-1">Score Awarded: ${scaled} / ${maxScale} (${pct}% Accuracy &bull; ${correctCount}C / ${wrongCount}W / ${unattemptedCount}U)</div>
-              <div class="text-xs text-slate-300 mt-1">Time Allocated: <strong>${formatDuration(timeAllocatedSec)}</strong> &bull; Time Taken: <strong>${formatDuration(timeTakenSec)}</strong> &bull; Pace: <strong>${pacePerQ}s / Q</strong> (${pacingVerdict})</div>
-            </div>
-            <div class="flex flex-wrap gap-2">
-              <button type="button" onclick="window.downloadMbaMockMarksheetAndScript('${savedEntry.serialId}')"
-                class="px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 border border-slate-500 text-white text-xs font-extrabold shadow cursor-pointer">
-                &#11015; Download Marksheet &amp; Script PDF
-              </button>
-              <button type="button" onclick="window.syncSpecificMbaMockToTab7('${savedEntry.serialId}')"
-                class="px-4 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-extrabold shadow cursor-pointer">
-                &#128202; Sync ${savedEntry.serialId} to Tab 7 Forecaster &rarr;
-              </button>
-            </div>
+      const entry = {
+        serialId,
+        mode: modeKey,
+        modeKey: modeKey,
+        isProctored: true,
+        isSectional: false,
+        blueprint: `Full GRE ${modeKey} Simulation (${paper.length} Qs)`,
+        score: scaled,
+        maxScore: maxScale,
+        accuracy,
+        quant170,
+        verbal170,
+        awaScore: 4.5,
+        s1: quant170,
+        s2: verbal170,
+        s3: 4.5,
+        totalQs: paper.length,
+        correct,
+        wrong,
+        unattempted,
+        timeAllocatedStr: formatDuration(timeAllocatedSec),
+        timeTakenStr: formatDuration(timeTakenSec),
+        pacePerQ,
+        pacingVerdict,
+        sectionSummary: Object.values(secStats),
+        breakdown,
+        date: new Date().toLocaleDateString("en-GB", { day: "2-digit", month: "short" }),
+        time: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })
+      };
+
+      hist.unshift(entry);
+      try {
+        localStorage.setItem("ipm_mock_history_v1", JSON.stringify(hist));
+      } catch (_) {
+        localStorage.setItem("ipm_mock_history_v1", JSON.stringify(hist.map((it, i) => i === 0 ? it : { ...it, breakdown: [] })));
+      }
+
+      if (typeof window.renderCleanHeader === "function") window.renderCleanHeader();
+      if (typeof window.renderStreamlinedTab4 === "function") window.renderStreamlinedTab4();
+
+      const newStage = document.getElementById("gre-mock-stage");
+      if (newStage) {
+        const banner = document.createElement("div");
+        banner.className = "mt-4 p-5 rounded-2xl bg-emerald-950/60 border border-emerald-500 flex flex-wrap items-center justify-between gap-3 text-xs";
+        banner.innerHTML = `
+          <div>
+            <div class="font-extrabold uppercase text-emerald-400">Proctored GRE Mock Saved &bull; ${serialId}</div>
+            <div class="text-xl font-black text-white mt-0.5">Score Awarded: ${scaled} / 340 (Q ${quant170} • V ${verbal170} &bull; ${accuracy}% Accuracy &bull; ${correct}C / ${wrong}W / ${unattempted}U)</div>
+            <div class="text-slate-300 mt-0.5">Time Allocated: <strong>${entry.timeAllocatedStr}</strong> &bull; Time Taken: <strong>${entry.timeTakenStr}</strong> &bull; Pace: <strong>${pacePerQ}s/Q</strong></div>
           </div>
-        </div>
-      `;
-      runner.scrollIntoView({ behavior: "smooth", block: "start" });
+          <div class="flex flex-wrap gap-2">
+            <button type="button" onclick="window.downloadMbaMockMarksheetAndScript('${serialId}')" class="px-3.5 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 border border-slate-500 text-white font-extrabold cursor-pointer">&#11015; Marksheet &amp; Script</button>
+            <button type="button" onclick="window.syncSpecificMbaMockToTab7('${serialId}')" class="px-3.5 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-extrabold cursor-pointer">Sync Tab 7 &rarr;</button>
+          </div>
+        `;
+        newStage.insertAdjacentElement("afterend", banner);
+      }
     };
 
-    document.getElementById("univSubmitPaperBtn").onclick = handleUnifiedSubmit;
-    document.getElementById("univTopSubmitPaperBtn").onclick = handleUnifiedSubmit;
+    document.getElementById("univSubmitPaperBtn").onclick = handleSubmit;
+    document.getElementById("univTopSubmitPaperBtn").onclick = handleSubmit;
     runner.scrollIntoView({ behavior: "smooth", block: "start" });
-  };
+  }
 
-  // Capture-phase intercept so Start Proctored Mock uses the full-bank telemetry-tracked engine
   document.addEventListener("click", function (ev) {
     const btn = ev.target && ev.target.closest("button");
     if (btn && /Start Proctored Mock/i.test(btn.textContent || "")) {
       ev.preventDefault();
       ev.stopImmediatePropagation();
-      window.launchUnifiedProctoredExam(btn);
+      launchGreProctoredRunner(btn);
     }
   }, true);
-
-  // Standardized Top-Summary Diagnostic Marksheet + Evaluated Answer Script PDF Generator
-  window.downloadMbaMockMarksheetAndScript = function (serialId) {
-    const hist = JSON.parse(localStorage.getItem("ipm_mock_history_v1") || "[]");
-    const rec = hist.find(m => m.serialId === serialId);
-    if (!rec) {
-      alert("Mock record not found in ledger.");
-      return;
-    }
-    const isGre = /GRE/i.test(rec.serialId || document.title || "");
-    const examLabel = isGre ? "GRE" : "CAT";
-    const portalTitle = `GOALisB ${examLabel} EVALUATION ENGINE`;
-    const candidate = (function () {
-      try {
-        const u = JSON.parse(localStorage.getItem("goalisb_user") || "{}");
-        if (u.full_name || u.name || u.username) return u.full_name || u.name || u.username;
-      } catch (_) {}
-      const headerTxt = (document.querySelector("header") || document.body).textContent || "";
-      const m = headerTxt.match(/\b([a-zA-Z]+(?:\s+[a-zA-Z]+)?)\s*\|\s*(?:Target|Mocks)/);
-      return m ? m[1].trim() : "Candidate";
-    })();
-
-    const win = window.open("", "_blank", "width=980,height=880");
-    if (!win) {
-      alert("Please allow popups to download the Diagnostic Marksheet & Answer Script PDF.");
-      return;
-    }
-
-    const totalQs = rec.totalQs || (Array.isArray(rec.breakdown) && rec.breakdown.length) || (isGre ? 54 : 66);
-    const timeAlloc = rec.timeAllocatedStr || (isGre ? "118m 00s" : "120m 00s");
-    const timeTaken = rec.timeTakenStr || "0m 05s";
-    const cCnt = typeof rec.correct === "number" ? rec.correct : 0;
-    const wCnt = typeof rec.wrong === "number" ? rec.wrong : 0;
-    const uCnt = typeof rec.unattempted === "number" ? rec.unattempted : Math.max(0, totalQs - cCnt - wCnt);
-    const pacePerQ = rec.pacePerQ || "0.1";
-    const verdict = rec.pacingVerdict || "Rushed (High Risk of Operational Slips)";
-
-    const secRows = Array.isArray(rec.sectionSummary) && rec.sectionSummary.length
-      ? rec.sectionSummary
-      : [
-          { section: isGre ? "Quantitative Reasoning" : "VARC (Section 1)", qs: isGre ? 27 : 24, correct: 0, wrong: 0, unattempted: isGre ? 27 : 24, marks: rec.s1 || 0, maxMarks: isGre ? 27 : 72 },
-          { section: isGre ? "Verbal Reasoning" : "DILR (Section 2)", qs: isGre ? 27 : 20, correct: 0, wrong: 0, unattempted: isGre ? 27 : 20, marks: rec.s2 || 0, maxMarks: isGre ? 27 : 60 },
-          ...(isGre ? [] : [{ section: "Quantitative Aptitude (Section 3)", qs: 22, correct: 0, wrong: 0, unattempted: 22, marks: rec.s3 || 0, maxMarks: 66 }])
-        ];
-
-    const items = Array.isArray(rec.breakdown) ? rec.breakdown : [];
-    const questionsHtml = items.length ? items.map((q, idx) => {
-      const unatt = q.isUnattempted || !String(q.userChoice || "").trim();
-      const statusCls = unatt ? "q-unatt" : (q.isCorrect ? "q-ok" : "q-bad");
-      const badgeText = unatt
-        ? "Unattempted (0 Marks)"
-        : q.isCorrect
-          ? `✓ Correct (+${q.marksDelta ?? (isGre ? 1 : 3)} Marks)`
-          : `✕ Incorrect (${q.marksDelta ?? (isGre ? 0 : -1)} Marks)`;
-      return `
-        <div class="q-card ${statusCls}">
-          <div class="q-head">
-            <div><strong>Question ${q.qNo || (idx + 1)} of ${totalQs} &bull; ${q.sec || "Section"}</strong> <span class="scheme-tag">(${q.scheme || (isGre ? "MCQ +1/0" : "MCQ +3/-1")})</span></div>
-            <div class="status-tag">${badgeText}</div>
-          </div>
-          <div class="q-prompt">${q.q}</div>
-          <div class="resp-box">
-            <div><strong>Your Submitted Response:</strong> ${q.userChoice || "(No response submitted)"}</div>
-            <div style="margin-top:4px;"><strong style="color:#065f46;">Official Answer:</strong> ${q.correctChoice}</div>
-            ${q.rationale ? `<div style="margin-top:4px;color:#334155;"><strong>Solution:</strong> ${q.rationale}</div>` : ""}
-          </div>
-        </div>
-      `;
-    }).join("") : `<div class="q-card"><p>Legacy entry summary: Score ${rec.score} / ${rec.maxMarks} (${rec.percentage}%). Run a fresh proctored mock in Tab 4 to include the full evaluated answer script.</p></div>`;
-
-    const ts = new Date().toISOString().replace(/[-:T]/g, "").slice(0, 14);
-    const fname = `${examLabel}_Marksheet_${rec.serialId.replace(/#/g, "")}_${candidate.replace(/\s+/g, "_")}_${ts}`;
-
-    win.document.open();
-    win.document.write(`<!DOCTYPE html>
-<html>
-<head>
-  <meta charset="utf-8">
-  <title>${fname}</title>
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css">
-  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"><\/script>
-  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/contrib/auto-render.min.js"><\/script>
-  <style>
-    @page { size: A4 portrait; margin: 11mm 13mm; }
-    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; color: #0f172a; margin: 0; padding: 12px; font-size: 12px; line-height: 1.48; background: #fff; }
-    .top-banner { display: flex; justify-content: space-between; align-items: flex-start; border-bottom: 2px solid #0f172a; padding-bottom: 10px; margin-bottom: 12px; gap: 12px; }
-    .engine-lbl { font-size: 10px; font-weight: 800; color: #4f46e5; text-transform: uppercase; letter-spacing: 0.6px; }
-    .main-title { font-size: 19px; font-weight: 900; margin: 2px 0 4px; letter-spacing: 0.2px; }
-    .meta-line { font-size: 11px; color: #334155; }
-    .score-right { text-align: right; min-width: 210px; }
-    .score-big { font-size: 20px; font-weight: 900; color: #0f172a; }
-    .score-sub { font-size: 10.5px; color: #475569; margin-top: 2px; }
-    .telemetry-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-bottom: 12px; }
-    .t-box { border: 1px solid #cbd5e1; border-radius: 8px; padding: 7px 10px; background: #f8fafc; }
-    .t-lbl { font-size: 9px; font-weight: 800; color: #64748b; text-transform: uppercase; display: block; }
-    .t-val { font-size: 12px; font-weight: 800; color: #0f172a; margin-top: 2px; display: block; }
-    .sec-table { width: 100%; border-collapse: collapse; margin-bottom: 14px; font-size: 11px; }
-    .sec-table th { background: #f1f5f9; color: #334155; text-align: left; padding: 6px 9px; border: 1px solid #cbd5e1; font-size: 10px; text-transform: uppercase; }
-    .sec-table td { padding: 6px 9px; border: 1px solid #cbd5e1; }
-    .section-divider { font-size: 11px; font-weight: 900; text-transform: uppercase; letter-spacing: 0.5px; color: #334155; margin: 10px 0 8px; }
-    .q-card { border: 1px solid #cbd5e1; border-radius: 9px; padding: 10px 12px; margin-bottom: 9px; page-break-inside: avoid; }
-    .q-ok { border-left: 4px solid #059669; }
-    .q-bad { border-left: 4px solid #e11d48; }
-    .q-unatt { border-left: 4px solid #94a3b8; }
-    .q-head { display: flex; justify-content: space-between; align-items: center; font-size: 11px; margin-bottom: 6px; padding-bottom: 5px; border-bottom: 1px solid #e2e8f0; }
-    .scheme-tag { color: #4f46e5; font-weight: 700; }
-    .status-tag { font-weight: 800; color: #334155; }
-    .q-prompt { font-weight: 600; color: #0f172a; margin-bottom: 7px; }
-    .resp-box { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 7px; padding: 7px 10px; font-size: 11px; }
-    .footer { margin-top: 14px; text-align: center; font-size: 10px; color: #64748b; border-top: 1px solid #cbd5e1; padding-top: 8px; }
-    .katex-mathml { display: none !important; }
-  </style>
-</head>
-<body>
-  <div class="top-banner">
-    <div>
-      <div class="engine-lbl">${portalTitle}</div>
-      <div class="main-title">OFFICIAL ${examLabel} DIAGNOSTIC MARKSHEET</div>
-      <div class="meta-line"><strong>Candidate:</strong> ${candidate} &nbsp;|&nbsp; <strong>Assessment Serial ID:</strong> ${rec.serialId} &nbsp;|&nbsp; <strong>Date:</strong> ${rec.date}</div>
-    </div>
-    <div class="score-right">
-      <div class="score-big">SCORE AWARDED: ${rec.score} / ${rec.maxMarks}</div>
-      <div class="score-sub"><strong>ACCURACY:</strong> ${rec.percentage}% (${cCnt}C / ${wCnt}W / ${uCnt}U)</div>
-      <div class="score-sub"><strong>PACE PER Q:</strong> ${pacePerQ}s/Q &nbsp;|&nbsp; <strong>VERDICT:</strong> ${verdict}</div>
-    </div>
-  </div>
-
-  <div class="telemetry-grid">
-    <div class="t-box"><span class="t-lbl">Time Allocated</span><span class="t-val">${timeAlloc}</span></div>
-    <div class="t-box"><span class="t-lbl">Time Taken</span><span class="t-val">${timeTaken}</span></div>
-    <div class="t-box"><span class="t-lbl">Blueprint / Scale</span><span class="t-val">${rec.blueprint || rec.format}</span></div>
-    <div class="t-box"><span class="t-lbl">Attempt Distribution</span><span class="t-val">${cCnt} Correct &bull; ${wCnt} Wrong &bull; ${uCnt} Unattempted</span></div>
-  </div>
-
-  <table class="sec-table">
-    <thead>
-      <tr>
-        <th>Section</th>
-        <th>Questions</th>
-        <th>Correct / Wrong / Unattempted</th>
-        <th>Marks Awarded</th>
-      </tr>
-    </thead>
-    <tbody>
-      ${secRows.map(s => `
-        <tr>
-          <td><strong>${s.section}</strong></td>
-          <td>${s.qs} Qs</td>
-          <td>${s.correct}C / ${s.wrong}W / ${s.unattempted}U</td>
-          <td><strong>${s.marks} / ${s.maxMarks}</strong></td>
-        </tr>
-      `).join("")}
-    </tbody>
-  </table>
-
-  <div class="section-divider">Evaluated Answer Script &amp; Official Solutions (${totalQs} Questions)</div>
-  ${questionsHtml}
-
-  <div class="footer">Generated by ${portalTitle} &bull; Assessment Serial ID: ${rec.serialId} &bull; Official Marking Scheme Verified</div>
-  <script>
-    window.onload = function () {
-      if (window.renderMathInElement) {
-        renderMathInElement(document.body, {
-          delimiters: [{ left: "$$", right: "$$", display: true }, { left: "$", right: "$", display: false }],
-          throwOnError: false
-        });
-      }
-      setTimeout(function () { window.print(); }, 450);
-    };
-  <\/script>
-</body>
-</html>`);
-    win.document.close();
-  };
-})();
-
-
-// === BULLETPROOF TAB 4 LEDGER PERSISTENCE & MODE-KEY ALIGNMENT (v_bulletproof_save_v6) ===
-window.saveTab4ProctoredToNativeLedger = function (payload) {
-  const isGre = !!payload.isGre || /GRE/i.test(document.title || "") || window.location.port === "8007";
-  let modeKey = isGre ? "GRE_STD" : "CAT_STD";
-  try {
-    if (typeof getActiveModeKey === "function") modeKey = getActiveModeKey();
-  } catch (_) {}
-
-  let schema = { badge: modeKey, totalMax: payload.maxScale || (isGre ? 340 : 198), sections: [{ max: 72 }, { max: 60 }, { max: 66 }] };
-  try {
-    if (typeof getSchema === "function") schema = getSchema(modeKey) || schema;
-  } catch (_) {}
-
-  const ratio = Number(payload.pct || 0) / 100;
-  const s1 = Math.round(((schema.sections && schema.sections[0]) ? schema.sections[0].max : 72) * ratio);
-  const s2 = Math.round(((schema.sections && schema.sections[1]) ? schema.sections[1].max : 60) * ratio);
-  const s3 = Math.round(((schema.sections && schema.sections[2]) ? schema.sections[2].max : 66) * ratio);
-
-  let hist = [];
-  try {
-    hist = JSON.parse(localStorage.getItem("ipm_mock_history_v1") || "[]");
-    if (!Array.isArray(hist)) hist = [];
-  } catch (_) { hist = []; }
-
-  const dStr = new Date().toISOString().slice(0, 10).replace(/-/g, "");
-  const sameTrack = hist.filter(m =>
-    String(m.mode || m.modeKey || m.examMode || "").toLowerCase() === String(modeKey).toLowerCase()
-  );
-  const seq = String(sameTrack.length + 1).padStart(2, "0");
-  const serialId = payload.serialId || `${isGre ? "GRE-FULL" : "CAT-FULL"}${payload.totalQs || (isGre ? 54 : 66)}-${dStr}-#${seq}`;
-
-  // Keep breakdown compact so localStorage never hits QuotaExceededError
-  const compactBreakdown = Array.isArray(payload.breakdown)
-    ? payload.breakdown.map(b => ({
-        qNo: b.qNo,
-        sec: b.sec,
-        scheme: b.scheme,
-        q: String(b.q || "").slice(0, 260),
-        userChoice: String(b.userChoice || "").slice(0, 140),
-        correctChoice: String(b.correctChoice || "").slice(0, 140),
-        isCorrect: !!b.isCorrect,
-        isUnattempted: !!b.isUnattempted,
-        marksDelta: Number(b.marksDelta || 0),
-        rationale: String(b.rationale || "").slice(0, 220)
-      }))
-    : [];
-
-  const entry = {
-    id: serialId,
-    serialId: serialId,
-    type: "full",
-    mockType: "full",
-    isProctored: true,
-    isSectional: false,
-    mode: modeKey,
-    modeKey: modeKey,
-    examMode: modeKey,
-    track: modeKey,
-    title: `${schema.badge || modeKey} (${payload.totalQs} Qs)`,
-    format: `${schema.badge || modeKey} (${payload.totalQs} Qs)`,
-    blueprint: `${schema.badge || modeKey} (${payload.totalQs} Qs)`,
-    score: Number(payload.scaled || 0),
-    totalScore: Number(payload.scaled || 0),
-    maxMarks: Number(payload.maxScale || schema.totalMax || (isGre ? 340 : 198)),
-    maxScore: Number(payload.maxScale || schema.totalMax || (isGre ? 340 : 198)),
-    percentage: Number(payload.pct || 0),
-    accuracy: Number(payload.pct || 0),
-    s1, s2, s3,
-    secScores: [s1, s2, s3],
-    sectionScores: { s1, s2, s3 },
-    totalQs: Number(payload.totalQs || (isGre ? 54 : 66)),
-    correct: Number(payload.correct || 0),
-    wrong: Number(payload.wrong || 0),
-    unattempted: Number(payload.unattempted || 0),
-    timeAllocatedSec: Number(payload.timeAllocatedSec || (isGre ? 7080 : 7200)),
-    timeTakenSec: Number(payload.timeTakenSec || 1),
-    timeAllocatedStr: payload.timeAllocatedStr || (isGre ? "118m 00s" : "120m 00s"),
-    timeTakenStr: payload.timeTakenStr || "0m 05s",
-    pacePerQ: payload.pacePerQ || "0.1",
-    pacingVerdict: payload.pacingVerdict || "Rushed (High Risk of Operational Slips)",
-    sectionSummary: Array.isArray(payload.sectionSummary) ? payload.sectionSummary : [],
-    breakdown: compactBreakdown,
-    timestamp: Date.now(),
-    date: new Date().toLocaleString([], { day: "2-digit", month: "short", hour: "2-digit", minute: "2-digit" })
-  };
-
-  if (!hist.some(h => h.serialId === serialId)) {
-    hist.unshift(entry);
-  }
-
-  try {
-    localStorage.setItem("ipm_mock_history_v1", JSON.stringify(hist));
-  } catch (err) {
-    // If quota exceeded by older heavy entries, strip breakdowns from older entries and retry
-    const trimmed = hist.map((item, idx) => idx === 0 ? item : { ...item, breakdown: [] });
-    localStorage.setItem("ipm_mock_history_v1", JSON.stringify(trimmed));
-  }
-
-  if (typeof window.renderStreamlinedTab4 === "function") {
-    window.renderStreamlinedTab4();
-  }
-  return entry;
-};
-
-
-// === EXACT MODE KEY RESOLUTION ('CAT' for CAT, 'STANDARD' for GRE) + MIGRATION ===
-(function () {
-  function resolveExactPortalMode(isGre) {
-    if (!isGre) {
-      if (typeof window.detectActiveCatPortalMode === "function") return window.detectActiveCatPortalMode();
-      return window._ACTIVE_CAT_MODE || "CAT";
-    }
-    const idx = Number(window._ACTIVE_MODE_IDX || 0);
-    return idx === 1 ? "Q170" : (idx === 2 ? "V165" : "STANDARD");
-  }
-
-  // Migrate any legacy CAT_STD / GRE_STD entries in ipm_mock_history_v1 to exact mode keys
-  try {
-    const isGre = /GRE/i.test(document.title || "") || window.location.port === "8007";
-    const exactMode = resolveExactPortalMode(isGre);
-    const hist = JSON.parse(localStorage.getItem("ipm_mock_history_v1") || "[]");
-    if (Array.isArray(hist) && hist.length) {
-      let changed = false;
-      hist.forEach(item => {
-        if ((item.mode === "CAT_STD" && !isGre) || (item.mode === "GRE_STD" && isGre)) {
-          item.mode = exactMode;
-          item.modeKey = exactMode;
-          item.examMode = exactMode;
-          item.track = exactMode;
-          changed = true;
-        }
-      });
-      if (changed) localStorage.setItem("ipm_mock_history_v1", JSON.stringify(hist));
-    }
-  } catch (_) {}
-
-  const prevSave = window.saveTab4ProctoredToNativeLedger;
-  if (typeof prevSave === "function") {
-    window.saveTab4ProctoredToNativeLedger = function (payload) {
-      const isGre = !!payload.isGre || /GRE/i.test(document.title || "") || window.location.port === "8007";
-      const exactMode = resolveExactPortalMode(isGre);
-      const res = prevSave(payload);
-      try {
-        const hist = JSON.parse(localStorage.getItem("ipm_mock_history_v1") || "[]");
-        const target = hist.find(h => h.serialId === res.serialId);
-        if (target) {
-          target.mode = exactMode;
-          target.modeKey = exactMode;
-          target.examMode = exactMode;
-          target.track = exactMode;
-          localStorage.setItem("ipm_mock_history_v1", JSON.stringify(hist));
-        }
-      } catch (_) {}
-      if (typeof window.renderStreamlinedTab4 === "function") window.renderStreamlinedTab4();
-      return res;
-    };
-  }
 })();
