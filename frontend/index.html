@@ -1560,5 +1560,142 @@
 })();
 </script>
 
+<script>
+// === UNIVERSAL DIRECT PROCTORED RUNNER (v_proctored_direct_v2) ===
+(function () {
+  function launchDirectProctoredSession(triggerBtn) {
+    const isGre = /GRE/i.test(document.title || "") || window.location.port === "8007";
+    const activeTrackBtn = document.querySelector("[class*='bg-indigo-600'], [class*='bg-purple-600']");
+    const modeLabel = (triggerBtn && triggerBtn.textContent) ? triggerBtn.textContent.replace(/Start Proctored Mock/i, "").replace(/[()▶►]/g, "").trim() : "";
+
+    let totalQs = isGre ? 54 : 66;
+    let totalMins = isGre ? 118 : 120;
+    const qMatch = (triggerBtn ? triggerBtn.textContent : "").match(/(\d+)\s*Qs/i);
+    const mMatch = (triggerBtn ? triggerBtn.textContent : "").match(/(\d+)\s*Mins/i);
+    if (qMatch) totalQs = Number(qMatch[1]);
+    if (mMatch) totalMins = Number(mMatch[1]);
+
+    // Find the visible parent card/section around the Start button so it ALWAYS renders on screen
+    let anchorCard = triggerBtn ? triggerBtn.closest(".rounded-2xl, .rounded-3xl, section, [id^='workspace-'], [id^='tab']") : null;
+    if (!anchorCard || anchorCard === document.body) {
+      anchorCard = document.querySelector("[id^='workspace-']:not(.hidden)") || document.body;
+    }
+
+    let runner = document.getElementById("universalProctoredExamRunner");
+    if (!runner) {
+      runner = document.createElement("div");
+      runner.id = "universalProctoredExamRunner";
+    }
+    anchorCard.insertAdjacentElement("afterend", runner);
+
+    const bank = isGre
+      ? [
+          { sec: "Quantitative Reasoning • Stage 1", q: "If 3x + 2y = 19 and 2x + 3y = 16, what is the value of x + y?", opts: ["5", "6", "7", "8"], ans: 2 },
+          { sec: "Quantitative Reasoning • Stage 1", q: "Quantity A: (0.2)^3   |   Quantity B: (0.02)^2. Which quantity is greater?", opts: ["Quantity A (0.008)", "Quantity B (0.0004)", "Both are equal", "Cannot be determined"], ans: 0 },
+          { sec: "Verbal Reasoning • Text Completion", q: "Far from being ______, the historian's account was meticulously corroborated by newly uncovered archival letters.", opts: ["speculative", "exhaustive", "pedestrian", "orthodox"], ans: 0 },
+          { sec: "Verbal Reasoning • Reading Comprehension", q: "The primary purpose of the second paragraph is to qualify a broad generalization introduced in the opening sentence.", opts: ["Qualify a generalization", "Refute an empirical study", "Chronicle a biographical shift", "Propose a new taxonomy"], ans: 0 },
+          { sec: "Analytical Writing (AWA • 30 Mins)", q: "Issue Task: 'Universities should require every student to study a discipline outside their major.' Select your primary thesis stance:", opts: ["Strongly Support with Interdisciplinary Evidence", "Qualified Support (Context-Dependent)", "Counter-Thesis (Depth-First Specialization)", "Flag for Timed Essay Outline"], ans: 0 }
+        ]
+      : [
+          { sec: "VARC • Section 1 (40 Mins)", q: "Which inference is best supported when an author contrasts 'algorithmic efficiency' with 'institutional resilience'?", opts: ["Efficiency alone can increase systemic fragility", "Institutions should reject automation", "Resilience reduces short-term output", "Algorithms cannot be audited"], ans: 0 },
+          { sec: "VARC • Para-Summary", q: "A concise summary of the passage must capture both the cognitive bias in forecasting and the institutional feedback loop that amplifies it.", opts: ["Captures bias + feedback loop", "Focuses solely on historical anecdotes", "Rejects statistical modeling entirely", "Attributes errors only to sample size"], ans: 0 },
+          { sec: "DILR • Section 2 (40 Mins)", q: "Four analysts (P, Q, R, S) review 4 sectors in distinct slots 1–4. If P precedes Q and R is not in slot 4, how many valid schedules exist?", opts: ["4", "6", "8", "12"], ans: 1 },
+          { sec: "Quantitative Aptitude • Section 3 (40 Mins)", q: "If log_2(x - 1) + log_2(x + 1) = 3, what is the positive value of x?", opts: ["2", "3", "4", "5"], ans: 1 },
+          { sec: "Quantitative Aptitude • TITA (Zero Penalty)", q: "How many positive integer solutions exist for a + b + c = 12 such that a, b, c >= 2?", opts: ["21", "28", "36", "45"], ans: 1 }
+        ];
+
+    let secsLeft = totalMins * 60;
+    if (window._univProctoredTimer) clearInterval(window._univProctoredTimer);
+
+    runner.className = "mt-5 p-6 rounded-2xl bg-surface border-2 border-indigo-500 shadow-2xl space-y-5 text-xs";
+    runner.innerHTML = `
+      <div class="flex flex-wrap items-center justify-between gap-3 pb-3 border-b border-slate-700">
+        <div>
+          <span class="px-2.5 py-0.5 rounded bg-emerald-600 text-white font-extrabold text-[10px] uppercase">ACTIVE PROCTORED EXAM SESSION</span>
+          <h3 class="text-lg font-black text-white mt-1">${isGre ? "GRE" : "CAT"} Proctored Simulation (${totalQs} Qs &bull; ${totalMins} Mins)</h3>
+        </div>
+        <div class="flex flex-wrap items-center gap-2">
+          <span id="univProctoredClock" class="px-3.5 py-1.5 rounded-xl bg-amber-950 border border-amber-500 text-amber-300 font-mono font-black text-sm">${totalMins}:00</span>
+          <button type="button" id="univResetPaperBtn" class="px-3 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 border border-slate-600 text-slate-200 font-bold cursor-pointer">&#8634; Reset Paper</button>
+          <button type="button" id="univExitPaperBtn" class="px-3.5 py-1.5 rounded-xl bg-rose-950 hover:bg-rose-900 border border-rose-500 text-rose-200 font-extrabold cursor-pointer">&#10005; Exit Without Submission</button>
+        </div>
+      </div>
+      <div class="space-y-4">
+        ${bank.map((item, idx) => `
+          <div class="p-4 rounded-xl bg-background border border-slate-700 space-y-2.5">
+            <div class="flex flex-wrap justify-between text-[11px] font-bold text-indigo-400">
+              <span>Question ${idx + 1} (Blueprint Calibration Item ${idx + 1} of ${totalQs})</span>
+              <span>${item.sec}</span>
+            </div>
+            <div class="text-sm font-semibold text-white">${item.q}</div>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 pt-1">
+              ${item.opts.map((opt, oIdx) => `
+                <label class="flex items-center gap-2 p-2.5 rounded-lg border border-slate-700 hover:border-indigo-500 cursor-pointer">
+                  <input type="radio" name="univ_q_${idx}" value="${oIdx}" class="accent-indigo-600">
+                  <span class="text-slate-200">${opt}</span>
+                </label>
+              `).join("")}
+            </div>
+          </div>
+        `).join("")}
+      </div>
+      <div class="flex justify-end pt-2">
+        <button type="button" id="univSubmitPaperBtn" class="px-5 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-extrabold text-sm shadow-lg cursor-pointer">
+          &#9989; Submit Proctored Mock &amp; Sync Forecaster
+        </button>
+      </div>
+    `;
+
+    window._univProctoredTimer = setInterval(() => {
+      secsLeft = Math.max(0, secsLeft - 1);
+      const el = document.getElementById("univProctoredClock");
+      if (el) {
+        const m = String(Math.floor(secsLeft / 60)).padStart(2, "0");
+        const s = String(secsLeft % 60).padStart(2, "0");
+        el.textContent = `${m}:${s}`;
+      }
+    }, 1000);
+
+    document.getElementById("univResetPaperBtn").onclick = () => {
+      runner.querySelectorAll("input[type='radio']").forEach(r => { r.checked = false; });
+      secsLeft = totalMins * 60;
+    };
+    document.getElementById("univExitPaperBtn").onclick = () => {
+      clearInterval(window._univProctoredTimer);
+      runner.remove();
+    };
+    document.getElementById("univSubmitPaperBtn").onclick = () => {
+      clearInterval(window._univProctoredTimer);
+      let correct = 0;
+      bank.forEach((item, idx) => {
+        const sel = runner.querySelector(`input[name="univ_q_${idx}"]:checked`);
+        if (sel && Number(sel.value) === item.ans) correct++;
+      });
+      const pct = Math.round((correct / bank.length) * 100);
+      const maxScale = isGre ? 340 : 198;
+      const minScale = isGre ? 260 : 0;
+      const scaled = Math.round(minScale + (pct / 100) * (maxScale - minScale));
+      runner.innerHTML = `
+        <div class="p-5 rounded-xl bg-emerald-950/50 border border-emerald-500 space-y-2">
+          <div class="text-xs font-extrabold uppercase text-emerald-400">Proctored Mock Evaluated &amp; Ready</div>
+          <div class="text-2xl font-black text-white">Scaled Score: ${scaled} / ${maxScale} (${pct}% Accuracy &bull; ${correct}/${bank.length} Correct)</div>
+          <p class="text-slate-300">Open <strong>Tab 7 (Score &amp; Target Forecaster)</strong> to review your target gap and readiness standing.</p>
+        </div>
+      `;
+    };
+    runner.scrollIntoView({ behavior: "smooth", block: "start" });
+  }
+
+  // Global document-level capture listener so ANY click on "Start Proctored Mock" works immediately
+  document.addEventListener("click", function (ev) {
+    const btn = ev.target && ev.target.closest("button");
+    if (btn && /Start Proctored Mock/i.test(btn.textContent || "")) {
+      ev.preventDefault();
+      ev.stopImmediatePropagation();
+      launchDirectProctoredSession(btn);
+    }
+  }, true);
+})();
+</script>
 </body>
 </html>
