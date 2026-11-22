@@ -1347,7 +1347,7 @@
       if (host.includes("gmat")) {
         const est = Math.min(805, Math.max(205, Math.round((205 + (latest.score / latest.maxScore) * 600) / 10) * 10 + 5));
         telemetry = `Mocks: ${hist.length} &bull; Latest Scaled: ${est}/805`;
-      } else if (host.includes("gre")) {
+      } else if (host.includes("gre") || window.location.port === "8007" || /GRE/i.test(document.title || "")) {
         const est = Math.min(340, Math.max(260, Math.round(260 + (latest.score / latest.maxScore) * 80)));
         telemetry = `Mocks: ${hist.length} &bull; Latest Scaled: ${est}/340`;
       } else {
