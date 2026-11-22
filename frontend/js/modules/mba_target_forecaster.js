@@ -1224,3 +1224,82 @@
     return entry;
   };
 })();
+
+
+// === NATIVE PROCTORED LEDGER & TAB 7 SYNC BRIDGE (v_native_sync_final) ===
+window.saveTab4ProctoredToNativeLedger = function (payload) {
+  const isGre = !!payload.isGre;
+  const modeKey = (typeof getActiveModeKey === "function") ? getActiveModeKey() : (isGre ? "GRE_STD" : "CAT_STD");
+  const schema = (typeof getSchema === "function")
+    ? getSchema(modeKey)
+    : { badge: modeKey, totalMax: payload.maxScale, sections: [{ id: "s1", max: 72 }, { id: "s2", max: 60 }, { id: "s3", max: 66 }] };
+
+  const ratio = Number(payload.pct || 0) / 100;
+  const s1 = Math.round(((schema.sections && schema.sections[0]) ? schema.sections[0].max : 72) * ratio);
+  const s2 = Math.round(((schema.sections && schema.sections[1]) ? schema.sections[1].max : 60) * ratio);
+  const s3 = Math.round(((schema.sections && schema.sections[2]) ? schema.sections[2].max : 66) * ratio);
+
+  const hist = JSON.parse(localStorage.getItem("ipm_mock_history_v1") || "[]");
+  const dStr = new Date().toISOString().slice(0, 10).replace(/-/g, "");
+  const modeExisting = hist.filter(m => (m.mode === modeKey || m.modeKey === modeKey || m.examMode === modeKey));
+  const seq = String(modeExisting.length + 1).padStart(2, "0");
+  const serialId = payload.serialId || `${isGre ? "GRE-FULL" : "CAT-FULL"}${payload.totalQs}-${dStr}-#${seq}`;
+
+  const entry = {
+    id: serialId,
+    serialId: serialId,
+    type: "full",
+    mockType: "full",
+    isProctored: true,
+    isSectional: false,
+    mode: modeKey,
+    modeKey: modeKey,
+    examMode: modeKey,
+    track: modeKey,
+    title: `${schema.badge || modeKey} (${payload.totalQs} Qs)`,
+    format: `${schema.badge || modeKey} (${payload.totalQs} Qs)`,
+    blueprint: `${schema.badge || modeKey} (${payload.totalQs} Qs)`,
+    score: Number(payload.scaled || 0),
+    totalScore: Number(payload.scaled || 0),
+    maxMarks: Number(payload.maxScale || schema.totalMax || 198),
+    maxScore: Number(payload.maxScale || schema.totalMax || 198),
+    percentage: Number(payload.pct || 0),
+    accuracy: Number(payload.pct || 0),
+    s1: s1,
+    s2: s2,
+    s3: s3,
+    secScores: [s1, s2, s3],
+    sectionScores: { s1: s1, s2: s2, s3: s3 },
+    timestamp: Date.now(),
+    date: new Date().toLocaleString([], { day: "2-digit", month: "short", hour: "2-digit", minute: "2-digit" })
+  };
+
+  if (!hist.some(h => h.serialId === serialId)) {
+    hist.unshift(entry);
+    localStorage.setItem("ipm_mock_history_v1", JSON.stringify(hist));
+  }
+
+  if (typeof window.renderStreamlinedTab4 === "function") window.renderStreamlinedTab4();
+  return entry;
+};
+
+// Auto-migrate any existing cat_proctored_ledger / gre_proctored_ledger entries into ipm_mock_history_v1 on load
+(function () {
+  try {
+    const isGre = /GRE/i.test(document.title || "") || window.location.port === "8007";
+    const legacyKey = isGre ? "gre_proctored_ledger" : "cat_proctored_ledger";
+    const legacy = JSON.parse(localStorage.getItem(legacyKey) || "[]");
+    if (Array.isArray(legacy) && legacy.length) {
+      legacy.forEach(item => {
+        window.saveTab4ProctoredToNativeLedger({
+          isGre,
+          serialId: item.serialId,
+          scaled: item.scaled || item.score || 0,
+          maxScale: item.maxScale || item.maxMarks || (isGre ? 340 : 198),
+          pct: item.pct || item.percentage || 0,
+          totalQs: item.totalQs || (isGre ? 54 : 66)
+        });
+      });
+    }
+  } catch (_) {}
+})();
