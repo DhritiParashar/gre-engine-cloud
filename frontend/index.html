@@ -1561,7 +1561,7 @@
 </script>
 
 <script>
-// === UNIVERSAL DIRECT PROCTORED RUNNER (v_proctored_direct_v2) ===
+// === UNIVERSAL DIRECT PROCTORED RUNNER (v_proctored_direct_v3) ===
 (function () {
   function launchDirectProctoredSession(triggerBtn) {
     const isGre = /GRE/i.test(document.title || "") || window.location.port === "8007";
@@ -1616,8 +1616,9 @@
         </div>
         <div class="flex flex-wrap items-center gap-2">
           <span id="univProctoredClock" class="px-3.5 py-1.5 rounded-xl bg-amber-950 border border-amber-500 text-amber-300 font-mono font-black text-sm">${totalMins}:00</span>
-          <button type="button" id="univResetPaperBtn" class="px-3 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 border border-slate-600 text-slate-200 font-bold cursor-pointer">&#8634; Reset Paper</button>
-          <button type="button" id="univExitPaperBtn" class="px-3.5 py-1.5 rounded-xl bg-rose-950 hover:bg-rose-900 border border-rose-500 text-rose-200 font-extrabold cursor-pointer">&#10005; Exit Without Submission</button>
+          <button type="button" id="univResetPaperBtn" class="px-3 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 border border-slate-600 text-white font-bold cursor-pointer">&#8634; Reset Paper</button>
+          <button type="button" id="univExitPaperBtn" class="px-3.5 py-1.5 rounded-xl bg-rose-700 hover:bg-rose-600 border border-rose-500 text-white font-extrabold cursor-pointer">&#10005; Exit Without Submission</button>
+          <button type="button" id="univTopSubmitPaperBtn" class="px-4 py-1.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 border border-emerald-400 text-white font-extrabold shadow-md cursor-pointer">&#9989; Submit Mock &amp; Sync Tab 7</button>
         </div>
       </div>
       <div class="space-y-4">
@@ -1664,7 +1665,7 @@
       clearInterval(window._univProctoredTimer);
       runner.remove();
     };
-    document.getElementById("univSubmitPaperBtn").onclick = () => {
+    const handleUnivSubmit = () => {
       clearInterval(window._univProctoredTimer);
       let correct = 0;
       bank.forEach((item, idx) => {
