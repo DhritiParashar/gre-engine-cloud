@@ -1469,3 +1469,48 @@ window.downloadMbaMockMarksheetAndScript = function (serialId) {
   document.addEventListener("DOMContentLoaded", injectLedgerInlineActions);
   setInterval(injectLedgerInlineActions, 500);
 })();
+
+
+// === TAB 4 OFFICIAL MOCK LEDGER '↺ Reset / Clear Logs' BUTTON ===
+window.resetMbaOfficialMockLogs = function () {
+  const isGre = /GRE/i.test(document.title || "") || window.location.port === "8007";
+  const modeKey = (typeof getActiveModeKey === "function") ? getActiveModeKey() : (isGre ? "GRE_STD" : "CAT_STD");
+  if (!confirm(`Clear all logged ${modeKey} mocks from the Official Mock Ledger? Next attempt will restart from #01.`)) return;
+
+  try {
+    const hist = JSON.parse(localStorage.getItem("ipm_mock_history_v1") || "[]");
+    const remaining = Array.isArray(hist)
+      ? hist.filter(m => (m.mode !== modeKey && m.modeKey !== modeKey && m.examMode !== modeKey))
+      : [];
+    localStorage.setItem("ipm_mock_history_v1", JSON.stringify(remaining));
+  } catch (_) {}
+
+  try {
+    localStorage.removeItem(isGre ? "gre_proctored_ledger" : "cat_proctored_ledger");
+  } catch (_) {}
+
+  window._MBA_T7_SYNCED_ID = "";
+  window._MBA_T7_MODE = "TARGET";
+  if (typeof window.renderStreamlinedTab4 === "function") window.renderStreamlinedTab4();
+};
+
+(function () {
+  function injectResetLogsButton() {
+    const openT7Btn = Array.from(document.querySelectorAll("button")).find(b =>
+      /Open Tab 7 Target Forecaster/i.test(b.textContent || "")
+    );
+    if (!openT7Btn || !openT7Btn.parentElement) return;
+    if (document.getElementById("mbaResetMockLogsBtn")) return;
+
+    const resetBtn = document.createElement("button");
+    resetBtn.id = "mbaResetMockLogsBtn";
+    resetBtn.type = "button";
+    resetBtn.onclick = function () { window.resetMbaOfficialMockLogs(); };
+    resetBtn.style.cssText = "background:#fff1f2;color:#be123c;border:1px solid #fecdd3;border-radius:9999px;padding:7px 14px;font-size:12px;font-weight:800;cursor:pointer;margin-right:8px;";
+    resetBtn.innerHTML = "&#8634; Reset / Clear Logs";
+    openT7Btn.parentElement.insertBefore(resetBtn, openT7Btn);
+  }
+
+  document.addEventListener("DOMContentLoaded", injectResetLogsButton);
+  setInterval(injectResetLogsButton, 500);
+})();
