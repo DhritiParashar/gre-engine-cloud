@@ -2252,3 +2252,58 @@ window.saveTab4ProctoredToNativeLedger = function (payload) {
   }
   return entry;
 };
+
+
+// === EXACT MODE KEY RESOLUTION ('CAT' for CAT, 'STANDARD' for GRE) + MIGRATION ===
+(function () {
+  function resolveExactPortalMode(isGre) {
+    if (!isGre) {
+      if (typeof window.detectActiveCatPortalMode === "function") return window.detectActiveCatPortalMode();
+      return window._ACTIVE_CAT_MODE || "CAT";
+    }
+    const idx = Number(window._ACTIVE_MODE_IDX || 0);
+    return idx === 1 ? "Q170" : (idx === 2 ? "V165" : "STANDARD");
+  }
+
+  // Migrate any legacy CAT_STD / GRE_STD entries in ipm_mock_history_v1 to exact mode keys
+  try {
+    const isGre = /GRE/i.test(document.title || "") || window.location.port === "8007";
+    const exactMode = resolveExactPortalMode(isGre);
+    const hist = JSON.parse(localStorage.getItem("ipm_mock_history_v1") || "[]");
+    if (Array.isArray(hist) && hist.length) {
+      let changed = false;
+      hist.forEach(item => {
+        if ((item.mode === "CAT_STD" && !isGre) || (item.mode === "GRE_STD" && isGre)) {
+          item.mode = exactMode;
+          item.modeKey = exactMode;
+          item.examMode = exactMode;
+          item.track = exactMode;
+          changed = true;
+        }
+      });
+      if (changed) localStorage.setItem("ipm_mock_history_v1", JSON.stringify(hist));
+    }
+  } catch (_) {}
+
+  const prevSave = window.saveTab4ProctoredToNativeLedger;
+  if (typeof prevSave === "function") {
+    window.saveTab4ProctoredToNativeLedger = function (payload) {
+      const isGre = !!payload.isGre || /GRE/i.test(document.title || "") || window.location.port === "8007";
+      const exactMode = resolveExactPortalMode(isGre);
+      const res = prevSave(payload);
+      try {
+        const hist = JSON.parse(localStorage.getItem("ipm_mock_history_v1") || "[]");
+        const target = hist.find(h => h.serialId === res.serialId);
+        if (target) {
+          target.mode = exactMode;
+          target.modeKey = exactMode;
+          target.examMode = exactMode;
+          target.track = exactMode;
+          localStorage.setItem("ipm_mock_history_v1", JSON.stringify(hist));
+        }
+      } catch (_) {}
+      if (typeof window.renderStreamlinedTab4 === "function") window.renderStreamlinedTab4();
+      return res;
+    };
+  }
+})();
