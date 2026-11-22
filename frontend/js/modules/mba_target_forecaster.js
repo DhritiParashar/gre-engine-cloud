@@ -2147,3 +2147,108 @@ window.resetMbaOfficialMockLogs = function () {
     win.document.close();
   };
 })();
+
+
+// === BULLETPROOF TAB 4 LEDGER PERSISTENCE & MODE-KEY ALIGNMENT (v_bulletproof_save_v6) ===
+window.saveTab4ProctoredToNativeLedger = function (payload) {
+  const isGre = !!payload.isGre || /GRE/i.test(document.title || "") || window.location.port === "8007";
+  let modeKey = isGre ? "GRE_STD" : "CAT_STD";
+  try {
+    if (typeof getActiveModeKey === "function") modeKey = getActiveModeKey();
+  } catch (_) {}
+
+  let schema = { badge: modeKey, totalMax: payload.maxScale || (isGre ? 340 : 198), sections: [{ max: 72 }, { max: 60 }, { max: 66 }] };
+  try {
+    if (typeof getSchema === "function") schema = getSchema(modeKey) || schema;
+  } catch (_) {}
+
+  const ratio = Number(payload.pct || 0) / 100;
+  const s1 = Math.round(((schema.sections && schema.sections[0]) ? schema.sections[0].max : 72) * ratio);
+  const s2 = Math.round(((schema.sections && schema.sections[1]) ? schema.sections[1].max : 60) * ratio);
+  const s3 = Math.round(((schema.sections && schema.sections[2]) ? schema.sections[2].max : 66) * ratio);
+
+  let hist = [];
+  try {
+    hist = JSON.parse(localStorage.getItem("ipm_mock_history_v1") || "[]");
+    if (!Array.isArray(hist)) hist = [];
+  } catch (_) { hist = []; }
+
+  const dStr = new Date().toISOString().slice(0, 10).replace(/-/g, "");
+  const sameTrack = hist.filter(m =>
+    String(m.mode || m.modeKey || m.examMode || "").toLowerCase() === String(modeKey).toLowerCase()
+  );
+  const seq = String(sameTrack.length + 1).padStart(2, "0");
+  const serialId = payload.serialId || `${isGre ? "GRE-FULL" : "CAT-FULL"}${payload.totalQs || (isGre ? 54 : 66)}-${dStr}-#${seq}`;
+
+  // Keep breakdown compact so localStorage never hits QuotaExceededError
+  const compactBreakdown = Array.isArray(payload.breakdown)
+    ? payload.breakdown.map(b => ({
+        qNo: b.qNo,
+        sec: b.sec,
+        scheme: b.scheme,
+        q: String(b.q || "").slice(0, 260),
+        userChoice: String(b.userChoice || "").slice(0, 140),
+        correctChoice: String(b.correctChoice || "").slice(0, 140),
+        isCorrect: !!b.isCorrect,
+        isUnattempted: !!b.isUnattempted,
+        marksDelta: Number(b.marksDelta || 0),
+        rationale: String(b.rationale || "").slice(0, 220)
+      }))
+    : [];
+
+  const entry = {
+    id: serialId,
+    serialId: serialId,
+    type: "full",
+    mockType: "full",
+    isProctored: true,
+    isSectional: false,
+    mode: modeKey,
+    modeKey: modeKey,
+    examMode: modeKey,
+    track: modeKey,
+    title: `${schema.badge || modeKey} (${payload.totalQs} Qs)`,
+    format: `${schema.badge || modeKey} (${payload.totalQs} Qs)`,
+    blueprint: `${schema.badge || modeKey} (${payload.totalQs} Qs)`,
+    score: Number(payload.scaled || 0),
+    totalScore: Number(payload.scaled || 0),
+    maxMarks: Number(payload.maxScale || schema.totalMax || (isGre ? 340 : 198)),
+    maxScore: Number(payload.maxScale || schema.totalMax || (isGre ? 340 : 198)),
+    percentage: Number(payload.pct || 0),
+    accuracy: Number(payload.pct || 0),
+    s1, s2, s3,
+    secScores: [s1, s2, s3],
+    sectionScores: { s1, s2, s3 },
+    totalQs: Number(payload.totalQs || (isGre ? 54 : 66)),
+    correct: Number(payload.correct || 0),
+    wrong: Number(payload.wrong || 0),
+    unattempted: Number(payload.unattempted || 0),
+    timeAllocatedSec: Number(payload.timeAllocatedSec || (isGre ? 7080 : 7200)),
+    timeTakenSec: Number(payload.timeTakenSec || 1),
+    timeAllocatedStr: payload.timeAllocatedStr || (isGre ? "118m 00s" : "120m 00s"),
+    timeTakenStr: payload.timeTakenStr || "0m 05s",
+    pacePerQ: payload.pacePerQ || "0.1",
+    pacingVerdict: payload.pacingVerdict || "Rushed (High Risk of Operational Slips)",
+    sectionSummary: Array.isArray(payload.sectionSummary) ? payload.sectionSummary : [],
+    breakdown: compactBreakdown,
+    timestamp: Date.now(),
+    date: new Date().toLocaleString([], { day: "2-digit", month: "short", hour: "2-digit", minute: "2-digit" })
+  };
+
+  if (!hist.some(h => h.serialId === serialId)) {
+    hist.unshift(entry);
+  }
+
+  try {
+    localStorage.setItem("ipm_mock_history_v1", JSON.stringify(hist));
+  } catch (err) {
+    // If quota exceeded by older heavy entries, strip breakdowns from older entries and retry
+    const trimmed = hist.map((item, idx) => idx === 0 ? item : { ...item, breakdown: [] });
+    localStorage.setItem("ipm_mock_history_v1", JSON.stringify(trimmed));
+  }
+
+  if (typeof window.renderStreamlinedTab4 === "function") {
+    window.renderStreamlinedTab4();
+  }
+  return entry;
+};
