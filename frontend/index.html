@@ -1561,21 +1561,143 @@
 </script>
 
 <script>
-// === UNIVERSAL DIRECT PROCTORED RUNNER (v_proctored_direct_v3) ===
+// === FULL-COUNT PROCTORED PAPER ENGINE WITH QUESTION PALETTE (v_proctored_full_count_v4) ===
 (function () {
-  function launchDirectProctoredSession(triggerBtn) {
-    const isGre = /GRE/i.test(document.title || "") || window.location.port === "8007";
-    const activeTrackBtn = document.querySelector("[class*='bg-indigo-600'], [class*='bg-purple-600']");
-    const modeLabel = (triggerBtn && triggerBtn.textContent) ? triggerBtn.textContent.replace(/Start Proctored Mock/i, "").replace(/[()▶►]/g, "").trim() : "";
+  function harvestLoadedQuestions(isGre) {
+    const pool = [];
+    const seen = new Set();
+    function pushItem(qObj, fallbackSec) {
+      if (!qObj) return;
+      const qText = qObj.question || qObj.prompt || qObj.text || qObj.stem || qObj.q;
+      const opts = qObj.options || qObj.choices || qObj.opts;
+      if (!qText || !Array.isArray(opts) || opts.length < 2) return;
+      const key = String(qText).slice(0, 90);
+      if (seen.has(key)) return;
+      seen.add(key);
+      let ansIdx = 0;
+      if (typeof qObj.ans === "number") ansIdx = qObj.ans;
+      else if (typeof qObj.correct_index === "number") ansIdx = qObj.correct_index;
+      else if (typeof qObj.answer === "string") {
+        const up = qObj.answer.trim().toUpperCase();
+        if (["A", "B", "C", "D", "E"].includes(up)) ansIdx = up.charCodeAt(0) - 65;
+        else {
+          const found = opts.findIndex(o => String(o).trim().toLowerCase() === qObj.answer.trim().toLowerCase());
+          if (found >= 0) ansIdx = found;
+        }
+      }
+      pool.push({
+        sec: qObj.section || qObj.subject || qObj.topic || fallbackSec,
+        q: String(qText),
+        opts: opts.slice(0, 4).map(String),
+        ans: Math.max(0, Math.min(3, ansIdx))
+      });
+    }
 
+    const candidateGlobals = [
+      "questionBank", "dbQuestionBank", "catQuestionBank", "greQuestionBank",
+      "mockQuestionBank", "allQuestions", "practiceQuestions", "CAT_QUESTIONS", "GRE_QUESTIONS"
+    ];
+    candidateGlobals.forEach(name => {
+      const g = window[name];
+      if (Array.isArray(g)) g.forEach(item => pushItem(item, isGre ? "Quantitative Reasoning" : "Quantitative Aptitude"));
+      else if (g && typeof g === "object") {
+        Object.entries(g).forEach(([k, arr]) => {
+          if (Array.isArray(arr)) arr.forEach(item => pushItem(item, k));
+        });
+      }
+    });
+    return pool;
+  }
+
+  function buildFullSectionPaper(isGre, totalQs, harvestedPool) {
+    const sections = isGre
+      ? [
+          { name: "Quantitative Reasoning • Stage 1", count: Math.min(12, Math.round(totalQs * 0.22)) },
+          { name: "Quantitative Reasoning • Stage 2 (Hard)", count: Math.min(15, Math.round(totalQs * 0.28)) },
+          { name: "Verbal Reasoning • Stage 1", count: Math.min(12, Math.round(totalQs * 0.22)) },
+          { name: "Verbal Reasoning • Stage 2 (Adaptive)", count: totalQs - (Math.min(12, Math.round(totalQs * 0.22)) * 2 + Math.min(15, Math.round(totalQs * 0.28))) }
+        ]
+      : totalQs === 75
+        ? [
+            { name: "VALR (Verbal & Logical Reasoning)", count: 26 },
+            { name: "Decision Making (DM Caselets)", count: 21 },
+            { name: "QADI (Quant & Data Interpretation)", count: 28 }
+          ]
+        : [
+            { name: "VARC • Section 1 (40 Mins)", count: Math.round(totalQs * (24 / 66)) },
+            { name: "DILR • Section 2 (40 Mins)", count: Math.round(totalQs * (20 / 66)) },
+            { name: "Quantitative Aptitude • Section 3 (40 Mins)", count: totalQs - Math.round(totalQs * (24 / 66)) - Math.round(totalQs * (20 / 66)) }
+          ];
+
+    const greTemplates = [
+      i => ({ q: `If $3x + 2y = ${19 + (i % 7) * 5}$ and $2x + 3y = ${16 + (i % 7) * 5}$, what is the value of $x + y$?`, opts: [`${7 + (i % 7) * 2}`, `${6 + (i % 7) * 2}`, `${8 + (i % 7) * 2}`, `${5 + (i % 7) * 2}`], ans: 0 }),
+      i => ({ q: `Quantity A: $(0.${2 + (i % 3)})^3$   |   Quantity B: $(0.0${2 + (i % 3)})^2$. Compare Quantity A and Quantity B.`, opts: ["Quantity A is greater", "Quantity B is greater", "The two quantities are equal", "Relationship cannot be determined"], ans: 0 }),
+      i => ({ q: `A data server processes ${120 + i * 15} requests in ${4 + (i % 3)} minutes. At this constant rate, how many requests does it process in 15 minutes?`, opts: [`${Math.round(((120 + i * 15) / (4 + (i % 3))) * 15)}`, `${Math.round(((120 + i * 15) / (4 + (i % 3))) * 12)}`, `${Math.round(((120 + i * 15) / (4 + (i % 3))) * 18)}`, `${Math.round(((120 + i * 15) / (4 + (i % 3))) * 10)}`], ans: 0 }),
+      i => ({ q: `Text Completion (${i + 1}): Far from being ______, the economist's monograph was painstakingly corroborated by longitudinal municipal ledgers.`, opts: ["speculative", "exhaustive", "pedestrian", "orthodox"], ans: 0 }),
+      i => ({ q: `Sentence Equivalence (${i + 1}): Although early critics dismissed the urban transit proposal as ______, subsequent ridership figures proved its fiscal prudence.`, opts: ["chimerical", "prescient", "pellucid", "munificent"], ans: 0 })
+    ];
+
+    const catTemplates = [
+      i => ({ q: `VARC Inference (${i + 1}): When an author contrasts 'short-term algorithmic efficiency' with 'institutional resilience', which conclusion follows most directly?`, opts: ["Optimizing solely for efficiency can heighten systemic fragility", "Institutions should abandon automated decision tools", "Resilience necessarily lowers quarterly productivity", "Algorithms cannot be evaluated empirically"], ans: 0 }),
+      i => ({ q: `Para-Summary (${i + 1}): Which option best captures the core thesis of a passage linking cognitive anchoring in forecasting to organizational inertia?`, opts: ["Initial numerical anchors distort forecasts and are reinforced by institutional routines", "Historical case studies outperform statistical models in volatile markets", "Sample size alone determines the accuracy of corporate projections", "Forecasting errors stem primarily from external macroeconomic shocks"], ans: 0 }),
+      i => ({ q: `DILR Scheduling Set (${i + 1}): Four analysts (P, Q, R, S) audit ${4 + (i % 2)} portfolios across distinct time slots. If P precedes Q and R is not assigned the final slot, how many valid schedules exist?`, opts: ["4", "6", "8", "12"], ans: 1 }),
+      i => ({ q: `Quantitative Aptitude (${i + 1}): If $\\log_2(x - ${1 + (i % 3)}) + \\log_2(x + ${1 + (i % 3)}) = 3$, find the positive value of $x$.`, opts: [`${Math.round(Math.sqrt(8 + Math.pow(1 + (i % 3), 2)))}`, `${2 + (i % 3)}`, `${4 + (i % 3)}`, `${5 + (i % 3)}`], ans: 0 }),
+      i => ({ q: `Quantitative Aptitude • TITA (${i + 1}): Find the number of positive integer solutions to $a + b + c = ${12 + (i % 4)}$ such that $a, b, c \\ge 2$.`, opts: [`${((6 + (i % 4)) * (7 + (i % 4))) / 2}`, `${((5 + (i % 4)) * (6 + (i % 4))) / 2}`, `${((7 + (i % 4)) * (8 + (i % 4))) / 2}`, `${((4 + (i % 4)) * (5 + (i % 4))) / 2}`], ans: 0 })
+    ];
+
+    const paper = [];
+    let poolCursor = 0;
+    let globalIdx = 0;
+
+    sections.forEach(sec => {
+      for (let s = 0; s < sec.count; s++) {
+        if (poolCursor < harvestedPool.length) {
+          const item = harvestedPool[poolCursor++];
+          paper.push({ ...item, sec: sec.name });
+        } else {
+          const tplList = isGre ? greTemplates : catTemplates;
+          const gen = tplList[globalIdx % tplList.length](globalIdx);
+          paper.push({ sec: sec.name, q: gen.q, opts: gen.opts, ans: gen.ans });
+        }
+        globalIdx++;
+      }
+    });
+
+    return paper.slice(0, totalQs);
+  }
+
+  async function launchDirectProctoredSession(triggerBtn) {
+    const isGre = /GRE/i.test(document.title || "") || window.location.port === "8007";
     let totalQs = isGre ? 54 : 66;
     let totalMins = isGre ? 118 : 120;
-    const qMatch = (triggerBtn ? triggerBtn.textContent : "").match(/(\d+)\s*Qs/i);
-    const mMatch = (triggerBtn ? triggerBtn.textContent : "").match(/(\d+)\s*Mins/i);
+    const btnTxt = triggerBtn ? triggerBtn.textContent : "";
+    const qMatch = btnTxt.match(/(\d+)\s*Qs/i);
+    const mMatch = btnTxt.match(/(\d+)\s*Mins/i);
     if (qMatch) totalQs = Number(qMatch[1]);
     if (mMatch) totalMins = Number(mMatch[1]);
 
-    // Find the visible parent card/section around the Start button so it ALWAYS renders on screen
+    let harvested = harvestLoadedQuestions(isGre);
+    try {
+      const resp = await fetch(`/api/questions?limit=${totalQs}`);
+      if (resp.ok) {
+        const data = await resp.json();
+        const rows = Array.isArray(data) ? data : (data.questions || data.items || []);
+        rows.forEach(r => {
+          const opts = r.options || [r.option_a, r.option_b, r.option_c, r.option_d].filter(Boolean);
+          if ((r.question || r.text) && opts.length >= 2) {
+            harvested.push({
+              sec: r.section || r.subject || (isGre ? "Quantitative Reasoning" : "Quantitative Aptitude"),
+              q: r.question || r.text,
+              opts: opts.slice(0, 4),
+              ans: typeof r.correct_index === "number" ? r.correct_index : 0
+            });
+          }
+        });
+      }
+    } catch (_) {}
+
+    const fullPaper = buildFullSectionPaper(isGre, totalQs, harvested);
+
     let anchorCard = triggerBtn ? triggerBtn.closest(".rounded-2xl, .rounded-3xl, section, [id^='workspace-'], [id^='tab']") : null;
     if (!anchorCard || anchorCard === document.body) {
       anchorCard = document.querySelector("[id^='workspace-']:not(.hidden)") || document.body;
@@ -1588,31 +1710,15 @@
     }
     anchorCard.insertAdjacentElement("afterend", runner);
 
-    const bank = isGre
-      ? [
-          { sec: "Quantitative Reasoning • Stage 1", q: "If 3x + 2y = 19 and 2x + 3y = 16, what is the value of x + y?", opts: ["5", "6", "7", "8"], ans: 2 },
-          { sec: "Quantitative Reasoning • Stage 1", q: "Quantity A: (0.2)^3   |   Quantity B: (0.02)^2. Which quantity is greater?", opts: ["Quantity A (0.008)", "Quantity B (0.0004)", "Both are equal", "Cannot be determined"], ans: 0 },
-          { sec: "Verbal Reasoning • Text Completion", q: "Far from being ______, the historian's account was meticulously corroborated by newly uncovered archival letters.", opts: ["speculative", "exhaustive", "pedestrian", "orthodox"], ans: 0 },
-          { sec: "Verbal Reasoning • Reading Comprehension", q: "The primary purpose of the second paragraph is to qualify a broad generalization introduced in the opening sentence.", opts: ["Qualify a generalization", "Refute an empirical study", "Chronicle a biographical shift", "Propose a new taxonomy"], ans: 0 },
-          { sec: "Analytical Writing (AWA • 30 Mins)", q: "Issue Task: 'Universities should require every student to study a discipline outside their major.' Select your primary thesis stance:", opts: ["Strongly Support with Interdisciplinary Evidence", "Qualified Support (Context-Dependent)", "Counter-Thesis (Depth-First Specialization)", "Flag for Timed Essay Outline"], ans: 0 }
-        ]
-      : [
-          { sec: "VARC • Section 1 (40 Mins)", q: "Which inference is best supported when an author contrasts 'algorithmic efficiency' with 'institutional resilience'?", opts: ["Efficiency alone can increase systemic fragility", "Institutions should reject automation", "Resilience reduces short-term output", "Algorithms cannot be audited"], ans: 0 },
-          { sec: "VARC • Para-Summary", q: "A concise summary of the passage must capture both the cognitive bias in forecasting and the institutional feedback loop that amplifies it.", opts: ["Captures bias + feedback loop", "Focuses solely on historical anecdotes", "Rejects statistical modeling entirely", "Attributes errors only to sample size"], ans: 0 },
-          { sec: "DILR • Section 2 (40 Mins)", q: "Four analysts (P, Q, R, S) review 4 sectors in distinct slots 1–4. If P precedes Q and R is not in slot 4, how many valid schedules exist?", opts: ["4", "6", "8", "12"], ans: 1 },
-          { sec: "Quantitative Aptitude • Section 3 (40 Mins)", q: "If log_2(x - 1) + log_2(x + 1) = 3, what is the positive value of x?", opts: ["2", "3", "4", "5"], ans: 1 },
-          { sec: "Quantitative Aptitude • TITA (Zero Penalty)", q: "How many positive integer solutions exist for a + b + c = 12 such that a, b, c >= 2?", opts: ["21", "28", "36", "45"], ans: 1 }
-        ];
-
     let secsLeft = totalMins * 60;
     if (window._univProctoredTimer) clearInterval(window._univProctoredTimer);
 
     runner.className = "mt-5 p-6 rounded-2xl bg-surface border-2 border-indigo-500 shadow-2xl space-y-5 text-xs";
     runner.innerHTML = `
-      <div class="flex flex-wrap items-center justify-between gap-3 pb-3 border-b border-slate-700">
+      <div class="sticky top-2 z-30 p-3.5 rounded-xl bg-slate-900/95 border border-slate-700 flex flex-wrap items-center justify-between gap-3 shadow-lg">
         <div>
-          <span class="px-2.5 py-0.5 rounded bg-emerald-600 text-white font-extrabold text-[10px] uppercase">ACTIVE PROCTORED EXAM SESSION</span>
-          <h3 class="text-lg font-black text-white mt-1">${isGre ? "GRE" : "CAT"} Proctored Simulation (${totalQs} Qs &bull; ${totalMins} Mins)</h3>
+          <span class="px-2.5 py-0.5 rounded bg-emerald-600 text-white font-extrabold text-[10px] uppercase">ACTIVE PROCTORED EXAM SESSION (${fullPaper.length} QUESTIONS)</span>
+          <h3 class="text-base sm:text-lg font-black text-white mt-1">${isGre ? "GRE" : "CAT"} Proctored Simulation (${fullPaper.length} Qs &bull; ${totalMins} Mins)</h3>
         </div>
         <div class="flex flex-wrap items-center gap-2">
           <span id="univProctoredClock" class="px-3.5 py-1.5 rounded-xl bg-amber-950 border border-amber-500 text-amber-300 font-mono font-black text-sm">${totalMins}:00</span>
@@ -1621,31 +1727,73 @@
           <button type="button" id="univTopSubmitPaperBtn" class="px-4 py-1.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 border border-emerald-400 text-white font-extrabold shadow-md cursor-pointer">&#9989; Submit Mock &amp; Sync Tab 7</button>
         </div>
       </div>
-      <div class="space-y-4">
-        ${bank.map((item, idx) => `
-          <div class="p-4 rounded-xl bg-background border border-slate-700 space-y-2.5">
-            <div class="flex flex-wrap justify-between text-[11px] font-bold text-indigo-400">
-              <span>Question ${idx + 1} (Blueprint Calibration Item ${idx + 1} of ${totalQs})</span>
-              <span>${item.sec}</span>
+
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-5 items-start">
+        <div class="lg:col-span-9 space-y-4">
+          ${fullPaper.map((item, idx) => `
+            <div id="univ_q_card_${idx}" class="p-4 rounded-xl bg-background border border-slate-700 space-y-2.5 scroll-mt-24">
+              <div class="flex flex-wrap justify-between text-[11px] font-bold text-indigo-400">
+                <span>Question ${idx + 1} of ${fullPaper.length}</span>
+                <span>${item.sec}</span>
+              </div>
+              <div class="text-sm font-semibold text-white">${item.q}</div>
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 pt-1">
+                ${item.opts.map((opt, oIdx) => `
+                  <label class="flex items-center gap-2 p-2.5 rounded-lg border border-slate-700 hover:border-indigo-500 cursor-pointer">
+                    <input type="radio" name="univ_q_${idx}" value="${oIdx}" data-qidx="${idx}" class="univ-q-radio accent-indigo-600">
+                    <span class="text-slate-200">${opt}</span>
+                  </label>
+                `).join("")}
+              </div>
             </div>
-            <div class="text-sm font-semibold text-white">${item.q}</div>
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 pt-1">
-              ${item.opts.map((opt, oIdx) => `
-                <label class="flex items-center gap-2 p-2.5 rounded-lg border border-slate-700 hover:border-indigo-500 cursor-pointer">
-                  <input type="radio" name="univ_q_${idx}" value="${oIdx}" class="accent-indigo-600">
-                  <span class="text-slate-200">${opt}</span>
-                </label>
-              `).join("")}
-            </div>
+          `).join("")}
+        </div>
+
+        <div class="lg:col-span-3 sticky top-24 p-4 rounded-xl bg-background border border-slate-700 space-y-3">
+          <div class="flex items-center justify-between">
+            <span class="font-extrabold text-white uppercase tracking-wider text-[11px]">Question Palette (${fullPaper.length} Qs)</span>
+            <span id="univAnsweredCounter" class="text-[11px] font-mono font-bold text-emerald-400">0 / ${fullPaper.length}</span>
           </div>
-        `).join("")}
+          <div class="grid grid-cols-6 gap-1.5 max-h-96 overflow-y-auto pr-1">
+            ${fullPaper.map((_, idx) => `
+              <button type="button" id="univ_pal_${idx}" onclick="document.getElementById('univ_q_card_${idx}').scrollIntoView({behavior:'smooth',block:'start'})"
+                class="py-1.5 rounded-lg bg-slate-800 hover:bg-indigo-600 text-slate-200 hover:text-white font-mono text-[11px] font-bold cursor-pointer">
+                ${idx + 1}
+              </button>
+            `).join("")}
+          </div>
+          <div class="text-[10px] text-slate-400 pt-1 border-t border-slate-800">Click any question number to jump directly. Green = Answered.</div>
+        </div>
       </div>
+
       <div class="flex justify-end pt-2">
         <button type="button" id="univSubmitPaperBtn" class="px-5 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-extrabold text-sm shadow-lg cursor-pointer">
-          &#9989; Submit Proctored Mock &amp; Sync Forecaster
+          &#9989; Submit Proctored Mock (${fullPaper.length} Qs) &amp; Sync Forecaster
         </button>
       </div>
     `;
+
+    if (typeof window.renderMathInElement === "function") {
+      try {
+        window.renderMathInElement(runner, {
+          delimiters: [{ left: "$$", right: "$$", display: true }, { left: "$", right: "$", display: false }],
+          throwOnError: false
+        });
+      } catch (_) {}
+    }
+
+    runner.querySelectorAll(".univ-q-radio").forEach(radio => {
+      radio.addEventListener("change", function () {
+        const qIdx = Number(this.dataset.qidx);
+        const palBtn = document.getElementById(`univ_pal_${qIdx}`);
+        if (palBtn) {
+          palBtn.className = "py-1.5 rounded-lg bg-emerald-600 text-white font-mono text-[11px] font-extrabold cursor-pointer";
+        }
+        const answeredCount = runner.querySelectorAll(".univ-q-radio:checked").length;
+        const cntEl = document.getElementById("univAnsweredCounter");
+        if (cntEl) cntEl.textContent = `${answeredCount} / ${fullPaper.length}`;
+      });
+    });
 
     window._univProctoredTimer = setInterval(() => {
       secsLeft = Math.max(0, secsLeft - 1);
@@ -1659,35 +1807,50 @@
 
     document.getElementById("univResetPaperBtn").onclick = () => {
       runner.querySelectorAll("input[type='radio']").forEach(r => { r.checked = false; });
+      fullPaper.forEach((_, idx) => {
+        const palBtn = document.getElementById(`univ_pal_${idx}`);
+        if (palBtn) palBtn.className = "py-1.5 rounded-lg bg-slate-800 hover:bg-indigo-600 text-slate-200 hover:text-white font-mono text-[11px] font-bold cursor-pointer";
+      });
+      const cntEl = document.getElementById("univAnsweredCounter");
+      if (cntEl) cntEl.textContent = `0 / ${fullPaper.length}`;
       secsLeft = totalMins * 60;
     };
+
     document.getElementById("univExitPaperBtn").onclick = () => {
       clearInterval(window._univProctoredTimer);
       runner.remove();
     };
+
     const handleUnivSubmit = () => {
       clearInterval(window._univProctoredTimer);
       let correct = 0;
-      bank.forEach((item, idx) => {
+      let attempted = 0;
+      fullPaper.forEach((item, idx) => {
         const sel = runner.querySelector(`input[name="univ_q_${idx}"]:checked`);
-        if (sel && Number(sel.value) === item.ans) correct++;
+        if (sel) {
+          attempted++;
+          if (Number(sel.value) === item.ans) correct++;
+        }
       });
-      const pct = Math.round((correct / bank.length) * 100);
+      const pct = Math.round((correct / fullPaper.length) * 100);
       const maxScale = isGre ? 340 : 198;
       const minScale = isGre ? 260 : 0;
       const scaled = Math.round(minScale + (pct / 100) * (maxScale - minScale));
       runner.innerHTML = `
         <div class="p-5 rounded-xl bg-emerald-950/50 border border-emerald-500 space-y-2">
-          <div class="text-xs font-extrabold uppercase text-emerald-400">Proctored Mock Evaluated &amp; Ready</div>
-          <div class="text-2xl font-black text-white">Scaled Score: ${scaled} / ${maxScale} (${pct}% Accuracy &bull; ${correct}/${bank.length} Correct)</div>
+          <div class="text-xs font-extrabold uppercase text-emerald-400">Proctored Mock Evaluated (${fullPaper.length} Questions)</div>
+          <div class="text-2xl font-black text-white">Scaled Score: ${scaled} / ${maxScale} (${pct}% Accuracy &bull; ${correct}/${fullPaper.length} Correct &bull; ${attempted} Attempted)</div>
           <p class="text-slate-300">Open <strong>Tab 7 (Score &amp; Target Forecaster)</strong> to review your target gap and readiness standing.</p>
         </div>
       `;
+      runner.scrollIntoView({ behavior: "smooth", block: "start" });
     };
+
+    document.getElementById("univSubmitPaperBtn").onclick = handleUnivSubmit;
+    document.getElementById("univTopSubmitPaperBtn").onclick = handleUnivSubmit;
     runner.scrollIntoView({ behavior: "smooth", block: "start" });
   }
 
-  // Global document-level capture listener so ANY click on "Start Proctored Mock" works immediately
   document.addEventListener("click", function (ev) {
     const btn = ev.target && ev.target.closest("button");
     if (btn && /Start Proctored Mock/i.test(btn.textContent || "")) {
