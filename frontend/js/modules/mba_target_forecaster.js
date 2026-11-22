@@ -1270,6 +1270,7 @@ window.saveTab4ProctoredToNativeLedger = function (payload) {
     s3: s3,
     secScores: [s1, s2, s3],
     sectionScores: { s1: s1, s2: s2, s3: s3 },
+    breakdown: Array.isArray(payload.breakdown) ? payload.breakdown : [],
     timestamp: Date.now(),
     date: new Date().toLocaleString([], { day: "2-digit", month: "short", hour: "2-digit", minute: "2-digit" })
   };
@@ -1302,4 +1303,169 @@ window.saveTab4ProctoredToNativeLedger = function (payload) {
       });
     }
   } catch (_) {}
+})();
+
+
+// === TAB 4 OFFICIAL MOCK LEDGER INLINE ACTIONS (⬇ Marksheet & Script + Sync Tab 7 →) ===
+window.syncSpecificMbaMockToTab7 = function (serialId) {
+  const hist = JSON.parse(localStorage.getItem("ipm_mock_history_v1") || "[]");
+  const target = hist.find(m => m.serialId === serialId);
+  if (typeof switchMainTab === "function") switchMainTab(7);
+  setTimeout(() => {
+    if (target && typeof getActiveModeKey === "function" && typeof getSchema === "function") {
+      const modeKey = target.modeKey || target.mode || getActiveModeKey();
+      const schema = getSchema(modeKey);
+      const st = (typeof getActiveState === "function") ? getActiveState(modeKey, schema) : null;
+      if (st) {
+        st.s1 = Number(target.s1 || 0);
+        st.s2 = Number(target.s2 || 0);
+        st.s3 = Number(target.s3 || 0);
+      }
+      window._MBA_T7_SYNCED_ID = target.serialId;
+      window._MBA_T7_MODE = "VERIFIED";
+      window._MBA_T7_MSG = "";
+      if (typeof window.renderStreamlinedTab7 === "function") window.renderStreamlinedTab7();
+    } else if (typeof window.mbaSyncMock === "function") {
+      window.mbaSyncMock();
+    }
+  }, 120);
+};
+
+window.downloadMbaMockMarksheetAndScript = function (serialId) {
+  const hist = JSON.parse(localStorage.getItem("ipm_mock_history_v1") || "[]");
+  const rec = hist.find(m => m.serialId === serialId);
+  if (!rec) {
+    alert("Mock record not found in ledger.");
+    return;
+  }
+  const isGre = /GRE/i.test(rec.serialId || document.title || "");
+  const portalTitle = isGre ? "GOALisB GRE MASTER ENGINE" : "GOALisB CAT MASTER ENGINE";
+  const candidate = (function () {
+    try {
+      const u = JSON.parse(localStorage.getItem("goalisb_user") || "{}");
+      if (u.full_name || u.name || u.username) return u.full_name || u.name || u.username;
+    } catch (_) {}
+    const pill = document.querySelector("[class*='rounded-full'] span, header");
+    const m = pill ? (pill.textContent || "").match(/\b([a-zA-Z]+(?:\s+[a-zA-Z]+)?)\s*\|/) : null;
+    return m ? m[1].trim() : "Candidate";
+  })();
+
+  const win = window.open("", "_blank", "width=960,height=860");
+  if (!win) {
+    alert("Please allow popups to download the Marksheet & Answer Script PDF.");
+    return;
+  }
+
+  const items = Array.isArray(rec.breakdown) ? rec.breakdown : [];
+  const questionsHtml = items.length ? items.map((q, idx) => `
+    <div class="q-card ${q.isCorrect ? "q-ok" : "q-bad"}">
+      <div class="q-head">
+        <strong>Question ${idx + 1}</strong>
+        <span class="pill">${q.sec || "Section"}</span>
+        <span class="pill ${q.isCorrect ? "ok" : "bad"}">${q.isCorrect ? "✓ Correct" : (q.userChoice ? "✕ Incorrect" : "• Unattempted")}</span>
+      </div>
+      <div class="q-text">${q.q}</div>
+      <div class="q-meta">
+        <div><strong>Your Response:</strong> ${q.userChoice || "(No option selected)"}</div>
+        <div><strong>Official Correct Answer:</strong> ${q.correctChoice}</div>
+      </div>
+    </div>
+  `).join("") : `
+    <div class="q-card">
+      <p>Sectional Score Breakdown: <strong>Section 1: ${rec.s1 || 0}</strong> &bull; <strong>Section 2: ${rec.s2 || 0}</strong> &bull; <strong>Section 3: ${rec.s3 || 0}</strong>. Submit a fresh proctored mock in Tab 4 to include question-by-question answer script details.</p>
+    </div>
+  `;
+
+  const ts = new Date().toISOString().replace(/[-:T]/g, "").slice(0, 14);
+  const fname = `${isGre ? "GRE" : "CAT"}_Marksheet_Script_${rec.serialId.replace(/#/g, "")}_${ts}`;
+
+  win.document.open();
+  win.document.write(`<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>${fname}</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css">
+  <style>
+    @page { size: A4 portrait; margin: 12mm 14mm; }
+    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; color: #0f172a; margin: 0; padding: 14px; font-size: 12.5px; line-height: 1.5; }
+    .header { border-bottom: 2px solid #0f172a; padding-bottom: 8px; margin-bottom: 14px; }
+    .title { font-size: 18px; font-weight: 900; margin: 0; }
+    .sub { font-size: 11px; color: #475569; margin-top: 4px; }
+    .card { border: 1.5px solid #cbd5e1; border-radius: 10px; padding: 14px 16px; background: #f8fafc; margin-bottom: 16px; display: flex; justify-content: space-between; align-items: center; }
+    .big { font-size: 26px; font-weight: 900; color: #059669; text-align: right; }
+    .q-card { border: 1px solid #cbd5e1; border-radius: 8px; padding: 10px 12px; margin-bottom: 10px; page-break-inside: avoid; }
+    .q-ok { border-left: 4px solid #059669; }
+    .q-bad { border-left: 4px solid #e11d48; }
+    .q-head { display: flex; gap: 8px; align-items: center; border-bottom: 1px solid #e2e8f0; padding-bottom: 5px; margin-bottom: 6px; font-size: 11px; }
+    .pill { background: #e2e8f0; padding: 1px 7px; border-radius: 5px; font-weight: 700; }
+    .pill.ok { background: #d1fae5; color: #065f46; }
+    .pill.bad { background: #ffe4e6; color: #9f1239; }
+    .q-text { font-weight: 600; margin-bottom: 6px; }
+    .q-meta { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; font-size: 11px; background: #f8fafc; padding: 7px 9px; border-radius: 6px; border: 1px solid #e2e8f0; }
+    .footer { margin-top: 18px; text-align: center; font-size: 10px; color: #64748b; border-top: 1px solid #cbd5e1; padding-top: 8px; }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <h1 class="title">${portalTitle}</h1>
+    <div class="sub">Official Proctored Mock Marksheet &amp; Answer Script | Candidate: <strong>${candidate}</strong> | Serial ID: <strong>${rec.serialId}</strong> | Blueprint: ${rec.blueprint || rec.format} | Date: ${rec.date}</div>
+  </div>
+  <div class="card">
+    <div>
+      <div style="font-size:10px;font-weight:800;color:#059669;text-transform:uppercase;">Proctored Simulation Evaluated</div>
+      <div style="font-size:16px;font-weight:900;margin-top:2px;">Official Diagnostic Score Card &amp; Answer Script</div>
+      <div style="font-size:11px;color:#475569;margin-top:3px;">Section Scores: S1 = <strong>${rec.s1 || 0}</strong> &bull; S2 = <strong>${rec.s2 || 0}</strong> &bull; S3 = <strong>${rec.s3 || 0}</strong></div>
+    </div>
+    <div class="big">${rec.score} <span style="font-size:15px;color:#475569;">/ ${rec.maxMarks}</span><div style="font-size:11px;color:#334155;">${rec.percentage}% Accuracy</div></div>
+  </div>
+  ${questionsHtml}
+  <div class="footer">Generated by ${portalTitle} &bull; Serial ID: ${rec.serialId}</div>
+  <script>window.onload = function(){ setTimeout(function(){ window.print(); }, 350); };<\/script>
+</body>
+</html>`);
+  win.document.close();
+};
+
+// Inject inline ACTIONS column (⬇ Marksheet & Script + Sync Tab 7 →) into Tab 4 Official Mock Ledger table
+(function () {
+  function injectLedgerInlineActions() {
+    const tables = Array.from(document.querySelectorAll("table"));
+    tables.forEach(tbl => {
+      const headRow = tbl.querySelector("thead tr");
+      if (!headRow || !/SERIAL MOCK ID/i.test(headRow.textContent || "")) return;
+      if (!/ACTIONS/i.test(headRow.textContent || "")) {
+        const th = document.createElement("th");
+        th.className = headRow.lastElementChild ? headRow.lastElementChild.className : "py-2.5 px-3 text-right";
+        th.style.textAlign = "right";
+        th.textContent = "ACTIONS";
+        headRow.appendChild(th);
+      }
+      Array.from(tbl.querySelectorAll("tbody tr")).forEach(tr => {
+        if (tr.dataset.actionsInjected === "1") return;
+        const firstCell = tr.querySelector("td");
+        const serialId = firstCell ? (firstCell.textContent || "").trim() : "";
+        if (!serialId || !/#\d+/.test(serialId)) return;
+        tr.dataset.actionsInjected = "1";
+        const td = document.createElement("td");
+        td.className = "py-2.5 px-3 text-right whitespace-nowrap";
+        td.innerHTML = `
+          <div style="display:inline-flex;align-items:center;gap:6px;justify-content:flex-end;">
+            <button type="button" onclick="window.downloadMbaMockMarksheetAndScript('${serialId}')"
+              style="background:#ffffff;color:#1e293b;border:1px solid #cbd5e1;border-radius:8px;padding:4px 10px;font-size:11px;font-weight:700;cursor:pointer;">
+              &#11015; Marksheet &amp; Script
+            </button>
+            <button type="button" onclick="window.syncSpecificMbaMockToTab7('${serialId}')"
+              style="background:#4f46e5;color:#ffffff;border:none;border-radius:8px;padding:5px 11px;font-size:11px;font-weight:800;cursor:pointer;">
+              Sync Tab 7 &rarr;
+            </button>
+          </div>
+        `;
+        tr.appendChild(td);
+      });
+    });
+  }
+
+  document.addEventListener("DOMContentLoaded", injectLedgerInlineActions);
+  setInterval(injectLedgerInlineActions, 500);
 })();
