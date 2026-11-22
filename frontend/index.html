@@ -1836,11 +1836,37 @@
       const maxScale = isGre ? 340 : 198;
       const minScale = isGre ? 260 : 0;
       const scaled = Math.round(minScale + (pct / 100) * (maxScale - minScale));
+      const lKey = "gre_proctored_ledger";
+      const hist = JSON.parse(localStorage.getItem(lKey) || "[]");
+      const dStr = new Date().toISOString().slice(0, 10).replace(/-/g, "");
+      const seq = String(hist.length + 1).padStart(2, "0");
+      const serialId = `${isGre ? "GRE-FULL" : "CAT-FULL"}${fullPaper.length}-${dStr}-#${seq}`;
+      const rec = {
+        serialId,
+        scaled,
+        maxScale,
+        pct,
+        correct,
+        totalQs: fullPaper.length,
+        attempted,
+        date: new Date().toLocaleString([], { day: "2-digit", month: "short", hour: "2-digit", minute: "2-digit" })
+      };
+      hist.push(rec);
+      localStorage.setItem(lKey, JSON.stringify(hist));
+
       runner.innerHTML = `
-        <div class="p-5 rounded-xl bg-emerald-950/50 border border-emerald-500 space-y-2">
-          <div class="text-xs font-extrabold uppercase text-emerald-400">Proctored Mock Evaluated (${fullPaper.length} Questions)</div>
-          <div class="text-2xl font-black text-white">Scaled Score: ${scaled} / ${maxScale} (${pct}% Accuracy &bull; ${correct}/${fullPaper.length} Correct &bull; ${attempted} Attempted)</div>
-          <p class="text-slate-300">Open <strong>Tab 7 (Score &amp; Target Forecaster)</strong> to review your target gap and readiness standing.</p>
+        <div class="p-5 rounded-xl bg-emerald-950/50 border border-emerald-500 space-y-3">
+          <div class="flex flex-wrap items-center justify-between gap-2">
+            <div>
+              <div class="text-xs font-extrabold uppercase text-emerald-400">Proctored Mock Evaluated &bull; ${serialId}</div>
+              <div class="text-2xl font-black text-white mt-1">Scaled Score: ${scaled} / ${maxScale} (${pct}% Accuracy &bull; ${correct}/${fullPaper.length} Correct)</div>
+            </div>
+            <button type="button" onclick="if(typeof window.syncProctoredMockToTab7==='function') window.syncProctoredMockToTab7('${serialId}')"
+              class="px-4 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-extrabold shadow cursor-pointer">
+              &#128202; Sync ${serialId} to Tab 7 Forecaster &rarr;
+            </button>
+          </div>
+          <p class="text-slate-300">Saved to Official Mock Ledger. Click <strong>Sync to Tab 7 Forecaster</strong> above or open Tab 7 anytime.</p>
         </div>
       `;
       runner.scrollIntoView({ behavior: "smooth", block: "start" });

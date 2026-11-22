@@ -281,14 +281,14 @@
           let pct = "0.00 %ile";
           if (eff > 0) {
             if (eff >= 112) pct = "99.85 %ile";
-            else if (eff >= 103) pct = "99.50 %ile";
+            else if (eff >= 103) pct = "0 / 198 (Pending Mock)";
             else if (eff >= 95) pct = "99.00 %ile";
             else if (eff >= 82) pct = "97.50 %ile";
             else if (eff >= 68) pct = "94.50 %ile";
             else if (eff >= 50) pct = "87.00 %ile";
             else pct = (eff * 1.65).toFixed(2) + " %ile";
           }
-          const tier = eff >= 105 ? "IIM Ahmedabad / Bangalore / Calcutta Tier" : (eff >= 90 ? "IIM Lucknow / Kozhikode / Indore / FMS Delhi Tier" : (eff >= 72 ? "New & Baby IIMs / MDI Gurgaon / IIFT Tier" : "Foundation Rebuild — Target 95+ Raw"));
+          const tier = eff >= 105 ? "Awaiting Synced Proctored Mock" : (eff >= 90 ? "IIM Lucknow / Kozhikode / Indore / FMS Delhi Tier" : (eff >= 72 ? "New & Baby IIMs / MDI Gurgaon / IIFT Tier" : "Foundation Rebuild — Target 95+ Raw"));
           return { rawDisplay: `${raw} / 198`, eff, effDisplay: `${eff}/198`, pct, subMeta: `VARC ${vals.s1}/72 • DILR ${vals.s2}/60 • QA ${vals.s3}/66`, tier };
         },
         outcomes: [
@@ -1315,4 +1315,117 @@
 
   document.addEventListener("DOMContentLoaded", bindProctoredStartButtons);
   setInterval(bindProctoredStartButtons, 800);
+})();
+
+
+// === TAB 7 TARGET LOCK / RESET / SYNC CONTROLLER (GRE) ===
+(function () {
+  const LEDGER_KEY = "gre_proctored_ledger";
+  const TARGET_KEY = "gre_tab7_locked_targets";
+
+  function readLedger() {
+    try {
+      const arr = JSON.parse(localStorage.getItem(LEDGER_KEY) || "[]");
+      return Array.isArray(arr) ? arr : [];
+    } catch (_) { return []; }
+  }
+
+  function bindForecasterButtons() {
+    const ws7 = document.getElementById("workspace-7") || document.body;
+    const btns = Array.from(ws7.querySelectorAll("button"));
+    btns.forEach(btn => {
+      const label = (btn.textContent || "").trim();
+      if (btn.dataset.t7Bound === "1") return;
+
+      if (/Set Target/i.test(label)) {
+        btn.dataset.t7Bound = "1";
+        btn.addEventListener("click", function (ev) {
+          ev.preventDefault();
+          ev.stopPropagation();
+          const sliders = Array.from(ws7.querySelectorAll("input[type='range']"));
+          const vals = sliders.map(s => Number(s.value));
+          localStorage.setItem(TARGET_KEY, JSON.stringify({ values: vals, lockedAt: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit", second: "2-digit" }) }));
+          showT7Status("Section targets locked (" + vals.reduce((a, b) => a + b, 0) + " total marks)!");
+        }, true);
+      } else if (/Reset Target/i.test(label)) {
+        btn.dataset.t7Bound = "1";
+        btn.addEventListener("click", function (ev) {
+          ev.preventDefault();
+          ev.stopPropagation();
+          const sliders = Array.from(ws7.querySelectorAll("input[type='range']"));
+          sliders.forEach(s => {
+            const defVal = s.getAttribute("value") || Math.round(Number(s.max || 100) * 0.65);
+            s.value = defVal;
+            s.dispatchEvent(new Event("input", { bubbles: true }));
+          });
+          localStorage.removeItem(TARGET_KEY);
+          showT7Status("Section targets reset to default calibration benchmarks.");
+        }, true);
+      } else if (/Sync Mock/i.test(label)) {
+        btn.dataset.t7Bound = "1";
+        btn.addEventListener("click", function (ev) {
+          ev.preventDefault();
+          ev.stopPropagation();
+          const hist = readLedger();
+          if (!hist.length) {
+            showT7Status("No completed Proctored Mocks logged yet — run & submit a mock in Tab 4 first.");
+            return;
+          }
+          const latest = hist[hist.length - 1];
+          syncLatestToForecasterCards(latest);
+          showT7Status("Synced " + latest.serialId + " (" + latest.scaled + "/" + latest.maxScale + " • " + latest.pct + "%) into Tab 7 Forecaster.");
+        }, true);
+      }
+    });
+  }
+
+  function showT7Status(msg) {
+    const ws7 = document.getElementById("workspace-7");
+    if (!ws7) return;
+    let banner = document.getElementById("t7SyncStatusBanner");
+    if (!banner) {
+      banner = document.createElement("div");
+      banner.id = "t7SyncStatusBanner";
+      ws7.insertBefore(banner, ws7.firstChild);
+    }
+    banner.className = "mb-4 p-3.5 rounded-2xl bg-indigo-950/80 border border-indigo-500/50 text-xs text-indigo-100 flex items-center justify-between shadow";
+    banner.innerHTML = `<span>&#9989; <strong>Status:</strong> ${msg}</span><button type="button" onclick="this.parentElement.remove()" class="font-bold px-2 cursor-pointer">&times;</button>`;
+  }
+
+  function syncLatestToForecasterCards(latest) {
+    const ws7 = document.getElementById("workspace-7");
+    if (!ws7 || !latest) return;
+    const cards = Array.from(ws7.querySelectorAll(".rounded-2xl"));
+    cards.forEach(card => {
+      const txt = card.textContent || "";
+      if (/ATTAINED MOCK SCORE/i.test(txt)) {
+        const big = card.querySelector(".text-2xl, .text-3xl, .font-black, .font-extrabold");
+        if (big && !/ATTAINED/i.test(big.textContent)) {
+          big.textContent = `${latest.scaled} / ${latest.maxScale} (${latest.pct}%)`;
+        }
+      }
+      if (/PRESENT READINESS LEVEL/i.test(txt)) {
+        const big = card.querySelector(".text-lg, .text-xl, .font-bold, .font-extrabold");
+        if (big && !/PRESENT READINESS/i.test(big.textContent)) {
+          big.textContent = latest.pct >= 85 ? "Target Ready (85%+ Accuracy)" : latest.pct >= 65 ? "Competitive (65–84% Accuracy)" : "Developing (<65% — Drill Weak Sections)";
+        }
+      }
+    });
+  }
+
+  window.syncProctoredMockToTab7 = function (serialId) {
+    const hist = readLedger();
+    const match = serialId ? (hist.find(h => h.serialId === serialId) || hist[hist.length - 1]) : hist[hist.length - 1];
+    if (typeof switchMainTab === "function") switchMainTab(7);
+    setTimeout(() => {
+      bindForecasterButtons();
+      if (match) {
+        syncLatestToForecasterCards(match);
+        showT7Status("Synced " + match.serialId + " (" + match.scaled + "/" + match.maxScale + " • " + match.pct + "%) into Tab 7 Forecaster.");
+      }
+    }, 80);
+  };
+
+  document.addEventListener("DOMContentLoaded", bindForecasterButtons);
+  setInterval(bindForecasterButtons, 900);
 })();
