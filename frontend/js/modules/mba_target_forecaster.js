@@ -709,17 +709,23 @@
   }
 
   function getFullMocksForMode(modeKey, schema) {
+    let list = [];
     try {
       const raw = JSON.parse(localStorage.getItem("ipm_mock_history_v1") || "[]");
-      if (!Array.isArray(raw)) return [];
-      return raw.filter(h => {
-        if (!h || Number(h.score || 0) <= 0) return false;
-        if (PORTAL === "CAT" && typeof window.classifyMockEntryMode === "function") {
-          return window.classifyMockEntryMode(h) === modeKey && (Number(h.maxScore || 0) >= schema.fullMinQs || String(h.blueprint || "").toLowerCase().includes("full"));
-        }
-        return Number(h.maxScore || 0) >= schema.fullMinQs || String(h.blueprint || "").toLowerCase().includes("full");
-      });
-    } catch (_) { return []; }
+      if (Array.isArray(raw)) list = raw;
+    } catch (_) { list = []; }
+
+    const targetMode = String(modeKey || "").toUpperCase();
+    return list.filter(m => {
+      if (!m || typeof m !== "object") return false;
+      if (m.isSectional === true || String(m.type || "").toLowerCase() === "sectional") return false;
+      const mMode = String(m.mode || m.modeKey || m.examMode || m.track || "").toUpperCase();
+      if (mMode === targetMode) return true;
+      if ((targetMode === "CAT" || targetMode === "STANDARD") && (m.isProctored === true || m.type === "full" || /^CAT-FULL|^GRE-FULL/i.test(String(m.serialId || "")))) {
+        return true;
+      }
+      return false;
+    });
   }
 
   function extractMockSectionValues(rec, schema) {
