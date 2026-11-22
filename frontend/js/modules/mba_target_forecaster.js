@@ -1176,3 +1176,51 @@
   window.renderGreMockSimulator4 = window.renderMockSimulator4;
   window.renderGmatMockSimulator4 = window.renderMockSimulator4;
 })();
+
+
+// === TAB 4 -> NATIVE 'ipm_mock_history_v1' LEDGER & TAB 7 SYNC BRIDGE ===
+(function () {
+  const origRecord = window.recordProctoredMockNative;
+  window.recordProctoredMockNative = function (payload) {
+    const isGre = !!payload.isGre;
+    const modeKey = (typeof getActiveModeKey === "function") ? getActiveModeKey() : (isGre ? "GRE_STD" : "CAT_STD");
+    const schema = (typeof getSchema === "function") ? getSchema(modeKey) : { badge: modeKey, totalMax: payload.maxScale, sections: [{ max: 72 }, { max: 60 }, { max: 66 }] };
+    const ratio = Number(payload.pct || 0) / 100;
+    const s1 = Math.round((schema.sections[0]?.max || 72) * ratio);
+    const s2 = Math.round((schema.sections[1]?.max || 60) * ratio);
+    const s3 = Math.round((schema.sections[2]?.max || 66) * ratio);
+
+    const hist = JSON.parse(localStorage.getItem("ipm_mock_history_v1") || "[]");
+    const modeCount = hist.filter(x => (x.mode === modeKey || x.modeKey === modeKey)).length;
+    const dStr = new Date().toISOString().slice(0, 10).replace(/-/g, "");
+    const seq = String(modeCount + 1).padStart(2, "0");
+    const prefix = isGre ? "GRE-FULL" : "CAT-FULL";
+    const serialId = `${prefix}${payload.totalQs}-${dStr}-#${seq}`;
+
+    const entry = {
+      serialId,
+      mode: modeKey,
+      modeKey,
+      examMode: modeKey,
+      format: `${schema.badge || modeKey} (${payload.totalQs} Qs)`,
+      blueprint: `${schema.badge || modeKey} (${payload.totalQs} Qs)`,
+      score: payload.scaled,
+      maxMarks: payload.maxScale,
+      percentage: payload.pct,
+      s1, s2, s3,
+      sectionScores: { s1, s2, s3 },
+      date: new Date().toLocaleString([], { day: "2-digit", month: "short", hour: "2-digit", minute: "2-digit" })
+    };
+
+    hist.unshift(entry);
+    localStorage.setItem("ipm_mock_history_v1", JSON.stringify(hist));
+
+    if (typeof origRecord === "function") {
+      try { origRecord({ ...payload, serialId }); } catch (_) {}
+    }
+    if (typeof window.renderStreamlinedTab4 === "function") {
+      setTimeout(() => window.renderStreamlinedTab4(), 50);
+    }
+    return entry;
+  };
+})();
